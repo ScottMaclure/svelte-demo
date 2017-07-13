@@ -28,10 +28,13 @@ Run a local server:
 http-server docs
 ```
 
+http://localhost:8080/
+
 ## TODO
 
 - [x] Initial setup with 1k rows, delete row functionality
 - [x] Deploy to github
 - [x] Split HelloWorld into a couple of subcomponents
+- [ ] Add a search/filter component above table (update data.json to be more diverse)
 - [ ] Add a build system (rollup)
 - [ ] Testing components individually (Mocha)
