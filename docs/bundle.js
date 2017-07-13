@@ -575,16 +575,8 @@ var template = (function () {
             window.localStorage.count = parseInt(count, 10) + 1;
             this.set({ count: window.localStorage.count });
         },
-        // TODO Demonstrate sharing this code between Users component and something else.
-        deleteItem: function (id) {
-            console.log('Deleting id=%d.', id);
-            let items = this.get('items').filter(function (item) {
-              return item.id !== id
-            });
-            this.set({ items:  items });
-            console.log('Done.');
-        },
         requestData: function () {
+          // TODO isLoading... localise to Users component?
           this.set({ isLoading: true });
           this.fire('requestData');
         },
@@ -621,7 +613,7 @@ function create_main_fragment ( state, component ) {
 	});
 
 	users.on( 'deleteItem', function ( event ) {
-		component.deleteItem(event.id);
+		component.fire("deleteItem", event);
 	});
 
 	return {
@@ -759,23 +751,25 @@ var app = new HelloWorld({
     target: document.querySelector('main'),
     data: {
         name: 'Scott',
-        count: oldCount
+        count: oldCount,
+        items: []
     }
 });
 
 // Listen for semantic event and fetch data from server.
 app.on('requestData', event => {
-    // console.log('Fetching remote data after 1s.')
-    // setTimeout(function () {
-        fetch('data.json').then(function (response) {
-            console.log('Data fetched, parsing.');
-            response.json().then(function (json) {
-                console.log('Loaded json, setting data with ' + json.items.length + ' items into component.');
-                app.setData(json);
-                console.log('Done.');
-            });
+    fetch('data.json').then(function (response) {
+        response.json().then(function (json) {
+            app.setData(json);
         });
-    // }, 1000);
+    });
+});
+
+app.on('deleteItem', event => {
+    let items = app.get('items').filter(function (item) {
+      return item.id !== event.id
+    });
+    app.set({ items:  items });
 });
 
 }());

@@ -10,23 +10,23 @@ var app = new HelloWorld({
     target: document.querySelector('main'),
     data: {
         name: 'Scott',
-        count: oldCount
+        count: oldCount,
+        items: []
     }
 })
 
-// TODO Move deleteItem out of HelloWorld component, use main.js for all data modifications.
-
 // Listen for semantic event and fetch data from server.
 app.on('requestData', event => {
-    // console.log('Fetching remote data after 1s.')
-    // setTimeout(function () {
-        fetch('data.json').then(function (response) {
-            console.log('Data fetched, parsing.')
-            response.json().then(function (json) {
-                console.log('Loaded json, setting data with ' + json.items.length + ' items into component.')
-                app.setData(json)
-                console.log('Done.')
-            })
+    fetch('data.json').then(function (response) {
+        response.json().then(function (json) {
+            app.setData(json)
         })
-    // }, 1000);
+    })
+})
+
+app.on('deleteItem', event => {
+    let items = app.get('items').filter(function (item) {
+      return item.id !== event.id
+    })
+    app.set({ items:  items })
 })

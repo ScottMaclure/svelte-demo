@@ -8,7 +8,7 @@
   isLoading='{{isLoading}}'
   items='{{items}}'
   on:requestData='requestData()'
-  on:deleteItem='deleteItem(event.id)'
+  on:deleteItem='fire("deleteItem", event)'
 />
 
 <script>
@@ -28,16 +28,8 @@
             window.localStorage.count = parseInt(count, 10) + 1
             this.set({ count: window.localStorage.count })
         },
-        // TODO Demonstrate sharing this code between Users component and something else.
-        deleteItem: function (id) {
-            console.log('Deleting id=%d.', id)
-            let items = this.get('items').filter(function (item) {
-              return item.id !== id
-            })
-            this.set({ items:  items })
-            console.log('Done.')
-        },
         requestData: function () {
+          // TODO isLoading... localise to Users component?
           this.set({ isLoading: true })
           this.fire('requestData')
         },
