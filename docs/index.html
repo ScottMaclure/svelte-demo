@@ -11,8 +11,10 @@
     <main></main>
     <script src='HelloWorld.js'></script>
     <script>
+        // A bit of fun with localStorage.
         let oldCount = parseInt(window.localStorage.count || 0, 10)
 
+        // Top-level component is the "app".
         var app = new HelloWorld({
             target: document.querySelector('main'),
             data: {
@@ -21,13 +23,19 @@
             }
         })
 
-        console.log('Fetching remote data.')
-        fetch('data.json').then(function (response) {
-            response.json().then(function (json) {
-                console.log('Loaded json, setting into component.')
-                app.set(json)
-                console.log('Done.')
-            })
+        // Listen for semantic event and fetch data from server.
+        app.on('requestData', event => {
+            // console.log('Fetching remote data after 1s.')
+            // setTimeout(function () {
+                fetch('data.json').then(function (response) {
+                    console.log('Data fetched, parsing.')
+                    response.json().then(function (json) {
+                        console.log('Loaded json, setting data with ' + json.items.length + ' items into component.')
+                        app.setData(json)
+                        console.log('Done.')
+                    })
+                })
+            // }, 1000);
         })
 
     </script>

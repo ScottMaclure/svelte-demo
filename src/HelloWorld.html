@@ -25,7 +25,14 @@
       {{/each}}
     {{else}}
       <tr>
-        <td colspan="5">No rows present (or loading).</td>
+        <td colspan="5">
+          {{#if isLoading}}
+            <span class="loading">Loading...</span>
+          {{else}}
+            No rows present.
+            <button on:click='requestData()'>Load</button>
+          {{/if}}
+        </td>
       </tr>
     {{/if}}
   </tbody>
@@ -35,6 +42,7 @@
   export default {
     data () {
       return {
+        isLoading: false,
         count: 0,
         items: []
       }
@@ -52,6 +60,14 @@
             })
             this.set({ items:  items })
             console.log('Done.')
+        },
+        requestData: function () {
+          this.set({ isLoading: true })
+          this.fire('requestData')
+        },
+        setData: function (data) {
+          data.isLoading = false
+          this.set(data)
         }
     }
   }

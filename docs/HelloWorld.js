@@ -4,6 +4,7 @@ var template = (function () {
   return {
     data () {
       return {
+        isLoading: false,
         count: 0,
         items: []
       }
@@ -21,6 +22,14 @@ var template = (function () {
             })
             this.set({ items:  items })
             console.log('Done.')
+        },
+        requestData: function () {
+          this.set({ isLoading: true })
+          this.fire('requestData')
+        },
+        setData: function (data) {
+          data.isLoading = false
+          this.set(data)
         }
     }
   }
@@ -248,6 +257,69 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 	};
 }
 
+function create_if_block_2 ( state, component ) {
+	var span, text;
+
+	return {
+		create: function () {
+			span = createElement( 'span' );
+			text = createText( "Loading..." );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			span.className = "loading";
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( span, target, anchor );
+			appendNode( text, span );
+		},
+
+		unmount: function () {
+			detachNode( span );
+		},
+
+		destroy: noop
+	};
+}
+
+function create_if_block_3 ( state, component ) {
+	var text, button, text_1;
+
+	function click_handler_1 ( event ) {
+		component.requestData();
+	}
+
+	return {
+		create: function () {
+			text = createText( "No rows present.\n            " );
+			button = createElement( 'button' );
+			text_1 = createText( "Load" );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			addListener( button, 'click', click_handler_1 );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( text, target, anchor );
+			insertNode( button, target, anchor );
+			appendNode( text_1, button );
+		},
+
+		unmount: function () {
+			detachNode( text );
+			detachNode( button );
+		},
+
+		destroy: function () {
+			removeListener( button, 'click', click_handler_1 );
+		}
+	};
+}
+
 function create_if_block ( state, component ) {
 	var each_block_anchor;
 
@@ -313,13 +385,21 @@ function create_if_block ( state, component ) {
 }
 
 function create_if_block_1 ( state, component ) {
-	var tr, td, text;
+	var tr, td;
+
+	function get_block ( state ) {
+		if ( state.isLoading ) return create_if_block_2;
+		return create_if_block_3;
+	}
+
+	var current_block = get_block( state );
+	var if_block_1 = current_block( state, component );
 
 	return {
 		create: function () {
 			tr = createElement( 'tr' );
 			td = createElement( 'td' );
-			text = createText( "No rows present (or loading)." );
+			if_block_1.create();
 			this.hydrate();
 		},
 
@@ -330,16 +410,27 @@ function create_if_block_1 ( state, component ) {
 		mount: function ( target, anchor ) {
 			insertNode( tr, target, anchor );
 			appendNode( td, tr );
-			appendNode( text, td );
+			if_block_1.mount( td, null );
 		},
 
-		update: noop,
+		update: function ( changed, state ) {
+			if ( current_block !== ( current_block = get_block( state ) ) ) {
+				if_block_1.unmount();
+				if_block_1.destroy();
+				if_block_1 = current_block( state, component );
+				if_block_1.create();
+				if_block_1.mount( td, null );
+			}
+		},
 
 		unmount: function () {
 			detachNode( tr );
+			if_block_1.unmount();
 		},
 
-		destroy: noop
+		destroy: function () {
+			if_block_1.destroy();
+		}
 	};
 }
 
@@ -432,6 +523,8 @@ function removeListener(node, event, handler) {
 	node.removeEventListener(event, handler, false);
 }
 
+function noop() {}
+
 function createComment() {
 	return document.createComment('');
 }
@@ -441,8 +534,6 @@ function destroyEach(iterations, detach, start) {
 		if (iterations[i]) iterations[i].destroy(detach);
 	}
 }
-
-function noop() {}
 
 function assign(target) {
 	var k,
