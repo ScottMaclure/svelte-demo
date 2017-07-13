@@ -1,0 +1,44 @@
+<table border="1" width="100%">
+  <thead>
+    <th>Id</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Email</th>
+    <th>Actions</th>
+  </thead>
+  <tbody>
+    {{#if items && items.length > 0}}
+      {{#each items as item}}
+          <tr>
+            <td>{{item.id}}</td>
+            <td>{{item.firstName}}</td>
+            <td>{{item.lastName}}</td>
+            <td>{{item.email}}</td>
+            <td><button on:click='fire("deleteItem", { id: item.id })'>Delete</button></td>
+          </tr>
+      {{/each}}
+    {{else}}
+      <tr>
+        <td colspan="5">
+          {{#if isLoading}}
+            <span class="loading">Loading...</span>
+          {{else}}
+            No rows present.
+            <button on:click='fire("requestData")'>Load</button>
+          {{/if}}
+        </td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
+
+<script>
+    export default {
+        data () {
+            return {
+                isLoading: false,
+                items: []
+            }
+        }
+    }
+</script>

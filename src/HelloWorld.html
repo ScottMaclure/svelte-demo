@@ -4,39 +4,12 @@
 <!-- TODO search/filter sub-component -->
 
 <!-- TODO sub-component -->
-<table border="1" width="100%">
-  <thead>
-    <th>Id</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Email</th>
-    <th>Actions</th>
-  </thead>
-  <tbody>
-    {{#if items && items.length > 0}}
-      {{#each items as item}}
-          <tr>
-            <td>{{item.id}}</td>
-            <td>{{item.firstName}}</td>
-            <td>{{item.lastName}}</td>
-            <td>{{item.email}}</td>
-            <td><button on:click='deleteItem(item.id)'>Delete</button></td>
-          </tr>
-      {{/each}}
-    {{else}}
-      <tr>
-        <td colspan="5">
-          {{#if isLoading}}
-            <span class="loading">Loading...</span>
-          {{else}}
-            No rows present.
-            <button on:click='requestData()'>Load</button>
-          {{/if}}
-        </td>
-      </tr>
-    {{/if}}
-  </tbody>
-</table>
+<Users
+  isLoading='{{isLoading}}'
+  items='{{items}}'
+  on:requestData='requestData()'
+  on:deleteItem='deleteItem(event.id)'
+/>
 
 <script>
   export default {
@@ -53,6 +26,7 @@
             window.localStorage.count = parseInt(count, 10) + 1
             this.set({ count: window.localStorage.count })
         },
+        // TODO Demonstrate sharing this code between Users component and something else.
         deleteItem: function (id) {
             console.log('Deleting id=%d.', id)
             let items = this.get('items').filter(function (item) {
@@ -69,6 +43,9 @@
           data.isLoading = false
           this.set(data)
         }
+    },
+    components: {
+      Users
     }
   }
 </script>
