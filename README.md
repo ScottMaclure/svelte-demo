@@ -5,5 +5,5 @@ node scripts/generate-data.js
 ```
 
 ```
-svelte compile --format iife src/HelloWorld.html > public/HelloWorld.js
+svelte compile --format iife src/HelloWorld.html > docs/HelloWorld.js
 ```

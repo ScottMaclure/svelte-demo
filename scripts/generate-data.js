@@ -3,7 +3,7 @@
 const fs = require('fs')
 
 const maxRows = 5000
-const fileName = __dirname + '/../public/data.json'
+const fileName = __dirname + '/../docs/data.json'
 
 const log = (message, ...data) => {
     message = '[%s] ' + message
