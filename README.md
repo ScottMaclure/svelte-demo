@@ -4,31 +4,24 @@ http://scott.maclure.info/svelte-demo/
 
 ## Running
 
-Install deps:
+Install globals and locals
 
 ```
 npm install -g http-server svelte-cli rollup
+npm install
 ```
 
-Generate test data:
+(Re)Generate test data:
 
 ```
 node scripts/generate-data.js
 ```
 
-Compile for simple script inclusion as an iife:
+Build bundle.js, run server and open browser:
 
 ```
-svelte compile -f iife  -i src -o docs
+npm start
 ```
-
-Run a local server:
-
-```
-http-server docs
-```
-
-http://localhost:8080/
 
 ## TODO
 

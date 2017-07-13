@@ -1,1 +1,3 @@
-# Normally we'd ignore compiled assets, but have left in for hosting convenience.
+# Normally we'd ignore compiled assets, but have left most in for hosting convenience.
+
+node_modules

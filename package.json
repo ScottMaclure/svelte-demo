@@ -1,0 +1,26 @@
+{
+  "name": "svelte-demo",
+  "version": "1.0.0",
+  "description": "Testing Svelte.technology.",
+  "main": "rollup.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "rollup -c && http-server docs -g -o"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScottMaclure/svelte-demo.git"
+  },
+  "author": "Scott Maclure <scott.maclure@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ScottMaclure/svelte-demo/issues"
+  },
+  "homepage": "https://github.com/ScottMaclure/svelte-demo#readme",
+  "devDependencies": {
+    "rollup-plugin-svelte": "^2.0.2"
+  }
+}

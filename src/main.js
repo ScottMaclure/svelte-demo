@@ -1,5 +1,7 @@
 // Kickstart the application.
 
+import HelloWorld from './HelloWorld.html'
+
 // A bit of fun with localStorage.
 let oldCount = parseInt(window.localStorage.count || 0, 10)
 
