@@ -13,6 +13,14 @@ var template = (function () {
             // TODO emit semantic event and get index.html to update localStorage, so the component knows nothing!
             window.localStorage.count = parseInt(count, 10) + 1
             this.set({ count: window.localStorage.count })
+        },
+        deleteItem: function (id) {
+            console.log('Deleting id=%d.', id)
+            let items = this.get('items').filter(function (item) {
+              return item.id !== id
+            })
+            this.set({ items:  items })
+            console.log('Done.')
         }
     }
   }
@@ -157,7 +165,7 @@ function create_main_fragment ( state, component ) {
 }
 
 function create_each_block ( state, each_block_value, item, item_index, component ) {
-	var tr, td, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, text_8;
+	var tr, td, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, button, text_8;
 
 	return {
 		create: function () {
@@ -175,7 +183,19 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			text_6 = createText( text_6_value = item.email );
 			text_7 = createText( "\n            " );
 			td_4 = createElement( 'td' );
-			text_8 = createText( "..." );
+			button = createElement( 'button' );
+			text_8 = createText( "Delete" );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			addListener( button, 'click', click_handler );
+
+			button._svelte = {
+				component: component,
+				each_block_value: each_block_value,
+				item_index: item_index
+			};
 		},
 
 		mount: function ( target, anchor ) {
@@ -193,7 +213,8 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			appendNode( text_6, td_3 );
 			appendNode( text_7, tr );
 			appendNode( td_4, tr );
-			appendNode( text_8, td_4 );
+			appendNode( button, td_4 );
+			appendNode( text_8, button );
 		},
 
 		update: function ( changed, state, each_block_value, item, item_index ) {
@@ -212,13 +233,18 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			if ( text_6_value !== ( text_6_value = item.email ) ) {
 				text_6.data = text_6_value;
 			}
+
+			button._svelte.each_block_value = each_block_value;
+			button._svelte.item_index = item_index;
 		},
 
 		unmount: function () {
 			detachNode( tr );
 		},
 
-		destroy: noop
+		destroy: function () {
+			removeListener( button, 'click', click_handler );
+		}
 	};
 }
 
@@ -317,6 +343,12 @@ function create_if_block_1 ( state, component ) {
 	};
 }
 
+function click_handler ( event ) {
+	var component = this._svelte.component;
+	var each_block_value = this._svelte.each_block_value, item_index = this._svelte.item_index, item = each_block_value[item_index];
+	component.deleteItem(item.id);
+}
+
 function HelloWorld ( options ) {
 	options = options || {};
 	this._state = assign( template.data(), options.data );
@@ -400,8 +432,6 @@ function removeListener(node, event, handler) {
 	node.removeEventListener(event, handler, false);
 }
 
-function noop() {}
-
 function createComment() {
 	return document.createComment('');
 }
@@ -411,6 +441,8 @@ function destroyEach(iterations, detach, start) {
 		if (iterations[i]) iterations[i].destroy(detach);
 	}
 }
+
+function noop() {}
 
 function assign(target) {
 	var k,

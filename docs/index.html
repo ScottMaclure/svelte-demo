@@ -21,12 +21,12 @@
             }
         })
 
-        console.log('Fetching remote data..')
+        console.log('Fetching remote data.')
         fetch('data.json').then(function (response) {
             response.json().then(function (json) {
-                console.log('Loaded json, setting into component')
+                console.log('Loaded json, setting into component.')
                 app.set(json)
-                console.log('done')
+                console.log('Done.')
             })
         })
 

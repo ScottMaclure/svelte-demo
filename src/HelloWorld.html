@@ -20,7 +20,7 @@
             <td>{{item.firstName}}</td>
             <td>{{item.lastName}}</td>
             <td>{{item.email}}</td>
-            <td>...</td>
+            <td><button on:click='deleteItem(item.id)'>Delete</button></td>
           </tr>
       {{/each}}
     {{else}}
@@ -44,6 +44,14 @@
             // TODO emit semantic event and get index.html to update localStorage, so the component knows nothing!
             window.localStorage.count = parseInt(count, 10) + 1
             this.set({ count: window.localStorage.count })
+        },
+        deleteItem: function (id) {
+            console.log('Deleting id=%d.', id)
+            let items = this.get('items').filter(function (item) {
+              return item.id !== id
+            })
+            this.set({ items:  items })
+            console.log('Done.')
         }
     }
   }
