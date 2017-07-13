@@ -32,3 +32,5 @@ npm start
 - [ ] Add a search/filter component above table (update data.json to be more diverse)
 - [ ] Add A-Z/Z-A sorting by clicking in the headers
 - [ ] Testing components individually (Mocha)
+- [ ] Add a router, add "pages" (splash screen, Users table, User screen)
+- [ ] Support older browsers using babel (see rollup-starter-project)

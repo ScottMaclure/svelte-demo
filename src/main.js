@@ -14,6 +14,8 @@ var app = new HelloWorld({
     }
 })
 
+// TODO Move deleteItem out of HelloWorld component, use main.js for all data modifications.
+
 // Listen for semantic event and fetch data from server.
 app.on('requestData', event => {
     // console.log('Fetching remote data after 1s.')
