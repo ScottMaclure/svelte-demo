@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <title>SvelteDemo</title>
+</head>
+
+<body>
+    <main></main>
+    <script src='HelloWorld.js'></script>
+    <script>
+        let oldCount = parseInt(window.localStorage.count || 0, 10)
+
+        var app = new HelloWorld({
+            target: document.querySelector('main'),
+            data: {
+                name: 'Scott',
+                count: oldCount
+            }
+        })
+
+        console.log('Fetching remote data..')
+        fetch('data.json').then(function (response) {
+            response.json().then(function (json) {
+                console.log('Loaded json, setting into component')
+                app.set(json)
+                console.log('done')
+            })
+        })
+
+    </script>
+</body>
+
+</html>
