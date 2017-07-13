@@ -30,8 +30,8 @@ http-server docs
 
 ## TODO
 
-[*] Initial setup with 1k rows, delete row functionality
-[*] Deploy to github
-[~] Split HelloWorld into a couple of subcomponents
-[ ] Add a build system (rollup)
-[ ] Testing components individually (Mocha)
+- [x] Initial setup with 1k rows, delete row functionality
+- [x] Deploy to github
+- [x] Split HelloWorld into a couple of subcomponents
+- [ ] Add a build system (rollup)
+- [ ] Testing components individually (Mocha)
