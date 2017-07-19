@@ -72,7 +72,7 @@ const createRow = (id) => {
     return {
         id: id,
         firstName: firstName,
-        lastName: lastName,
+        lastName: lastName + id,
         email: firstName + '.' + lastName + '.' + id + '@not.a.tld'
     }
 }

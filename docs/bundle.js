@@ -153,18 +153,80 @@ var proto = {
 };
 
 var template$1 = (function () {
-    return {
-        data () {
-            return {
-                isLoading: false,
-                items: []
+return {
+    data() {
+        return {
+            isLoading: false,
+            items: [],
+            sorting: {
+                active: true,
+                fieldName: 'id',
+                order: 'asc'
+            },
+            utfShapes: {
+                invis: '\u2063',
+                asc: '\u25B4',
+                desc: '\u25BE'
             }
         }
+    },
+    helpers: {
+        getSortIcon: function (fieldName, sorting, utfShapes) {
+            if (!sorting.active) { return utfShapes.invis }
+            if (sorting.fieldName !== fieldName) { return utfShapes.invis }
+            // TODO per-field sorting values etc.
+            return utfShapes[sorting.order]
+        }
+    },
+    methods: {
+        /**
+         * TODO Sorting is localised to the component?
+         */
+        sortItems: function(event, params) {
+
+            event.preventDefault();
+
+            let sorting = this.get('sorting');
+            // Wipe the order if switching fields.
+            if (sorting.fieldName !== params.fieldName) {
+                sorting.order = null;
+            }
+            // Default asc on first click.
+            let order = sorting.order === 'asc' ? 'desc' : 'asc';
+
+            let sortedItems = this.get('items').sort((a, b) => {
+                let aF = a[params.fieldName];
+                let bF = b[params.fieldName];
+                if (aF === bF) { return 0; } // same value
+                // asc is default also.
+                let [lessThan, greaterThan] = (order === 'desc') ? [1, -1] : [-1, 1];
+                return (aF < bF) ? lessThan : greaterThan
+            });
+
+            this.set({ items: sortedItems, sorting: { active: true, order: order, fieldName: params.fieldName} });
+        }
     }
+}
 }());
 
 function create_main_fragment$1 ( state, component ) {
-	var table, thead, th, text, text_1, th_1, text_2, text_3, th_2, text_4, text_5, th_3, text_6, text_7, th_4, text_8, text_10, tbody;
+	var table, thead, th, a, text, text_1_value, text_1, text_2, th_1, a_1, text_3, text_4_value, text_4, text_5, th_2, a_2, text_6, text_7_value, text_7, text_8, th_3, a_3, text_9, text_10_value, text_10, text_11, th_4, text_12, text_14, tbody;
+
+	function click_handler ( event ) {
+		component.sortItems(event, { fieldName: "id" });
+	}
+
+	function click_handler_1 ( event ) {
+		component.sortItems(event, { fieldName: "firstName" });
+	}
+
+	function click_handler_2 ( event ) {
+		component.sortItems(event, { fieldName: "lastName" });
+	}
+
+	function click_handler_3 ( event ) {
+		component.sortItems(event, { fieldName: "email" });
+	}
 
 	function get_block ( state ) {
 		if ( state.items && state.items.length > 0 ) return create_if_block;
@@ -179,20 +241,28 @@ function create_main_fragment$1 ( state, component ) {
 			table = createElement( 'table' );
 			thead = createElement( 'thead' );
 			th = createElement( 'th' );
-			text = createText( "Id" );
-			text_1 = createText( "\n    " );
+			a = createElement( 'a' );
+			text = createText( "Id " );
+			text_1 = createText( text_1_value = template$1.helpers.getSortIcon('id', state.sorting, state.utfShapes) );
+			text_2 = createText( "\n        " );
 			th_1 = createElement( 'th' );
-			text_2 = createText( "First Name" );
-			text_3 = createText( "\n    " );
+			a_1 = createElement( 'a' );
+			text_3 = createText( "First Name " );
+			text_4 = createText( text_4_value = template$1.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) );
+			text_5 = createText( "\n        " );
 			th_2 = createElement( 'th' );
-			text_4 = createText( "Last Name" );
-			text_5 = createText( "\n    " );
+			a_2 = createElement( 'a' );
+			text_6 = createText( "Last Name " );
+			text_7 = createText( text_7_value = template$1.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) );
+			text_8 = createText( "\n        " );
 			th_3 = createElement( 'th' );
-			text_6 = createText( "Email" );
-			text_7 = createText( "\n    " );
+			a_3 = createElement( 'a' );
+			text_9 = createText( "Email " );
+			text_10 = createText( text_10_value = template$1.helpers.getSortIcon('email', state.sorting, state.utfShapes) );
+			text_11 = createText( "\n        " );
 			th_4 = createElement( 'th' );
-			text_8 = createText( "Actions" );
-			text_10 = createText( "\n  " );
+			text_12 = createText( "Actions" );
+			text_14 = createText( "\n    " );
 			tbody = createElement( 'tbody' );
 			if_block.create();
 			this.hydrate();
@@ -201,31 +271,63 @@ function create_main_fragment$1 ( state, component ) {
 		hydrate: function ( nodes ) {
 			table.border = "1";
 			setAttribute( table, 'width', "100%" );
+			a.href = "\#";
+			addListener( a, 'click', click_handler );
+			a_1.href = "\#";
+			addListener( a_1, 'click', click_handler_1 );
+			a_2.href = "\#";
+			addListener( a_2, 'click', click_handler_2 );
+			a_3.href = "\#";
+			addListener( a_3, 'click', click_handler_3 );
 		},
 
 		mount: function ( target, anchor ) {
 			insertNode( table, target, anchor );
 			appendNode( thead, table );
 			appendNode( th, thead );
-			appendNode( text, th );
-			appendNode( text_1, thead );
+			appendNode( a, th );
+			appendNode( text, a );
+			appendNode( text_1, a );
+			appendNode( text_2, thead );
 			appendNode( th_1, thead );
-			appendNode( text_2, th_1 );
-			appendNode( text_3, thead );
-			appendNode( th_2, thead );
-			appendNode( text_4, th_2 );
+			appendNode( a_1, th_1 );
+			appendNode( text_3, a_1 );
+			appendNode( text_4, a_1 );
 			appendNode( text_5, thead );
+			appendNode( th_2, thead );
+			appendNode( a_2, th_2 );
+			appendNode( text_6, a_2 );
+			appendNode( text_7, a_2 );
+			appendNode( text_8, thead );
 			appendNode( th_3, thead );
-			appendNode( text_6, th_3 );
-			appendNode( text_7, thead );
+			appendNode( a_3, th_3 );
+			appendNode( text_9, a_3 );
+			appendNode( text_10, a_3 );
+			appendNode( text_11, thead );
 			appendNode( th_4, thead );
-			appendNode( text_8, th_4 );
-			appendNode( text_10, table );
+			appendNode( text_12, th_4 );
+			appendNode( text_14, table );
 			appendNode( tbody, table );
 			if_block.mount( tbody, null );
 		},
 
 		update: function ( changed, state ) {
+			if ( text_1_value !== ( text_1_value = template$1.helpers.getSortIcon('id', state.sorting, state.utfShapes) ) ) {
+				text_1.data = text_1_value;
+			}
+
+			if ( text_4_value !== ( text_4_value = template$1.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) ) ) {
+				text_4.data = text_4_value;
+			}
+
+			if ( text_7_value !== ( text_7_value = template$1.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) ) ) {
+				text_7.data = text_7_value;
+			}
+
+			if ( text_10_value !== ( text_10_value = template$1.helpers.getSortIcon('email', state.sorting, state.utfShapes) ) ) {
+				text_10.data = text_10_value;
+			}
+
 			if ( current_block === ( current_block = get_block( state ) ) && if_block ) {
 				if_block.update( changed, state );
 			} else {
@@ -243,6 +345,10 @@ function create_main_fragment$1 ( state, component ) {
 		},
 
 		destroy: function () {
+			removeListener( a, 'click', click_handler );
+			removeListener( a_1, 'click', click_handler_1 );
+			removeListener( a_2, 'click', click_handler_2 );
+			removeListener( a_3, 'click', click_handler_3 );
 			if_block.destroy();
 		}
 	};
@@ -368,7 +474,7 @@ function create_if_block_3 ( state, component ) {
 
 	return {
 		create: function () {
-			text = createText( "No rows present.\n            " );
+			text = createText( "No rows present.\n                " );
 			button = createElement( 'button' );
 			text_1 = createText( "Load" );
 			this.hydrate();
@@ -539,7 +645,7 @@ function Users ( options ) {
 	}
 }
 
-assign( Users.prototype, proto );
+assign( Users.prototype, template$1.methods, proto );
 
 Users.prototype._set = function _set ( newState ) {
 	var oldState = this._state;

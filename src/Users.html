@@ -1,44 +1,87 @@
 <table border="1" width="100%">
-  <thead>
-    <th>Id</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Email</th>
-    <th>Actions</th>
-  </thead>
-  <tbody>
-    {{#if items && items.length > 0}}
-      {{#each items as item}}
-          <tr>
+    <thead>
+        <th><a href="#" on:click='sortItems(event, { fieldName: "id" })'>Id {{getSortIcon('id', sorting, utfShapes)}}</a></th>
+        <th><a href="#" on:click='sortItems(event, { fieldName: "firstName" })'>First Name {{getSortIcon('firstName', sorting, utfShapes)}}</a></th>
+        <th><a href="#" on:click='sortItems(event, { fieldName: "lastName" })'>Last Name {{getSortIcon('lastName', sorting, utfShapes)}}</a></th>
+        <th><a href="#" on:click='sortItems(event, { fieldName: "email" })'>Email {{getSortIcon('email', sorting, utfShapes)}}</a></th>
+        <th>Actions</th>
+    </thead>
+    <tbody>
+        {{#if items && items.length > 0}} {{#each items as item}}
+        <tr>
             <td>{{item.id}}</td>
             <td>{{item.firstName}}</td>
             <td>{{item.lastName}}</td>
             <td>{{item.email}}</td>
-            <td><button on:click='fire("deleteItem", { id: item.id })'>Delete</button></td>
-          </tr>
-      {{/each}}
-    {{else}}
-      <tr>
-        <td colspan="5">
-          {{#if isLoading}}
-            <span class="loading">Loading...</span>
-          {{else}}
-            No rows present.
-            <button on:click='fire("requestData")'>Load</button>
-          {{/if}}
-        </td>
-      </tr>
-    {{/if}}
-  </tbody>
+            <td>
+                <button on:click='fire("deleteItem", { id: item.id })'>Delete</button>
+            </td>
+        </tr>
+        {{/each}} {{else}}
+        <tr>
+            <td colspan="5">
+                {{#if isLoading}}
+                <span class="loading">Loading...</span> {{else}} No rows present.
+                <button on:click='fire("requestData")'>Load</button>
+                {{/if}}
+            </td>
+        </tr>
+        {{/if}}
+    </tbody>
 </table>
-
 <script>
-    export default {
-        data () {
-            return {
-                isLoading: false,
-                items: []
+export default {
+    data() {
+        return {
+            isLoading: false,
+            items: [],
+            sorting: {
+                active: true,
+                fieldName: 'id',
+                order: 'asc'
+            },
+            utfShapes: {
+                invis: '\u2063',
+                asc: '\u25B4',
+                desc: '\u25BE'
             }
         }
+    },
+    helpers: {
+        getSortIcon: function (fieldName, sorting, utfShapes) {
+            if (!sorting.active) { return utfShapes.invis }
+            if (sorting.fieldName !== fieldName) { return utfShapes.invis }
+            // TODO per-field sorting values etc.
+            return utfShapes[sorting.order]
+        }
+    },
+    methods: {
+        /**
+         * TODO Sorting is localised to the component?
+         */
+        sortItems: function(event, params) {
+
+            event.preventDefault();
+
+            let sorting = this.get('sorting')
+            // Wipe the order if switching fields.
+            if (sorting.fieldName !== params.fieldName) {
+                sorting.order = null
+            }
+            // Default asc on first click.
+            let order = sorting.order === 'asc' ? 'desc' : 'asc'
+
+            let sortedItems = this.get('items').sort((a, b) => {
+                let aF = a[params.fieldName]
+                let bF = b[params.fieldName]
+                if (aF === bF) { return 0; } // same value
+                // asc is default also.
+                let [lessThan, greaterThan] = (order === 'desc') ? [1, -1] : [-1, 1]
+                return (aF < bF) ? lessThan : greaterThan
+            })
+
+            this.set({ items: sortedItems, sorting: { active: true, order: order, fieldName: params.fieldName} })
+        }
     }
+}
 </script>
