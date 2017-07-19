@@ -180,19 +180,19 @@ function create_main_fragment$1 ( state, component ) {
 			thead = createElement( 'thead' );
 			th = createElement( 'th' );
 			text = createText( "Id" );
-			text_1 = createText( "\r\n    " );
+			text_1 = createText( "\n    " );
 			th_1 = createElement( 'th' );
 			text_2 = createText( "First Name" );
-			text_3 = createText( "\r\n    " );
+			text_3 = createText( "\n    " );
 			th_2 = createElement( 'th' );
 			text_4 = createText( "Last Name" );
-			text_5 = createText( "\r\n    " );
+			text_5 = createText( "\n    " );
 			th_3 = createElement( 'th' );
 			text_6 = createText( "Email" );
-			text_7 = createText( "\r\n    " );
+			text_7 = createText( "\n    " );
 			th_4 = createElement( 'th' );
 			text_8 = createText( "Actions" );
-			text_10 = createText( "\r\n  " );
+			text_10 = createText( "\n  " );
 			tbody = createElement( 'tbody' );
 			if_block.create();
 			this.hydrate();
@@ -256,16 +256,16 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			tr = createElement( 'tr' );
 			td = createElement( 'td' );
 			text = createText( text_value = item.id );
-			text_1 = createText( "\r\n            " );
+			text_1 = createText( "\n            " );
 			td_1 = createElement( 'td' );
 			text_2 = createText( text_2_value = item.firstName );
-			text_3 = createText( "\r\n            " );
+			text_3 = createText( "\n            " );
 			td_2 = createElement( 'td' );
 			text_4 = createText( text_4_value = item.lastName );
-			text_5 = createText( "\r\n            " );
+			text_5 = createText( "\n            " );
 			td_3 = createElement( 'td' );
 			text_6 = createText( text_6_value = item.email );
-			text_7 = createText( "\r\n            " );
+			text_7 = createText( "\n            " );
 			td_4 = createElement( 'td' );
 			button = createElement( 'button' );
 			text_8 = createText( "Delete" );
@@ -368,7 +368,7 @@ function create_if_block_3 ( state, component ) {
 
 	return {
 		create: function () {
-			text = createText( "No rows present.\r\n            " );
+			text = createText( "No rows present.\n            " );
 			button = createElement( 'button' );
 			text_1 = createText( "Load" );
 			this.hydrate();
