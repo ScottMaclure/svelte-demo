@@ -64,23 +64,26 @@ export default {
             event.preventDefault();
 
             let sorting = this.get('sorting')
+            sorting.active = true
             // Wipe the order if switching fields.
             if (sorting.fieldName !== params.fieldName) {
                 sorting.order = null
             }
+            // Update which field is being sorted.
+            sorting.fieldName = params.fieldName
             // Default asc on first click.
-            let order = sorting.order === 'asc' ? 'desc' : 'asc'
+            sorting.order = sorting.order === 'asc' ? 'desc' : 'asc'
 
             let sortedItems = this.get('items').sort((a, b) => {
-                let aF = a[params.fieldName]
-                let bF = b[params.fieldName]
-                if (aF === bF) { return 0; } // same value
+                let aV = a[sorting.fieldName]
+                let bV = b[sorting.fieldName]
+                if (aV === bV) { return 0; } // same value
                 // asc is default also.
-                let [lessThan, greaterThan] = (order === 'desc') ? [1, -1] : [-1, 1]
-                return (aF < bF) ? lessThan : greaterThan
+                let [lessThan, greaterThan] = (sorting.order === 'desc') ? [1, -1] : [-1, 1]
+                return (aV < bV) ? lessThan : greaterThan
             })
 
-            this.set({ items: sortedItems, sorting: { active: true, order: order, fieldName: params.fieldName} })
+            this.set({ items: sortedItems, sorting: sorting })
         }
     }
 }
