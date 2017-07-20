@@ -30,8 +30,10 @@ npm start
 - [x] Split HelloWorld into a couple of subcomponents
 - [x] Add a build system (rollup), update readme
 - [x] Move all data modification code into main.js (out of components) (leaving isLoading alone for now)
+- [x] Add sort asc/desc feature in table header.
+- [x] Refactor "processed items" (sorted & filtered) into computed property.
 - [ ] Add a search/filter component above table (update data.json to be more diverse)
-- [ ] Add A-Z/Z-A sorting by clicking in the headers
-- [ ] Testing components individually (Mocha)
 - [ ] Add a router, add "pages" (splash screen, Users table, User screen)
+- [ ] Add a11y test automation and update app with a11y
+- [ ] Testing components individually (Mocha)
 - [ ] Support older browsers using babel (see rollup-starter-project)

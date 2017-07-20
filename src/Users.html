@@ -1,4 +1,5 @@
 <table border="1" width="100%">
+
     <thead>
         <th><a href="#" on:click='sortItems(event, { fieldName: "id" })'>Id {{getSortIcon('id', sorting, utfShapes)}}</a></th>
         <th><a href="#" on:click='sortItems(event, { fieldName: "firstName" })'>First Name {{getSortIcon('firstName', sorting, utfShapes)}}</a></th>
@@ -6,85 +7,102 @@
         <th><a href="#" on:click='sortItems(event, { fieldName: "email" })'>Email {{getSortIcon('email', sorting, utfShapes)}}</a></th>
         <th>Actions</th>
     </thead>
+
     <tbody>
-        {{#if items && items.length > 0}} {{#each items as item}}
-        <tr>
-            <td>{{item.id}}</td>
-            <td>{{item.firstName}}</td>
-            <td>{{item.lastName}}</td>
-            <td>{{item.email}}</td>
-            <td>
-                <button on:click='fire("deleteItem", { id: item.id })'>Delete</button>
-            </td>
-        </tr>
-        {{/each}} {{else}}
-        <tr>
-            <td colspan="5">
-                {{#if isLoading}}
-                <span class="loading">Loading...</span> {{else}} No rows present.
-                <button on:click='fire("requestData")'>Load</button>
-                {{/if}}
-            </td>
-        </tr>
+        {{#if items && items.length > 0}}
+            {{#each processedItems as item}}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.firstName}}</td>
+                    <td>{{item.lastName}}</td>
+                    <td>{{item.email}}</td>
+                    <td>
+                        <button on:click='fire("deleteItem", { id: item.id })'>Delete</button>
+                    </td>
+                </tr>
+            {{/each}}
+        {{else}}
+            <tr>
+                <td colspan="5">
+                    {{#if isLoading}}
+                        <span class="loading">Loading...</span> {{else}} No rows present.
+                        <button on:click='fire("requestData")'>Load</button>
+                    {{/if}}
+                </td>
+            </tr>
         {{/if}}
     </tbody>
+
 </table>
+
 <script>
-export default {
-    data() {
-        return {
-            isLoading: false,
-            items: [],
-            sorting: {
-                active: true,
-                fieldName: 'id',
-                order: 'asc'
-            },
-            utfShapes: {
-                invis: '\u2063',
-                asc: '\u25B4',
-                desc: '\u25BE'
+    export default {
+        data() {
+            return {
+                isLoading: false,
+                items: [],
+                sorting: {
+                    active: true,
+                    fieldName: 'id',
+                    order: 'asc'
+                },
+                utfShapes: {
+                    invis: '\u2063',
+                    asc: '\u25B4',
+                    desc: '\u25BE'
+                }
             }
-        }
-    },
-    helpers: {
-        getSortIcon: function (fieldName, sorting, utfShapes) {
-            if (!sorting.active) { return utfShapes.invis }
-            if (sorting.fieldName !== fieldName) { return utfShapes.invis }
-            // TODO per-field sorting values etc.
-            return utfShapes[sorting.order]
-        }
-    },
-    methods: {
-        /**
-         * TODO Sorting is localised to the component?
-         */
-        sortItems: function(event, params) {
-
-            event.preventDefault();
-
-            let sorting = this.get('sorting')
-            sorting.active = true
-            // Wipe the order if switching fields.
-            if (sorting.fieldName !== params.fieldName) {
-                sorting.order = null
+        },
+        computed: {
+            /**
+             * TODO What's more efficient - computed property or a methods function?
+             */
+            processedItems: (items, sorting) => (
+                items.sort((a, b) => {
+                    let aV = a[sorting.fieldName]
+                    let bV = b[sorting.fieldName]
+                    if (aV === bV) { return 0; } // same value
+                    // asc is default also.
+                    let [lessThan, greaterThan] = (sorting.order === 'desc') ? [1, -1] : [-1, 1]
+                    return (aV < bV) ? lessThan : greaterThan
+                })
+            )
+        },
+        helpers: {
+            /**
+             * Not a computed property - helper function with passed-in data context.
+             */
+            getSortIcon: function (fieldName, sorting, utfShapes) {
+                if (!sorting.active) { return utfShapes.invis }
+                if (sorting.fieldName !== fieldName) { return utfShapes.invis }
+                // TODO per-field sorting values etc.
+                return utfShapes[sorting.order]
             }
-            // Update which field is being sorted.
-            sorting.fieldName = params.fieldName
-            // Default asc on first click.
-            sorting.order = sorting.order === 'asc' ? 'desc' : 'asc'
+        },
+        methods: {
+            /**
+             * Sorting localised to the component.
+             * When user changes sorting we only update the "sorting" meta-data.
+             * The actual sorting happens as a computed property.
+             */
+            sortItems: function(event, params) {
 
-            let sortedItems = this.get('items').sort((a, b) => {
-                let aV = a[sorting.fieldName]
-                let bV = b[sorting.fieldName]
-                if (aV === bV) { return 0; } // same value
-                // asc is default also.
-                let [lessThan, greaterThan] = (sorting.order === 'desc') ? [1, -1] : [-1, 1]
-                return (aV < bV) ? lessThan : greaterThan
-            })
+                event.preventDefault();
 
-            this.set({ items: sortedItems, sorting: sorting })
+                let sorting = this.get('sorting')
+                sorting.active = true
+                // Wipe the order if switching fields.
+                if (sorting.fieldName !== params.fieldName) {
+                    sorting.order = null
+                }
+                // Update which field is being sorted.
+                sorting.fieldName = params.fieldName
+                // Default asc on first click.
+                sorting.order = sorting.order === 'asc' ? 'desc' : 'asc'
+
+                this.set({ sorting: sorting })
+
+            }
         }
     }
-}
 </script>

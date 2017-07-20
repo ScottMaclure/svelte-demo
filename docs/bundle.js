@@ -152,64 +152,82 @@ var proto = {
 	set: set
 };
 
+function recompute ( state, newState, oldState, isInitial ) {
+	if ( isInitial || ( 'items' in newState && differs( state.items, oldState.items ) ) || ( 'sorting' in newState && differs( state.sorting, oldState.sorting ) ) ) {
+		state.processedItems = newState.processedItems = template$1.computed.processedItems( state.items, state.sorting );
+	}
+}
+
 var template$1 = (function () {
-return {
-    data() {
-        return {
-            isLoading: false,
-            items: [],
-            sorting: {
-                active: true,
-                fieldName: 'id',
-                order: 'asc'
-            },
-            utfShapes: {
-                invis: '\u2063',
-                asc: '\u25B4',
-                desc: '\u25BE'
+    return {
+        data() {
+            return {
+                isLoading: false,
+                items: [],
+                sorting: {
+                    active: true,
+                    fieldName: 'id',
+                    order: 'asc'
+                },
+                utfShapes: {
+                    invis: '\u2063',
+                    asc: '\u25B4',
+                    desc: '\u25BE'
+                }
             }
-        }
-    },
-    helpers: {
-        getSortIcon: function (fieldName, sorting, utfShapes) {
-            if (!sorting.active) { return utfShapes.invis }
-            if (sorting.fieldName !== fieldName) { return utfShapes.invis }
-            // TODO per-field sorting values etc.
-            return utfShapes[sorting.order]
-        }
-    },
-    methods: {
-        /**
-         * TODO Sorting is localised to the component?
-         */
-        sortItems: function(event, params) {
-
-            event.preventDefault();
-
-            let sorting = this.get('sorting');
-            sorting.active = true;
-            // Wipe the order if switching fields.
-            if (sorting.fieldName !== params.fieldName) {
-                sorting.order = null;
+        },
+        computed: {
+            /**
+             * TODO What's more efficient - computed property or a methods function?
+             */
+            processedItems: (items, sorting) => (
+                items.sort((a, b) => {
+                    let aV = a[sorting.fieldName];
+                    let bV = b[sorting.fieldName];
+                    if (aV === bV) { return 0; } // same value
+                    // asc is default also.
+                    let [lessThan, greaterThan] = (sorting.order === 'desc') ? [1, -1] : [-1, 1];
+                    return (aV < bV) ? lessThan : greaterThan
+                })
+            )
+        },
+        helpers: {
+            /**
+             * Not a computed property - helper function with passed-in data context.
+             */
+            getSortIcon: function (fieldName, sorting, utfShapes) {
+                if (!sorting.active) { return utfShapes.invis }
+                if (sorting.fieldName !== fieldName) { return utfShapes.invis }
+                // TODO per-field sorting values etc.
+                return utfShapes[sorting.order]
             }
-            // Update which field is being sorted.
-            sorting.fieldName = params.fieldName;
-            // Default asc on first click.
-            sorting.order = sorting.order === 'asc' ? 'desc' : 'asc';
+        },
+        methods: {
+            /**
+             * Sorting localised to the component.
+             * When user changes sorting we only update the "sorting" meta-data.
+             * The actual sorting happens as a computed property.
+             */
+            sortItems: function(event, params) {
 
-            let sortedItems = this.get('items').sort((a, b) => {
-                let aV = a[sorting.fieldName];
-                let bV = b[sorting.fieldName];
-                if (aV === bV) { return 0; } // same value
-                // asc is default also.
-                let [lessThan, greaterThan] = (sorting.order === 'desc') ? [1, -1] : [-1, 1];
-                return (aV < bV) ? lessThan : greaterThan
-            });
+                event.preventDefault();
 
-            this.set({ items: sortedItems, sorting: sorting });
+                let sorting = this.get('sorting');
+                sorting.active = true;
+                // Wipe the order if switching fields.
+                if (sorting.fieldName !== params.fieldName) {
+                    sorting.order = null;
+                }
+                // Update which field is being sorted.
+                sorting.fieldName = params.fieldName;
+                // Default asc on first click.
+                sorting.order = sorting.order === 'asc' ? 'desc' : 'asc';
+
+                this.set({ sorting: sorting });
+
+            }
         }
     }
-}
 }());
 
 function create_main_fragment$1 ( state, component ) {
@@ -265,7 +283,7 @@ function create_main_fragment$1 ( state, component ) {
 			text_11 = createText( "\n        " );
 			th_4 = createElement( 'th' );
 			text_12 = createText( "Actions" );
-			text_14 = createText( "\n    " );
+			text_14 = createText( "\n\n    " );
 			tbody = createElement( 'tbody' );
 			if_block.create();
 			this.hydrate();
@@ -365,16 +383,16 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			tr = createElement( 'tr' );
 			td = createElement( 'td' );
 			text = createText( text_value = item.id );
-			text_1 = createText( "\n            " );
+			text_1 = createText( "\n                    " );
 			td_1 = createElement( 'td' );
 			text_2 = createText( text_2_value = item.firstName );
-			text_3 = createText( "\n            " );
+			text_3 = createText( "\n                    " );
 			td_2 = createElement( 'td' );
 			text_4 = createText( text_4_value = item.lastName );
-			text_5 = createText( "\n            " );
+			text_5 = createText( "\n                    " );
 			td_3 = createElement( 'td' );
 			text_6 = createText( text_6_value = item.email );
-			text_7 = createText( "\n            " );
+			text_7 = createText( "\n                    " );
 			td_4 = createElement( 'td' );
 			button = createElement( 'button' );
 			text_8 = createText( "Delete" );
@@ -477,7 +495,7 @@ function create_if_block_3 ( state, component ) {
 
 	return {
 		create: function () {
-			text = createText( "No rows present.\n                " );
+			text = createText( "No rows present.\n                        " );
 			button = createElement( 'button' );
 			text_1 = createText( "Load" );
 			this.hydrate();
@@ -507,7 +525,7 @@ function create_if_block_3 ( state, component ) {
 function create_if_block ( state, component ) {
 	var each_block_anchor;
 
-	var each_block_value = state.items;
+	var each_block_value = state.processedItems;
 
 	var each_block_iterations = [];
 
@@ -533,9 +551,9 @@ function create_if_block ( state, component ) {
 		},
 
 		update: function ( changed, state ) {
-			var each_block_value = state.items;
+			var each_block_value = state.processedItems;
 
-			if ( 'items' in changed ) {
+			if ( 'processedItems' in changed ) {
 				for ( var i = 0; i < each_block_value.length; i += 1 ) {
 					if ( each_block_iterations[i] ) {
 						each_block_iterations[i].update( changed, state, each_block_value, each_block_value[i], i );
@@ -627,6 +645,7 @@ function click_handler ( event ) {
 function Users ( options ) {
 	options = options || {};
 	this._state = assign( template$1.data(), options.data );
+	recompute( this._state, this._state, {}, true );
 
 	this._observers = {
 		pre: Object.create( null ),
@@ -653,6 +672,7 @@ assign( Users.prototype, template$1.methods, proto );
 Users.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
 	this._state = assign( {}, oldState, newState );
+	recompute( this._state, newState, oldState, false );
 	dispatchObservers( this, this._observers.pre, newState, oldState );
 	this._fragment.update( newState, this._state );
 	dispatchObservers( this, this._observers.post, newState, oldState );
