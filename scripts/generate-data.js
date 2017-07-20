@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 
-const maxRows = 1000
+const maxRows = 25
 const fileName = __dirname + '/../docs/data.json'
 
 const fullNames = [
