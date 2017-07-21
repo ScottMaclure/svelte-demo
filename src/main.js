@@ -8,15 +8,17 @@ let oldCount = parseInt(window.localStorage.count || 0, 10)
 // Top-level component is the "app".
 var app = new HelloWorld({
     target: document.querySelector('main'),
-    data: {
+    data:
+    {
         name: 'Scott',
         count: oldCount,
         items: []
     }
 })
 
-// Listen for semantic event and fetch data from server.
-app.on('requestData', event => {
+// Listen for semantic event and fetch data from server. Can take event.
+app.on('requestData', () =>
+{
     fetch('data.json').then(function (response) {
         response.json().then(function (json) {
             app.setData(json)

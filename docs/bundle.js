@@ -28,7 +28,6 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
-// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
@@ -878,15 +877,17 @@ let oldCount = parseInt(window.localStorage.count || 0, 10);
 // Top-level component is the "app".
 var app = new HelloWorld({
     target: document.querySelector('main'),
-    data: {
+    data:
+    {
         name: 'Scott',
         count: oldCount,
         items: []
     }
 });
 
-// Listen for semantic event and fetch data from server.
-app.on('requestData', event => {
+// Listen for semantic event and fetch data from server. Can take event.
+app.on('requestData', () =>
+{
     fetch('data.json').then(function (response) {
         response.json().then(function (json) {
             app.setData(json);

@@ -6,6 +6,10 @@ export default {
   entry: 'src/main.js',
   dest: 'docs/bundle.js',
   format: 'iife',
+  watch:
+  {
+    exclude: ['node_modules/**']
+  },
   plugins: [
     svelte({
       // By default, all .html and .svelte files are compiled
