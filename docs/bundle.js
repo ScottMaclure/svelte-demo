@@ -28,6 +28,7 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
+// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
