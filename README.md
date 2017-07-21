@@ -41,7 +41,7 @@ npm run watch
 - [x] Add sort asc/desc feature in table header.
 - [x] Refactor "processed items" (sorted & filtered) into computed property.
 - [x] Setup eslint with some defaults.
-- [ ] Add rollup-watch (https://github.com/rollup/rollup-watch) for dev
+- [x] Add rollup-watch (https://github.com/rollup/rollup-watch) for dev
 - [ ] Add a search/filter component above table (update data.json to be more diverse)
 - [ ] Add a router, add "pages" (splash screen, Users table, User screen)
 - [ ] Testing components individually (Mocha)
