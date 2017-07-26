@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/ScottMaclure/svelte-demo#readme",
   "devDependencies": {
-    "rollup-plugin-svelte": "^2.0.2",
+    "rollup-plugin-svelte": "^3.0.1",
     "rollup-watch": "^4.3.1"
   }
 }
