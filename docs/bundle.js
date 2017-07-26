@@ -28,7 +28,6 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
-// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
@@ -157,13 +156,131 @@ var proto = {
 	set: set
 };
 
-function recompute ( state, newState, oldState, isInitial ) {
-	if ( isInitial || ( 'items' in newState && differs( state.items, oldState.items ) ) || ( 'sorting' in newState && differs( state.sorting, oldState.sorting ) ) ) {
-		state.processedItems = newState.processedItems = template$1.computed.processedItems( state.items, state.sorting );
+var template$1 = (function () {
+    const FILTER_WAIT = 250;
+
+    var timer;
+
+    return {
+        methods: {
+            /**
+             * Only fire after a certain number of characters have been typed.
+             * Wait before firing the event, to debounce.
+             */
+            possibleFilter: function (event) {
+                var self = this;
+
+                window.clearTimeout(timer);
+
+                let filterValue = event.target.value.trim();
+
+                // TODO MIN_FILTER_LENGTH check here, but how to handle delete actions?
+
+                timer = setTimeout(function () {
+                    self.fire('filterData', { filter: filterValue });
+                }, FILTER_WAIT);
+
+            }
+        }
+    }
+}());
+
+function create_main_fragment$1 ( state, component ) {
+	var div, label, text, text_1, input;
+
+	function keyup_handler ( event ) {
+		component.possibleFilter(event);
+	}
+
+	return {
+		create: function () {
+			div = createElement( 'div' );
+			label = createElement( 'label' );
+			text = createText( "Filter:" );
+			text_1 = createText( "\r\n    " );
+			input = createElement( 'input' );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			setAttribute( div, 'svelte-2520737836', '' );
+			div.className = "filters";
+			label.htmlFor = "filter";
+			input.type = "text";
+			input.id = "filter";
+			input.name = "filter";
+			addListener( input, 'keyup', keyup_handler );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( div, target, anchor );
+			appendNode( label, div );
+			appendNode( text, label );
+			appendNode( text_1, div );
+			appendNode( input, div );
+		},
+
+		unmount: function () {
+			detachNode( div );
+		},
+
+		destroy: function () {
+			removeListener( input, 'keyup', keyup_handler );
+		}
+	};
+}
+
+function Filters ( options ) {
+	options = options || {};
+	this._state = options.data || {};
+
+	this._observers = {
+		pre: Object.create( null ),
+		post: Object.create( null )
+	};
+
+	this._handlers = Object.create( null );
+
+	this._root = options._root || this;
+	this._yield = options._yield;
+
+	this._torndown = false;
+
+	this._fragment = create_main_fragment$1( this._state, this );
+
+	if ( options.target ) {
+		this._fragment.create();
+		this._fragment.mount( options.target, null );
 	}
 }
 
-var template$1 = (function () {
+assign( Filters.prototype, template$1.methods, proto );
+
+Filters.prototype._set = function _set ( newState ) {
+	var oldState = this._state;
+	this._state = assign( {}, oldState, newState );
+	dispatchObservers( this, this._observers.pre, newState, oldState );
+	dispatchObservers( this, this._observers.post, newState, oldState );
+};
+
+Filters.prototype.teardown = Filters.prototype.destroy = function destroy ( detach ) {
+	this.fire( 'destroy' );
+
+	if ( detach !== false ) this._fragment.unmount();
+	this._fragment.destroy();
+	this._fragment = null;
+
+	this._state = {};
+	this._torndown = true;
+};
+
+function recompute ( state, newState, oldState, isInitial ) {
+	if ( isInitial || ( 'items' in newState && differs( state.items, oldState.items ) ) || ( 'sorting' in newState && differs( state.sorting, oldState.sorting ) ) ) {
+		state.processedItems = newState.processedItems = template$2.computed.processedItems( state.items, state.sorting );
+	}
+}
+
+var template$2 = (function () {
     return {
         data() {
             return {
@@ -235,8 +352,8 @@ var template$1 = (function () {
     }
 }());
 
-function create_main_fragment$1 ( state, component ) {
-	var table, thead, th, a, text, text_1_value, text_1, text_2, th_1, a_1, text_3, text_4_value, text_4, text_5, th_2, a_2, text_6, text_7_value, text_7, text_8, th_3, a_3, text_9, text_10_value, text_10, text_11, th_4, text_12, text_14, tbody;
+function create_main_fragment$2 ( state, component ) {
+	var div, table, thead, th, a, text, text_1_value, text_1, text_2, th_1, a_1, text_3, text_4_value, text_4, text_5, th_2, a_2, text_6, text_7_value, text_7, text_8, th_3, a_3, text_9, text_10_value, text_10, text_11, th_4, text_12, text_14, tbody;
 
 	function click_handler ( event ) {
 		component.sortItems(event, { fieldName: "id" });
@@ -264,37 +381,39 @@ function create_main_fragment$1 ( state, component ) {
 
 	return {
 		create: function () {
+			div = createElement( 'div' );
 			table = createElement( 'table' );
 			thead = createElement( 'thead' );
 			th = createElement( 'th' );
 			a = createElement( 'a' );
 			text = createText( "Id " );
-			text_1 = createText( text_1_value = template$1.helpers.getSortIcon('id', state.sorting, state.utfShapes) );
-			text_2 = createText( "\n        " );
+			text_1 = createText( text_1_value = template$2.helpers.getSortIcon('id', state.sorting, state.utfShapes) );
+			text_2 = createText( "\n            " );
 			th_1 = createElement( 'th' );
 			a_1 = createElement( 'a' );
 			text_3 = createText( "First Name " );
-			text_4 = createText( text_4_value = template$1.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) );
-			text_5 = createText( "\n        " );
+			text_4 = createText( text_4_value = template$2.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) );
+			text_5 = createText( "\n            " );
 			th_2 = createElement( 'th' );
 			a_2 = createElement( 'a' );
 			text_6 = createText( "Last Name " );
-			text_7 = createText( text_7_value = template$1.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) );
-			text_8 = createText( "\n        " );
+			text_7 = createText( text_7_value = template$2.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) );
+			text_8 = createText( "\n            " );
 			th_3 = createElement( 'th' );
 			a_3 = createElement( 'a' );
 			text_9 = createText( "Email " );
-			text_10 = createText( text_10_value = template$1.helpers.getSortIcon('email', state.sorting, state.utfShapes) );
-			text_11 = createText( "\n        " );
+			text_10 = createText( text_10_value = template$2.helpers.getSortIcon('email', state.sorting, state.utfShapes) );
+			text_11 = createText( "\n            " );
 			th_4 = createElement( 'th' );
 			text_12 = createText( "Actions" );
-			text_14 = createText( "\n\n    " );
+			text_14 = createText( "\n\n        " );
 			tbody = createElement( 'tbody' );
 			if_block.create();
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
+			div.className = "users";
 			table.border = "1";
 			setAttribute( table, 'width', "100%" );
 			a.href = "#";
@@ -308,7 +427,8 @@ function create_main_fragment$1 ( state, component ) {
 		},
 
 		mount: function ( target, anchor ) {
-			insertNode( table, target, anchor );
+			insertNode( div, target, anchor );
+			appendNode( table, div );
 			appendNode( thead, table );
 			appendNode( th, thead );
 			appendNode( a, th );
@@ -338,19 +458,19 @@ function create_main_fragment$1 ( state, component ) {
 		},
 
 		update: function ( changed, state ) {
-			if ( text_1_value !== ( text_1_value = template$1.helpers.getSortIcon('id', state.sorting, state.utfShapes) ) ) {
+			if ( text_1_value !== ( text_1_value = template$2.helpers.getSortIcon('id', state.sorting, state.utfShapes) ) ) {
 				text_1.data = text_1_value;
 			}
 
-			if ( text_4_value !== ( text_4_value = template$1.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) ) ) {
+			if ( text_4_value !== ( text_4_value = template$2.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) ) ) {
 				text_4.data = text_4_value;
 			}
 
-			if ( text_7_value !== ( text_7_value = template$1.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) ) ) {
+			if ( text_7_value !== ( text_7_value = template$2.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) ) ) {
 				text_7.data = text_7_value;
 			}
 
-			if ( text_10_value !== ( text_10_value = template$1.helpers.getSortIcon('email', state.sorting, state.utfShapes) ) ) {
+			if ( text_10_value !== ( text_10_value = template$2.helpers.getSortIcon('email', state.sorting, state.utfShapes) ) ) {
 				text_10.data = text_10_value;
 			}
 
@@ -366,7 +486,7 @@ function create_main_fragment$1 ( state, component ) {
 		},
 
 		unmount: function () {
-			detachNode( table );
+			detachNode( div );
 			if_block.unmount();
 		},
 
@@ -388,16 +508,16 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			tr = createElement( 'tr' );
 			td = createElement( 'td' );
 			text = createText( text_value = item.id );
-			text_1 = createText( "\n                    " );
+			text_1 = createText( "\n                        " );
 			td_1 = createElement( 'td' );
 			text_2 = createText( text_2_value = item.firstName );
-			text_3 = createText( "\n                    " );
+			text_3 = createText( "\n                        " );
 			td_2 = createElement( 'td' );
 			text_4 = createText( text_4_value = item.lastName );
-			text_5 = createText( "\n                    " );
+			text_5 = createText( "\n                        " );
 			td_3 = createElement( 'td' );
 			text_6 = createText( text_6_value = item.email );
-			text_7 = createText( "\n                    " );
+			text_7 = createText( "\n                        " );
 			td_4 = createElement( 'td' );
 			button = createElement( 'button' );
 			text_8 = createText( "Delete" );
@@ -500,7 +620,7 @@ function create_if_block_3 ( state, component ) {
 
 	return {
 		create: function () {
-			text = createText( "No rows present.\n                        " );
+			text = createText( "No rows present.\n                            " );
 			button = createElement( 'button' );
 			text_1 = createText( "Load" );
 			this.hydrate();
@@ -649,7 +769,7 @@ function click_handler ( event ) {
 
 function Users ( options ) {
 	options = options || {};
-	this._state = assign( template$1.data(), options.data );
+	this._state = assign( template$2.data(), options.data );
 	recompute( this._state, this._state, {}, true );
 
 	this._observers = {
@@ -664,7 +784,7 @@ function Users ( options ) {
 
 	this._torndown = false;
 
-	this._fragment = create_main_fragment$1( this._state, this );
+	this._fragment = create_main_fragment$2( this._state, this );
 
 	if ( options.target ) {
 		this._fragment.create();
@@ -672,7 +792,7 @@ function Users ( options ) {
 	}
 }
 
-assign( Users.prototype, template$1.methods, proto );
+assign( Users.prototype, template$2.methods, proto );
 
 Users.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
@@ -716,6 +836,7 @@ var template = (function () {
         },
         setData: function (data) {
           data.isLoading = false;
+          data.originalItems = data.items.slice(); // make a shallow copy for filtering etc.
           this.set(data);
         }
     }
@@ -723,7 +844,7 @@ var template = (function () {
 }());
 
 function create_main_fragment ( state, component ) {
-	var h1, text, text_1_value, text_1, text_2, p, text_3, text_4_value, text_4, text_5, button, text_6, text_7, button_1, text_8, text_9;
+	var div, h1, text, text_1_value, text_1, text_2, p, text_3, text_4_value, text_4, text_5, button, text_6, text_7, button_1, text_8, text_9, text_10;
 
 	function click_handler ( event ) {
 		var state = component.get();
@@ -733,6 +854,14 @@ function create_main_fragment ( state, component ) {
 	function click_handler_1 ( event ) {
 		component.set({ count: 0 });
 	}
+
+	var filters = new Filters({
+		_root: component._root
+	});
+
+	filters.on( 'filterData', function ( event ) {
+		component.fire("filterData", event);
+	});
 
 	var users = new Users({
 		_root: component._root,
@@ -752,10 +881,11 @@ function create_main_fragment ( state, component ) {
 
 	return {
 		create: function () {
+			div = createElement( 'div' );
 			h1 = createElement( 'h1' );
 			text = createText( "Hello " );
 			text_1 = createText( text_1_value = state.name );
-			text_2 = createText( "\n" );
+			text_2 = createText( "\n  " );
 			p = createElement( 'p' );
 			text_3 = createText( "Count: " );
 			text_4 = createText( text_4_value = state.count );
@@ -765,22 +895,27 @@ function create_main_fragment ( state, component ) {
 			text_7 = createText( " " );
 			button_1 = createElement( 'button' );
 			text_8 = createText( "Reset" );
-			text_9 = createText( "\n\n\n\n" );
+			text_9 = createText( "\n\n  " );
+			filters._fragment.create();
+			text_10 = createText( "\n\n  " );
 			users._fragment.create();
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
+			setAttribute( div, 'svelte-4240337790', '' );
+			div.className = "helloWorld";
 			addListener( button, 'click', click_handler );
 			addListener( button_1, 'click', click_handler_1 );
 		},
 
 		mount: function ( target, anchor ) {
-			insertNode( h1, target, anchor );
+			insertNode( div, target, anchor );
+			appendNode( h1, div );
 			appendNode( text, h1 );
 			appendNode( text_1, h1 );
-			insertNode( text_2, target, anchor );
-			insertNode( p, target, anchor );
+			appendNode( text_2, div );
+			appendNode( p, div );
 			appendNode( text_3, p );
 			appendNode( text_4, p );
 			appendNode( text_5, p );
@@ -789,8 +924,10 @@ function create_main_fragment ( state, component ) {
 			appendNode( text_7, p );
 			appendNode( button_1, p );
 			appendNode( text_8, button_1 );
-			insertNode( text_9, target, anchor );
-			users._fragment.mount( target, anchor );
+			appendNode( text_9, div );
+			filters._fragment.mount( div, null );
+			appendNode( text_10, div );
+			users._fragment.mount( div, null );
 		},
 
 		update: function ( changed, state ) {
@@ -811,16 +948,13 @@ function create_main_fragment ( state, component ) {
 		},
 
 		unmount: function () {
-			detachNode( h1 );
-			detachNode( text_2 );
-			detachNode( p );
-			detachNode( text_9 );
-			users._fragment.unmount();
+			detachNode( div );
 		},
 
 		destroy: function () {
 			removeListener( button, 'click', click_handler );
 			removeListener( button_1, 'click', click_handler_1 );
+			filters.destroy( false );
 			users.destroy( false );
 		}
 	};
@@ -887,6 +1021,8 @@ HelloWorld.prototype.teardown = HelloWorld.prototype.destroy = function destroy 
 
 // Kickstart the application.
 
+const MIN_FILTER_LENGTH = 3;
+
 // A bit of fun with localStorage.
 let oldCount = parseInt(window.localStorage.count || 0, 10);
 
@@ -915,7 +1051,37 @@ app.on('deleteItem', event => {
     let items = app.get('items').filter(function (item) {
       return item.id !== event.id
     });
-    app.set({ items:  items });
+    app.set({ items: items });
+});
+
+app.on('filterData', event => {
+
+    let originalItems = app.get('originalItems');
+    let filterValue = event.filter && event.filter.toString().trim();
+
+    // Not loaded yet.
+    if (!originalItems) {
+        return;
+    }
+
+    // If the filter is empty or blank, reset the filtering to the original items.
+    if (filterValue === '' || filterValue.length < MIN_FILTER_LENGTH) {
+        app.set({ items: originalItems });
+        return
+    }
+
+    // Important: use originalItems, filter down, set into items.
+    let items = originalItems.filter(function (item) {
+        return Object.getOwnPropertyNames(item).some(function (fieldName) {
+            // Handle numbers and strings the same way.
+            if (-1 !== item[fieldName].toString().toLowerCase().indexOf(event.filter.trim().toLowerCase())) {
+                return true
+            }
+            return false
+        })
+    });
+
+    app.set({ items: items });
 });
 
 }());

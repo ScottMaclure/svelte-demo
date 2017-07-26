@@ -1,0 +1,37 @@
+<div class="filters">
+    <label for="filter">Filter:</label>
+    <input type="text" id="filter" name="filter" on:keyup='possibleFilter(event)'/>
+</div>
+<script>
+    const FILTER_WAIT = 250
+
+    var timer;
+
+    export default {
+        methods: {
+            /**
+             * Only fire after a certain number of characters have been typed.
+             * Wait before firing the event, to debounce.
+             */
+            possibleFilter: function (event) {
+                var self = this
+
+                window.clearTimeout(timer)
+
+                let filterValue = event.target.value.trim();
+
+                // TODO MIN_FILTER_LENGTH check here, but how to handle delete actions?
+
+                timer = setTimeout(function () {
+                    self.fire('filterData', { filter: filterValue })
+                }, FILTER_WAIT);
+
+            }
+        }
+    }
+</script>
+<style>
+    .filters {
+        margin: var(--spacing-horizontal-normal) 0;
+    }
+</style>

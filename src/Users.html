@@ -1,39 +1,41 @@
-<table border="1" width="100%">
+<div class="users">
+    <table border="1" width="100%">
 
-    <thead>
-        <th><a href="#" on:click='sortItems(event, { fieldName: "id" })'>Id {{getSortIcon('id', sorting, utfShapes)}}</a></th>
-        <th><a href="#" on:click='sortItems(event, { fieldName: "firstName" })'>First Name {{getSortIcon('firstName', sorting, utfShapes)}}</a></th>
-        <th><a href="#" on:click='sortItems(event, { fieldName: "lastName" })'>Last Name {{getSortIcon('lastName', sorting, utfShapes)}}</a></th>
-        <th><a href="#" on:click='sortItems(event, { fieldName: "email" })'>Email {{getSortIcon('email', sorting, utfShapes)}}</a></th>
-        <th>Actions</th>
-    </thead>
+        <thead>
+            <th><a href="#" on:click='sortItems(event, { fieldName: "id" })'>Id {{getSortIcon('id', sorting, utfShapes)}}</a></th>
+            <th><a href="#" on:click='sortItems(event, { fieldName: "firstName" })'>First Name {{getSortIcon('firstName', sorting, utfShapes)}}</a></th>
+            <th><a href="#" on:click='sortItems(event, { fieldName: "lastName" })'>Last Name {{getSortIcon('lastName', sorting, utfShapes)}}</a></th>
+            <th><a href="#" on:click='sortItems(event, { fieldName: "email" })'>Email {{getSortIcon('email', sorting, utfShapes)}}</a></th>
+            <th>Actions</th>
+        </thead>
 
-    <tbody>
-        {{#if items && items.length > 0}}
-            {{#each processedItems as item}}
+        <tbody>
+            {{#if items && items.length > 0}}
+                {{#each processedItems as item}}
+                    <tr>
+                        <td>{{item.id}}</td>
+                        <td>{{item.firstName}}</td>
+                        <td>{{item.lastName}}</td>
+                        <td>{{item.email}}</td>
+                        <td>
+                            <button on:click='fire("deleteItem", { id: item.id })'>Delete</button>
+                        </td>
+                    </tr>
+                {{/each}}
+            {{else}}
                 <tr>
-                    <td>{{item.id}}</td>
-                    <td>{{item.firstName}}</td>
-                    <td>{{item.lastName}}</td>
-                    <td>{{item.email}}</td>
-                    <td>
-                        <button on:click='fire("deleteItem", { id: item.id })'>Delete</button>
+                    <td colspan="5">
+                        {{#if isLoading}}
+                            <span class="loading">Loading...</span> {{else}} No rows present.
+                            <button on:click='fire("requestData")'>Load</button>
+                        {{/if}}
                     </td>
                 </tr>
-            {{/each}}
-        {{else}}
-            <tr>
-                <td colspan="5">
-                    {{#if isLoading}}
-                        <span class="loading">Loading...</span> {{else}} No rows present.
-                        <button on:click='fire("requestData")'>Load</button>
-                    {{/if}}
-                </td>
-            </tr>
-        {{/if}}
-    </tbody>
+            {{/if}}
+        </tbody>
 
-</table>
+    </table>
+</div>
 
 <script>
     export default {
