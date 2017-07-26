@@ -2,7 +2,7 @@
 
 import HelloWorld from './HelloWorld.html'
 
-const MIN_FILTER_LENGTH = 3
+const MIN_FILTER_LENGTH = 1 // allow for id searches
 
 // A bit of fun with localStorage.
 let oldCount = parseInt(window.localStorage.count || 0, 10)

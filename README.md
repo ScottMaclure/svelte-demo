@@ -43,7 +43,7 @@ npm run watch
 - [x] Setup eslint with some defaults.
 - [x] Add rollup-watch (https://github.com/rollup/rollup-watch) for dev
 - [x] Add a search/filter component above table
-- [ ] Add a router, add "pages" (splash screen, Users table, User screen)
+- [ ] Add a router, add "pages" (splash screen, Users table, User edit screen)
 - [ ] Testing components individually (Mocha)
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)

@@ -28,6 +28,7 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
+// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
@@ -1021,7 +1022,7 @@ HelloWorld.prototype.teardown = HelloWorld.prototype.destroy = function destroy 
 
 // Kickstart the application.
 
-const MIN_FILTER_LENGTH = 3;
+const MIN_FILTER_LENGTH = 1; // allow for id searches
 
 // A bit of fun with localStorage.
 let oldCount = parseInt(window.localStorage.count || 0, 10);
