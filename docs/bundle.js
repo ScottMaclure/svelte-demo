@@ -137,7 +137,12 @@ function on(eventName, handler) {
 
 function set(newState) {
 	this._set(assign({}, newState));
+	if (this._root._lock) return;
+	this._root._lock = true;
+	callAll(this._root._beforecreate);
 	callAll(this._root._oncreate);
+	callAll(this._root._aftercreate);
+	this._root._lock = false;
 }
 
 function callAll(fns) {
@@ -292,13 +297,13 @@ function create_main_fragment$1 ( state, component ) {
 		hydrate: function ( nodes ) {
 			table.border = "1";
 			setAttribute( table, 'width', "100%" );
-			a.href = "\#";
+			a.href = "#";
 			addListener( a, 'click', click_handler );
-			a_1.href = "\#";
+			a_1.href = "#";
 			addListener( a_1, 'click', click_handler_1 );
-			a_2.href = "\#";
+			a_2.href = "#";
 			addListener( a_2, 'click', click_handler_2 );
-			a_3.href = "\#";
+			a_3.href = "#";
 			addListener( a_3, 'click', click_handler_3 );
 		},
 
@@ -836,7 +841,12 @@ function HelloWorld ( options ) {
 	this._yield = options._yield;
 
 	this._torndown = false;
-	this._oncreate = [];
+
+	if ( !options._root ) {
+		this._oncreate = [];
+		this._beforecreate = [];
+		this._aftercreate = [];
+	}
 
 	this._fragment = create_main_fragment( this._state, this );
 
@@ -845,7 +855,13 @@ function HelloWorld ( options ) {
 		this._fragment.mount( options.target, null );
 	}
 
-	callAll(this._oncreate);
+	if ( !options._root ) {
+		this._lock = true;
+		callAll(this._beforecreate);
+		callAll(this._oncreate);
+		callAll(this._aftercreate);
+		this._lock = false;
+	}
 }
 
 assign( HelloWorld.prototype, template.methods, proto );
@@ -856,7 +872,6 @@ HelloWorld.prototype._set = function _set ( newState ) {
 	dispatchObservers( this, this._observers.pre, newState, oldState );
 	this._fragment.update( newState, this._state );
 	dispatchObservers( this, this._observers.post, newState, oldState );
-	callAll(this._oncreate);
 };
 
 HelloWorld.prototype.teardown = HelloWorld.prototype.destroy = function destroy ( detach ) {
