@@ -42,8 +42,8 @@ npm run watch
 - [x] Refactor "processed items" (sorted & filtered) into computed property.
 - [x] Setup eslint with some defaults.
 - [x] Add rollup-watch (https://github.com/rollup/rollup-watch) for dev
-- [ ] Add a search/filter component above table (update data.json to be more diverse)
+- [x] Add a search/filter component above table
 - [ ] Add a router, add "pages" (splash screen, Users table, User screen)
 - [ ] Testing components individually (Mocha)
 - [ ] Add a11y test automation and update app with a11y
-- [ ] Support older browsers using babel (see rollup-starter-project)
+- [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
