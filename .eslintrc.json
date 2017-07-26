@@ -17,5 +17,7 @@
     "curly": 1
   },
   "globals": {
+    "require": true,
+    "__dirname": true
   }
 }

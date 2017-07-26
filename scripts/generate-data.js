@@ -1,11 +1,12 @@
-// Helper file to create a data file of 5,000 rows
+/*eslint no-console: 0*/
+// Helper file to create a data file of MAX_ROWS
 
 const fs = require('fs')
 
-const maxRows = 25
-const fileName = __dirname + '/../docs/data.json'
+const MAX_ROWS = 1000
+const FILE_NAME = __dirname + '/../docs/data.json'
 
-const fullNames = [
+const FULL_NAMES = [
     'Evelin Ohlsen',
     'Jani Thorman',
     'Rosalia Bunde',
@@ -68,7 +69,7 @@ const log = (message, ...data) => {
 }
 
 const createRow = (id) => {
-    let [firstName, lastName] = randomItem(fullNames).split(' ')
+    let [firstName, lastName] = randomItem(FULL_NAMES).split(' ')
     return {
         id: id,
         firstName: firstName,
@@ -77,7 +78,7 @@ const createRow = (id) => {
     }
 }
 
-log('Generating %d rows.', maxRows)
+log('Generating %d rows.', MAX_ROWS)
 
 let data = {
     version: 1,
@@ -85,12 +86,12 @@ let data = {
     items: []
 }
 
-for (let i = 1; i <= maxRows; i++) {
+for (let i = 1; i <= MAX_ROWS; i++) {
     data.items.push(createRow(i))
 }
 
-log('Writing to file %s', fileName)
+log('Writing to file %s', FILE_NAME)
 
-fs.writeFileSync(fileName, JSON.stringify(data, null, 4))
+fs.writeFileSync(FILE_NAME, JSON.stringify(data, null, 4))
 
 log('Done')
