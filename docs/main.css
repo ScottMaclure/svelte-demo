@@ -1,12 +1,15 @@
 
-  [svelte-2084390954].helloWorld, [svelte-2084390954] .helloWorld {
+  [svelte-2475337159].helloWorld, [svelte-2475337159] .helloWorld {
     background-color: var(--base-background-color, #00f);
-    padding-bottom: var(--spacing-horizontal-normal);
+    padding: var(--spacing-vertical-normal);
+  }
+  [svelte-2475337159].navLinks a, [svelte-2475337159] .navLinks a {
+    margin-right: var(--spacing-horizontal-small);
   }
 
 
-    [svelte-1414020480].filters, [svelte-1414020480] .filters {
-        margin: var(--spacing-horizontal-normal) 0;
+    [svelte-2871249186].filters, [svelte-2871249186] .filters {
+        margin: var(--spacing-vertical-normal) 0;
     }
 
 

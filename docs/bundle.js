@@ -38,7 +38,6 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
-// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
@@ -357,7 +356,7 @@ function create_main_fragment$2 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1414020480', '' );
+			setAttribute( div, 'svelte-2871249186', '' );
 			div.className = "filters";
 			label.htmlFor = "filter";
 			input.type = "text";
@@ -480,6 +479,7 @@ var template$3 = (function () {
         },
         methods: {
             /**
+             * TODO Move sorting data up and out - either 2-way bound, or fire(). Else you lose the sorting when you switch between routes.
              * Sorting localised to the component.
              * When user changes sorting we only update the "sorting" meta-data.
              * The actual sorting happens as a computed property.
@@ -980,6 +980,10 @@ var template = (function () {
       }
     },
     methods: {
+        doRoute: function (event, data) {
+          event.preventDefault();
+          this.set({ route: data.route });
+        },
         requestData: function () {
           // TODO isLoading... localise to Users component?
           this.set({ isLoading: true });
@@ -995,7 +999,21 @@ var template = (function () {
 }());
 
 function create_main_fragment ( state, component ) {
-	var div;
+	var div, div_1, a, a_href_value, text, text_1, a_1, a_1_href_value, text_2, text_3, a_2, text_4, text_6;
+
+	function click_handler ( event ) {
+		var state = component.get();
+		component.doRoute(event, { route: state.routes.splash});
+	}
+
+	function click_handler_1 ( event ) {
+		var state = component.get();
+		component.doRoute(event, { route: state.routes.listUsers });
+	}
+
+	function click_handler_2 ( event ) {
+		component.doRoute(event, { route: "testBroken" });
+	}
 
 	function get_block ( state ) {
 		if ( state.route === state.routes.splash ) return create_if_block;
@@ -1009,21 +1027,56 @@ function create_main_fragment ( state, component ) {
 	return {
 		create: function () {
 			div = createElement( 'div' );
+			div_1 = createElement( 'div' );
+			a = createElement( 'a' );
+			text = createText( "Home" );
+			text_1 = createText( "\n    " );
+			a_1 = createElement( 'a' );
+			text_2 = createText( "List Users" );
+			text_3 = createText( "\n    " );
+			a_2 = createElement( 'a' );
+			text_4 = createText( "Test Broken" );
+			text_6 = createText( "\n\n  " );
 			if_block.create();
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2084390954', '' );
+			setAttribute( div, 'svelte-2475337159', '' );
 			div.className = "helloWorld";
+			div_1.className = "navLinks";
+			a.href = a_href_value = "/" + ( state.routes.splash );
+			addListener( a, 'click', click_handler );
+			a_1.href = a_1_href_value = "/" + ( state.routes.listUsers );
+			addListener( a_1, 'click', click_handler_1 );
+			a_2.href = "/testBroken";
+			addListener( a_2, 'click', click_handler_2 );
 		},
 
 		mount: function ( target, anchor ) {
 			insertNode( div, target, anchor );
+			appendNode( div_1, div );
+			appendNode( a, div_1 );
+			appendNode( text, a );
+			appendNode( text_1, div_1 );
+			appendNode( a_1, div_1 );
+			appendNode( text_2, a_1 );
+			appendNode( text_3, div_1 );
+			appendNode( a_2, div_1 );
+			appendNode( text_4, a_2 );
+			appendNode( text_6, div );
 			if_block.mount( div, null );
 		},
 
 		update: function ( changed, state ) {
+			if ( a_href_value !== ( a_href_value = "/" + ( state.routes.splash ) ) ) {
+				a.href = a_href_value;
+			}
+
+			if ( a_1_href_value !== ( a_1_href_value = "/" + ( state.routes.listUsers ) ) ) {
+				a_1.href = a_1_href_value;
+			}
+
 			if ( current_block === ( current_block = get_block( state ) ) && if_block ) {
 				if_block.update( changed, state );
 			} else {
@@ -1041,6 +1094,9 @@ function create_main_fragment ( state, component ) {
 		},
 
 		destroy: function () {
+			removeListener( a, 'click', click_handler );
+			removeListener( a_1, 'click', click_handler_1 );
+			removeListener( a_2, 'click', click_handler_2 );
 			if_block.destroy();
 		}
 	};
