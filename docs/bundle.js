@@ -1,5 +1,11 @@
-(function () {
 'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var RouterLink = _interopDefault(require('components/RouterLink.html'));
+var createRouter = _interopDefault(require('utils/create-router'));
+
+var SvelteRouter = { createRouter, RouterLink };
 
 function noop() {}
 
@@ -157,6 +163,126 @@ var proto = {
 	set: set
 };
 
+function create_main_fragment$1 ( state, component ) {
+	var div, h1, text, text_1_value, text_1, text_2, p, text_3, text_4_value, text_4, text_5, button, text_6, text_7, button_1, text_8;
+
+	function click_handler ( event ) {
+		var state = component.get();
+		component.fire("doInc", { count: state.count });
+	}
+
+	function click_handler_1 ( event ) {
+		component.set({ count: 0 });
+	}
+
+	return {
+		create: function () {
+			div = createElement( 'div' );
+			h1 = createElement( 'h1' );
+			text = createText( "Hello " );
+			text_1 = createText( text_1_value = state.name );
+			text_2 = createText( "\r\n    " );
+			p = createElement( 'p' );
+			text_3 = createText( "Count: " );
+			text_4 = createText( text_4_value = state.count );
+			text_5 = createText( " " );
+			button = createElement( 'button' );
+			text_6 = createText( "Increment" );
+			text_7 = createText( " " );
+			button_1 = createElement( 'button' );
+			text_8 = createText( "Reset" );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			div.className = "splash";
+			addListener( button, 'click', click_handler );
+			addListener( button_1, 'click', click_handler_1 );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( div, target, anchor );
+			appendNode( h1, div );
+			appendNode( text, h1 );
+			appendNode( text_1, h1 );
+			appendNode( text_2, div );
+			appendNode( p, div );
+			appendNode( text_3, p );
+			appendNode( text_4, p );
+			appendNode( text_5, p );
+			appendNode( button, p );
+			appendNode( text_6, button );
+			appendNode( text_7, p );
+			appendNode( button_1, p );
+			appendNode( text_8, button_1 );
+		},
+
+		update: function ( changed, state ) {
+			if ( text_1_value !== ( text_1_value = state.name ) ) {
+				text_1.data = text_1_value;
+			}
+
+			if ( text_4_value !== ( text_4_value = state.count ) ) {
+				text_4.data = text_4_value;
+			}
+		},
+
+		unmount: function () {
+			detachNode( div );
+		},
+
+		destroy: function () {
+			removeListener( button, 'click', click_handler );
+			removeListener( button_1, 'click', click_handler_1 );
+		}
+	};
+}
+
+function Splash ( options ) {
+	options = options || {};
+	this._state = options.data || {};
+
+	this._observers = {
+		pre: Object.create( null ),
+		post: Object.create( null )
+	};
+
+	this._handlers = Object.create( null );
+
+	this._root = options._root || this;
+	this._yield = options._yield;
+
+	this._torndown = false;
+
+	this._fragment = create_main_fragment$1( this._state, this );
+
+	if ( options.target ) {
+		this._fragment.create();
+		this._fragment.mount( options.target, null );
+	}
+}
+
+assign( Splash.prototype, proto );
+
+Splash.prototype._set = function _set ( newState ) {
+	var oldState = this._state;
+	this._state = assign( {}, oldState, newState );
+	dispatchObservers( this, this._observers.pre, newState, oldState );
+	this._fragment.update( newState, this._state );
+	dispatchObservers( this, this._observers.post, newState, oldState );
+};
+
+Splash.prototype.teardown = Splash.prototype.destroy = function destroy ( detach ) {
+	this.fire( 'destroy' );
+
+	if ( detach !== false ) this._fragment.unmount();
+	this._fragment.destroy();
+	this._fragment = null;
+
+	this._state = {};
+	this._torndown = true;
+};
+
 var template$1 = (function () {
     const FILTER_WAIT = 250;
 
@@ -186,7 +312,7 @@ var template$1 = (function () {
     }
 }());
 
-function create_main_fragment$1 ( state, component ) {
+function create_main_fragment$3 ( state, component ) {
 	var div, label, text, text_1, input;
 
 	function keyup_handler ( event ) {
@@ -247,7 +373,7 @@ function Filters ( options ) {
 
 	this._torndown = false;
 
-	this._fragment = create_main_fragment$1( this._state, this );
+	this._fragment = create_main_fragment$3( this._state, this );
 
 	if ( options.target ) {
 		this._fragment.create();
@@ -353,7 +479,7 @@ var template$2 = (function () {
     }
 }());
 
-function create_main_fragment$2 ( state, component ) {
+function create_main_fragment$4 ( state, component ) {
 	var div, table, thead, th, a, text, text_1_value, text_1, text_2, th_1, a_1, text_3, text_4_value, text_4, text_5, th_2, a_2, text_6, text_7_value, text_7, text_8, th_3, a_3, text_9, text_10_value, text_10, text_11, th_4, text_12, text_14, tbody;
 
 	function click_handler ( event ) {
@@ -785,7 +911,7 @@ function Users ( options ) {
 
 	this._torndown = false;
 
-	this._fragment = create_main_fragment$2( this._state, this );
+	this._fragment = create_main_fragment$4( this._state, this );
 
 	if ( options.target ) {
 		this._fragment.create();
@@ -815,8 +941,150 @@ Users.prototype.teardown = Users.prototype.destroy = function destroy ( detach )
 	this._torndown = true;
 };
 
+function create_main_fragment$2 ( state, component ) {
+	var div, text;
+
+	var filters = new Filters({
+		_root: component._root
+	});
+
+	filters.on( 'filterData', function ( event ) {
+		component.fire("filterData", event);
+	});
+
+	var users = new Users({
+		_root: component._root,
+		data: {
+			isLoading: state.isLoading,
+			items: state.items
+		}
+	});
+
+	users.on( 'requestData', function ( event ) {
+		component.fire("requestData");
+	});
+
+	users.on( 'deleteItem', function ( event ) {
+		component.fire("deleteItem", event);
+	});
+
+	return {
+		create: function () {
+			div = createElement( 'div' );
+			filters._fragment.create();
+			text = createText( "\r\n    " );
+			users._fragment.create();
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			div.className = "listUsers";
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( div, target, anchor );
+			filters._fragment.mount( div, null );
+			appendNode( text, div );
+			users._fragment.mount( div, null );
+		},
+
+		update: function ( changed, state ) {
+			var users_changes = {};
+
+			if ( 'isLoading' in changed ) users_changes.isLoading = state.isLoading;
+			if ( 'items' in changed ) users_changes.items = state.items;
+
+			if ( Object.keys( users_changes ).length ) users.set( users_changes );
+		},
+
+		unmount: function () {
+			detachNode( div );
+		},
+
+		destroy: function () {
+			filters.destroy( false );
+			users.destroy( false );
+		}
+	};
+}
+
+function ListUsers ( options ) {
+	options = options || {};
+	this._state = options.data || {};
+
+	this._observers = {
+		pre: Object.create( null ),
+		post: Object.create( null )
+	};
+
+	this._handlers = Object.create( null );
+
+	this._root = options._root || this;
+	this._yield = options._yield;
+
+	this._torndown = false;
+
+	if ( !options._root ) {
+		this._oncreate = [];
+		this._beforecreate = [];
+		this._aftercreate = [];
+	}
+
+	this._fragment = create_main_fragment$2( this._state, this );
+
+	if ( options.target ) {
+		this._fragment.create();
+		this._fragment.mount( options.target, null );
+	}
+
+	if ( !options._root ) {
+		this._lock = true;
+		callAll(this._beforecreate);
+		callAll(this._oncreate);
+		callAll(this._aftercreate);
+		this._lock = false;
+	}
+}
+
+assign( ListUsers.prototype, proto );
+
+ListUsers.prototype._set = function _set ( newState ) {
+	var oldState = this._state;
+	this._state = assign( {}, oldState, newState );
+	dispatchObservers( this, this._observers.pre, newState, oldState );
+	this._fragment.update( newState, this._state );
+	dispatchObservers( this, this._observers.post, newState, oldState );
+};
+
+ListUsers.prototype.teardown = ListUsers.prototype.destroy = function destroy ( detach ) {
+	this.fire( 'destroy' );
+
+	if ( detach !== false ) this._fragment.unmount();
+	this._fragment.destroy();
+	this._fragment = null;
+
+	this._state = {};
+	this._torndown = true;
+};
+
 var template = (function () {
+  const { createRouter: createRouter$$1, RouterLink: RouterLink$$1 } = SvelteRouter;
+
+  const router = createRouter$$1({
+    '/': Splash,
+    '/ListUsers': ListUsers
+  });
+
   return {
+    components: {
+      RouterLink: RouterLink$$1
+    },
+    oncreate () {
+      router.create('#content');
+    },
+    ondestroy () {
+      router.destroy();
+    },
     data () {
       return {
         isLoading: false,
@@ -845,107 +1113,50 @@ var template = (function () {
 }());
 
 function create_main_fragment ( state, component ) {
-	var div, h1, text, text_1_value, text_1, text_2, p, text_3, text_4_value, text_4, text_5, button, text_6, text_7, button_1, text_8, text_9, text_10;
+	var div, text, text_1, div_1;
 
-	function click_handler ( event ) {
-		var state = component.get();
-		component.doInc(state.count);
-	}
+	var routerlink_2_yield_fragment = create_routerlink_yield_fragment( state, component );
 
-	function click_handler_1 ( event ) {
-		component.set({ count: 0 });
-	}
-
-	var filters = new Filters({
-		_root: component._root
-	});
-
-	filters.on( 'filterData', function ( event ) {
-		component.fire("filterData", event);
-	});
-
-	var users = new Users({
+	var routerlink_2 = new template.components.RouterLink({
 		_root: component._root,
-		data: {
-			isLoading: state.isLoading,
-			items: state.items
-		}
+		_yield: routerlink_2_yield_fragment,
+		data: { to: "/" }
 	});
 
-	users.on( 'requestData', function ( event ) {
-		component.requestData();
-	});
+	var routerlink_3_yield_fragment = create_routerlink_1_yield_fragment( state, component );
 
-	users.on( 'deleteItem', function ( event ) {
-		component.fire("deleteItem", event);
+	var routerlink_3 = new template.components.RouterLink({
+		_root: component._root,
+		_yield: routerlink_3_yield_fragment,
+		data: { to: "/ListUsers" }
 	});
 
 	return {
 		create: function () {
 			div = createElement( 'div' );
-			h1 = createElement( 'h1' );
-			text = createText( "Hello " );
-			text_1 = createText( text_1_value = state.name );
-			text_2 = createText( "\n  " );
-			p = createElement( 'p' );
-			text_3 = createText( "Count: " );
-			text_4 = createText( text_4_value = state.count );
-			text_5 = createText( " " );
-			button = createElement( 'button' );
-			text_6 = createText( "Increment" );
-			text_7 = createText( " " );
-			button_1 = createElement( 'button' );
-			text_8 = createText( "Reset" );
-			text_9 = createText( "\n\n  " );
-			filters._fragment.create();
-			text_10 = createText( "\n\n  " );
-			users._fragment.create();
+			routerlink_2_yield_fragment.create();
+			routerlink_2._fragment.create();
+			text = createText( "\n  " );
+			routerlink_3_yield_fragment.create();
+			routerlink_3._fragment.create();
+			text_1 = createText( "\n\n  " );
+			div_1 = createElement( 'div' );
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-4240337790', '' );
+			setAttribute( div, 'svelte-3812589708', '' );
 			div.className = "helloWorld";
-			addListener( button, 'click', click_handler );
-			addListener( button_1, 'click', click_handler_1 );
+			div_1.id = "content";
 		},
 
 		mount: function ( target, anchor ) {
 			insertNode( div, target, anchor );
-			appendNode( h1, div );
-			appendNode( text, h1 );
-			appendNode( text_1, h1 );
-			appendNode( text_2, div );
-			appendNode( p, div );
-			appendNode( text_3, p );
-			appendNode( text_4, p );
-			appendNode( text_5, p );
-			appendNode( button, p );
-			appendNode( text_6, button );
-			appendNode( text_7, p );
-			appendNode( button_1, p );
-			appendNode( text_8, button_1 );
-			appendNode( text_9, div );
-			filters._fragment.mount( div, null );
-			appendNode( text_10, div );
-			users._fragment.mount( div, null );
-		},
-
-		update: function ( changed, state ) {
-			if ( text_1_value !== ( text_1_value = state.name ) ) {
-				text_1.data = text_1_value;
-			}
-
-			if ( text_4_value !== ( text_4_value = state.count ) ) {
-				text_4.data = text_4_value;
-			}
-
-			var users_changes = {};
-
-			if ( 'isLoading' in changed ) users_changes.isLoading = state.isLoading;
-			if ( 'items' in changed ) users_changes.items = state.items;
-
-			if ( Object.keys( users_changes ).length ) users.set( users_changes );
+			routerlink_2._fragment.mount( div, null );
+			appendNode( text, div );
+			routerlink_3._fragment.mount( div, null );
+			appendNode( text_1, div );
+			appendNode( div_1, div );
 		},
 
 		unmount: function () {
@@ -953,11 +1164,51 @@ function create_main_fragment ( state, component ) {
 		},
 
 		destroy: function () {
-			removeListener( button, 'click', click_handler );
-			removeListener( button_1, 'click', click_handler_1 );
-			filters.destroy( false );
-			users.destroy( false );
+			routerlink_2_yield_fragment.destroy();
+			routerlink_2.destroy( false );
+			routerlink_3_yield_fragment.destroy();
+			routerlink_3.destroy( false );
 		}
+	};
+}
+
+function create_routerlink_yield_fragment ( state, component ) {
+	var text;
+
+	return {
+		create: function () {
+			text = createText( "Splash" );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( text, target, anchor );
+		},
+
+		unmount: function () {
+			detachNode( text );
+		},
+
+		destroy: noop
+	};
+}
+
+function create_routerlink_1_yield_fragment ( state, component ) {
+	var text;
+
+	return {
+		create: function () {
+			text = createText( "List Users" );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( text, target, anchor );
+		},
+
+		unmount: function () {
+			detachNode( text );
+		},
+
+		destroy: noop
 	};
 }
 
@@ -977,11 +1228,15 @@ function HelloWorld ( options ) {
 
 	this._torndown = false;
 
+	var oncreate = template.oncreate.bind( this );
+
 	if ( !options._root ) {
-		this._oncreate = [];
+		this._oncreate = [oncreate];
 		this._beforecreate = [];
 		this._aftercreate = [];
-	}
+	} else {
+	 	this._root._oncreate.push(oncreate);
+	 }
 
 	this._fragment = create_main_fragment( this._state, this );
 
@@ -1005,12 +1260,12 @@ HelloWorld.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
 	this._state = assign( {}, oldState, newState );
 	dispatchObservers( this, this._observers.pre, newState, oldState );
-	this._fragment.update( newState, this._state );
 	dispatchObservers( this, this._observers.post, newState, oldState );
 };
 
 HelloWorld.prototype.teardown = HelloWorld.prototype.destroy = function destroy ( detach ) {
 	this.fire( 'destroy' );
+	template.ondestroy.call( this );
 
 	if ( detach !== false ) this._fragment.unmount();
 	this._fragment.destroy();
@@ -1039,8 +1294,7 @@ var app = new HelloWorld({
 });
 
 // Listen for semantic event and fetch data from server. Can take event.
-app.on('requestData', () =>
-{
+app.on('requestData', () => {
     fetch('data.json').then(function (response) {
         response.json().then(function (json) {
             app.setData(json);
@@ -1084,5 +1338,3 @@ app.on('filterData', event => {
 
     app.set({ items: items });
 });
-
-}());

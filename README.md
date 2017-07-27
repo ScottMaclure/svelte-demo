@@ -7,7 +7,7 @@ http://scott.maclure.info/svelte-demo/
 Install globals and locals
 
 ```
-npm install -g http-server svelte-cli rollup eslint eslint-plugin-html
+npm install -g http-server svelte-cli rollup eslint eslint-plugin-html node-check-updates
 npm install
 ```
 

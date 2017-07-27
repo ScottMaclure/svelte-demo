@@ -2,15 +2,26 @@
 // https://github.com/rollup/rollup-plugin-svelte
 
 import svelte from 'rollup-plugin-svelte';
+// import commonjs from 'rollup-plugin-commonjs';
+import nodeResolve from 'rollup-plugin-node-resolve';
 
 export default {
     entry: 'src/main.js',
     dest: 'docs/bundle.js',
-    format: 'iife',
+    format: 'cjs',
     watch: {
         exclude: ['node_modules/**']
     },
     plugins: [
+        nodeResolve({
+            jsnext: true,
+            main: true
+        }),
+        // commonjs({
+        //     include: 'node_modules/**',  // Default: undefined
+        //     sourceMap: false,  // Default: true
+        //     // namedExports: { 'node_modules/svelte-router/lib/svelte-router.js': ['createRouter', 'RouterLink'] },  // Default: undefined
+        // }),
         svelte({
             // By default, all .html and .svelte files are compiled
             // extensions: [ '.my-custom-extension' ],

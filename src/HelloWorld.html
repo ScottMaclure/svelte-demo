@@ -1,25 +1,35 @@
 <div class="helloWorld">
-  <h1>Hello {{name}}</h1>
-  <p>Count: {{count}} <button on:click='doInc(count)'>Increment</button> <button on:click='set({ count: 0 })'>Reset</button></p>
 
-  <Filters on:filterData='fire("filterData", event)'/>
+  <RouterLink to="/">Splash</RouterLink>
+  <RouterLink to="/ListUsers">List Users</RouterLink>
 
-  <Users
-    isLoading='{{isLoading}}'
-    items='{{items}}'
-    on:requestData='requestData()'
-    on:deleteItem='fire("deleteItem", event)'
-  />
+  <div id="content"></div>
+
 </div>
 
 <script>
-  import Filters from './Filters.html'
-  import Users from './Users.html'
+  import SvelteRouter from '../vendors/svelte-router/src/index.js'
+  import Splash from './Splash.html'
+  import ListUsers from './ListUsers.html'
+
+  const { createRouter, RouterLink } = SvelteRouter
+
+  const router = createRouter({
+    '/': Splash,
+    '/ListUsers': ListUsers
+  })
 
   export default {
     components: {
-      Filters,
-      Users
+      RouterLink,
+      Splash,
+      ListUsers
+    },
+    oncreate () {
+      router.create('#content')
+    },
+    ondestroy () {
+      router.destroy()
     },
     data () {
       return {
@@ -51,5 +61,8 @@
   .helloWorld {
     background-color: var(--base-background-color, #00f);
     padding-bottom: var(--spacing-horizontal-normal);
+  }
+  .router-link-active {
+    color: red;
   }
 </style>

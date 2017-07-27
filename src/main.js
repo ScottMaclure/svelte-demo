@@ -19,8 +19,7 @@ var app = new HelloWorld({
 })
 
 // Listen for semantic event and fetch data from server. Can take event.
-app.on('requestData', () =>
-{
+app.on('requestData', () => {
     fetch('data.json').then(function (response) {
         response.json().then(function (json) {
             app.setData(json)
