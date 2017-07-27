@@ -14,7 +14,8 @@
   "rules": {
     "quotes": ["error", "single"],
     "eqeqeq": 1,
-    "curly": 1
+    "curly": 1,
+    "no-console": 0
   },
   "globals": {
     "require": true,

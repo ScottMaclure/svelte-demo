@@ -1,17 +1,21 @@
 // Kickstart the application.
 
-import HelloWorld from './HelloWorld.html'
+import Config from './config.js'
+import SvelteDemoApp from './SvelteDemoApp.html'
 
 const MIN_FILTER_LENGTH = 1 // allow for id searches
 
 // A bit of fun with localStorage.
 let oldCount = parseInt(window.localStorage.count || 0, 10)
 
+// Support page refreshes with different routes.
+let currentRoute = location.hash.slice(1) || Config.routes.default
+
 // Top-level component is the "app".
-var app = new HelloWorld({
+var app = new SvelteDemoApp({
     target: document.querySelector('main'),
-    data:
-    {
+    data: {
+        route: currentRoute,
         name: 'Scott',
         count: oldCount,
         items: []

@@ -1,0 +1,19 @@
+<div class="listUsers">
+  <Filters on:filterData='fire("filterData", event)'/>
+  <Users
+    isLoading='{{isLoading}}'
+    items='{{items}}'
+    on:requestData='fire("requestData", event)'
+    on:deleteItem='fire("deleteItem", event)'
+  />
+</div>
+<script>
+  import Filters from './Filters.html'
+  import Users from './Users.html'
+
+  export default {
+    components: {
+      Filters, Users
+    }
+  }
+</script>

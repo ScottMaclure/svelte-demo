@@ -1,0 +1,85 @@
+<:Window on:popstate='doPopState(event)'/>
+
+<div class="helloWorld">
+
+  <div class="navLinks">
+    <a href="#{{routes.splash}}" on:click='doRoute(event, { route: routes.splash})'>Home</a>
+    <a href="#{{routes.listUsers}}" on:click='doRoute(event, { route: routes.listUsers })'>List Users</a>
+    <a href="#{{routes.testBroken}}" on:click='doRoute(event, { route: routes.testBroken })'>Test Broken</a>
+  </div>
+
+  {{#if route === routes.splash}}
+
+    <Splash name='{{name}}' count='{{count}}'/>
+
+  {{elseif route === routes.listUsers}}
+
+    <ListUsers
+      isLoading='{{isLoading}}'
+      items='{{items}}'
+      on:filterData='fire("filterData", event)'
+      on:requestData='requestData()'
+      on:deleteItem='fire("deleteItem", event)'
+    />
+
+  {{else}}
+
+    <p>No route found for '{{route}}'</p>
+
+  {{/if}}
+
+</div>
+
+<script>
+  import Config from './config.js'
+  import Splash from './Splash.html'
+  import ListUsers from './ListUsers.html'
+
+  export default {
+    components: {
+      Config,
+      Splash,
+      ListUsers
+    },
+    data () {
+      return {
+        route: Config.routes.default,
+        routes: Config.routes,
+        isLoading: false,
+        count: 0,
+        items: []
+      }
+    },
+    methods: {
+        doRoute: function (event, data) {
+          event.preventDefault()
+          window.history.pushState(data, data.route, event.originalTarget.getAttribute('href'))
+          this.set({ route: data.route })
+        },
+        doPopState: function (event) {
+          // TODO Repeated code from main.js.
+          let currentRoute = window.location.hash.slice(1) || Config.routes.default
+          this.set({ route: currentRoute })
+        },
+        requestData: function () {
+          // TODO isLoading... localise to Users component?
+          this.set({ isLoading: true })
+          this.fire('requestData')
+        },
+        setData: function (data) {
+          data.isLoading = false
+          data.originalItems = data.items.slice() // make a shallow copy for filtering etc.
+          this.set(data)
+        }
+    }
+  }
+</script>
+<style>
+  .helloWorld {
+    background-color: var(--base-background-color, #00f);
+    padding: var(--spacing-vertical-normal);
+  }
+  .navLinks a {
+    margin-right: var(--spacing-horizontal-small);
+  }
+</style>

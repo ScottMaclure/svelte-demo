@@ -1,6 +1,17 @@
 (function () {
 'use strict';
 
+const ROUTE_DEFAULT = 'Splash';
+
+var Config = {
+    routes: {
+        default: ROUTE_DEFAULT,
+        splash: ROUTE_DEFAULT,
+        listUsers: 'ListUsers',
+        testBroken: 'TestBroken'
+    }
+};
+
 function noop() {}
 
 function assign(target) {
@@ -158,6 +169,149 @@ var proto = {
 };
 
 var template$1 = (function () {
+return {
+  data () {
+    return {
+      name: 'TBC',
+      count: 0
+    }
+  },
+  methods: {
+    // TODO emit semantic event and get index.html to update localStorage, so the component knows nothing!
+    doInc: function (count) {
+      window.localStorage.count = parseInt(count, 10) + 1;
+      this.set({ count: window.localStorage.count });
+    },
+    // TODO Push reset up to main.js also, rather than hiding localStorage in here.
+    resetCount: function () {
+      window.localStorage.count = 0;
+      this.set({ count: 0 });
+    }
+  }
+}
+}());
+
+function create_main_fragment$1 ( state, component ) {
+	var div, h1, text, text_1_value, text_1, text_2, p, text_3, text_4_value, text_4, text_5, button, text_6, text_7, button_1, text_8;
+
+	function click_handler ( event ) {
+		var state = component.get();
+		component.doInc(state.count);
+	}
+
+	function click_handler_1 ( event ) {
+		component.resetCount();
+	}
+
+	return {
+		create: function () {
+			div = createElement( 'div' );
+			h1 = createElement( 'h1' );
+			text = createText( "Hello " );
+			text_1 = createText( text_1_value = state.name );
+			text_2 = createText( "\r\n  " );
+			p = createElement( 'p' );
+			text_3 = createText( "Count: " );
+			text_4 = createText( text_4_value = state.count );
+			text_5 = createText( "\r\n    " );
+			button = createElement( 'button' );
+			text_6 = createText( "Increment" );
+			text_7 = createText( "\r\n    " );
+			button_1 = createElement( 'button' );
+			text_8 = createText( "Reset" );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			div.className = "splash";
+			addListener( button, 'click', click_handler );
+			addListener( button_1, 'click', click_handler_1 );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( div, target, anchor );
+			appendNode( h1, div );
+			appendNode( text, h1 );
+			appendNode( text_1, h1 );
+			appendNode( text_2, div );
+			appendNode( p, div );
+			appendNode( text_3, p );
+			appendNode( text_4, p );
+			appendNode( text_5, p );
+			appendNode( button, p );
+			appendNode( text_6, button );
+			appendNode( text_7, p );
+			appendNode( button_1, p );
+			appendNode( text_8, button_1 );
+		},
+
+		update: function ( changed, state ) {
+			if ( text_1_value !== ( text_1_value = state.name ) ) {
+				text_1.data = text_1_value;
+			}
+
+			if ( text_4_value !== ( text_4_value = state.count ) ) {
+				text_4.data = text_4_value;
+			}
+		},
+
+		unmount: function () {
+			detachNode( div );
+		},
+
+		destroy: function () {
+			removeListener( button, 'click', click_handler );
+			removeListener( button_1, 'click', click_handler_1 );
+		}
+	};
+}
+
+function Splash ( options ) {
+	options = options || {};
+	this._state = assign( template$1.data(), options.data );
+
+	this._observers = {
+		pre: Object.create( null ),
+		post: Object.create( null )
+	};
+
+	this._handlers = Object.create( null );
+
+	this._root = options._root || this;
+	this._yield = options._yield;
+
+	this._torndown = false;
+
+	this._fragment = create_main_fragment$1( this._state, this );
+
+	if ( options.target ) {
+		this._fragment.create();
+		this._fragment.mount( options.target, null );
+	}
+}
+
+assign( Splash.prototype, template$1.methods, proto );
+
+Splash.prototype._set = function _set ( newState ) {
+	var oldState = this._state;
+	this._state = assign( {}, oldState, newState );
+	dispatchObservers( this, this._observers.pre, newState, oldState );
+	this._fragment.update( newState, this._state );
+	dispatchObservers( this, this._observers.post, newState, oldState );
+};
+
+Splash.prototype.teardown = Splash.prototype.destroy = function destroy ( detach ) {
+	this.fire( 'destroy' );
+
+	if ( detach !== false ) this._fragment.unmount();
+	this._fragment.destroy();
+	this._fragment = null;
+
+	this._state = {};
+	this._torndown = true;
+};
+
+var template$2 = (function () {
     const FILTER_WAIT = 250;
 
     var timer;
@@ -186,7 +340,7 @@ var template$1 = (function () {
     }
 }());
 
-function create_main_fragment$1 ( state, component ) {
+function create_main_fragment$3 ( state, component ) {
 	var div, label, text, text_1, input;
 
 	function keyup_handler ( event ) {
@@ -204,7 +358,7 @@ function create_main_fragment$1 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1414020480', '' );
+			setAttribute( div, 'svelte-2871249186', '' );
 			div.className = "filters";
 			label.htmlFor = "filter";
 			input.type = "text";
@@ -247,7 +401,7 @@ function Filters ( options ) {
 
 	this._torndown = false;
 
-	this._fragment = create_main_fragment$1( this._state, this );
+	this._fragment = create_main_fragment$3( this._state, this );
 
 	if ( options.target ) {
 		this._fragment.create();
@@ -255,7 +409,7 @@ function Filters ( options ) {
 	}
 }
 
-assign( Filters.prototype, template$1.methods, proto );
+assign( Filters.prototype, template$2.methods, proto );
 
 Filters.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
@@ -277,11 +431,11 @@ Filters.prototype.teardown = Filters.prototype.destroy = function destroy ( deta
 
 function recompute ( state, newState, oldState, isInitial ) {
 	if ( isInitial || ( 'items' in newState && differs( state.items, oldState.items ) ) || ( 'sorting' in newState && differs( state.sorting, oldState.sorting ) ) ) {
-		state.processedItems = newState.processedItems = template$2.computed.processedItems( state.items, state.sorting );
+		state.processedItems = newState.processedItems = template$3.computed.processedItems( state.items, state.sorting );
 	}
 }
 
-var template$2 = (function () {
+var template$3 = (function () {
     return {
         data() {
             return {
@@ -327,6 +481,7 @@ var template$2 = (function () {
         },
         methods: {
             /**
+             * TODO Move sorting data up and out - either 2-way bound, or fire(). Else you lose the sorting when you switch between routes.
              * Sorting localised to the component.
              * When user changes sorting we only update the "sorting" meta-data.
              * The actual sorting happens as a computed property.
@@ -353,7 +508,7 @@ var template$2 = (function () {
     }
 }());
 
-function create_main_fragment$2 ( state, component ) {
+function create_main_fragment$4 ( state, component ) {
 	var div, table, thead, th, a, text, text_1_value, text_1, text_2, th_1, a_1, text_3, text_4_value, text_4, text_5, th_2, a_2, text_6, text_7_value, text_7, text_8, th_3, a_3, text_9, text_10_value, text_10, text_11, th_4, text_12, text_14, tbody;
 
 	function click_handler ( event ) {
@@ -373,8 +528,8 @@ function create_main_fragment$2 ( state, component ) {
 	}
 
 	function get_block ( state ) {
-		if ( state.items && state.items.length > 0 ) return create_if_block;
-		return create_if_block_1;
+		if ( state.items && state.items.length > 0 ) return create_if_block$1;
+		return create_if_block_1$1;
 	}
 
 	var current_block = get_block( state );
@@ -388,22 +543,22 @@ function create_main_fragment$2 ( state, component ) {
 			th = createElement( 'th' );
 			a = createElement( 'a' );
 			text = createText( "Id " );
-			text_1 = createText( text_1_value = template$2.helpers.getSortIcon('id', state.sorting, state.utfShapes) );
+			text_1 = createText( text_1_value = template$3.helpers.getSortIcon('id', state.sorting, state.utfShapes) );
 			text_2 = createText( "\n            " );
 			th_1 = createElement( 'th' );
 			a_1 = createElement( 'a' );
 			text_3 = createText( "First Name " );
-			text_4 = createText( text_4_value = template$2.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) );
+			text_4 = createText( text_4_value = template$3.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) );
 			text_5 = createText( "\n            " );
 			th_2 = createElement( 'th' );
 			a_2 = createElement( 'a' );
 			text_6 = createText( "Last Name " );
-			text_7 = createText( text_7_value = template$2.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) );
+			text_7 = createText( text_7_value = template$3.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) );
 			text_8 = createText( "\n            " );
 			th_3 = createElement( 'th' );
 			a_3 = createElement( 'a' );
 			text_9 = createText( "Email " );
-			text_10 = createText( text_10_value = template$2.helpers.getSortIcon('email', state.sorting, state.utfShapes) );
+			text_10 = createText( text_10_value = template$3.helpers.getSortIcon('email', state.sorting, state.utfShapes) );
 			text_11 = createText( "\n            " );
 			th_4 = createElement( 'th' );
 			text_12 = createText( "Actions" );
@@ -459,19 +614,19 @@ function create_main_fragment$2 ( state, component ) {
 		},
 
 		update: function ( changed, state ) {
-			if ( text_1_value !== ( text_1_value = template$2.helpers.getSortIcon('id', state.sorting, state.utfShapes) ) ) {
+			if ( text_1_value !== ( text_1_value = template$3.helpers.getSortIcon('id', state.sorting, state.utfShapes) ) ) {
 				text_1.data = text_1_value;
 			}
 
-			if ( text_4_value !== ( text_4_value = template$2.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) ) ) {
+			if ( text_4_value !== ( text_4_value = template$3.helpers.getSortIcon('firstName', state.sorting, state.utfShapes) ) ) {
 				text_4.data = text_4_value;
 			}
 
-			if ( text_7_value !== ( text_7_value = template$2.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) ) ) {
+			if ( text_7_value !== ( text_7_value = template$3.helpers.getSortIcon('lastName', state.sorting, state.utfShapes) ) ) {
 				text_7.data = text_7_value;
 			}
 
-			if ( text_10_value !== ( text_10_value = template$2.helpers.getSortIcon('email', state.sorting, state.utfShapes) ) ) {
+			if ( text_10_value !== ( text_10_value = template$3.helpers.getSortIcon('email', state.sorting, state.utfShapes) ) ) {
 				text_10.data = text_10_value;
 			}
 
@@ -585,7 +740,7 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 	};
 }
 
-function create_if_block_2 ( state, component ) {
+function create_if_block_2$1 ( state, component ) {
 	var span, text;
 
 	return {
@@ -648,7 +803,7 @@ function create_if_block_3 ( state, component ) {
 	};
 }
 
-function create_if_block ( state, component ) {
+function create_if_block$1 ( state, component ) {
 	var each_block_anchor;
 
 	var each_block_value = state.processedItems;
@@ -712,11 +867,11 @@ function create_if_block ( state, component ) {
 	};
 }
 
-function create_if_block_1 ( state, component ) {
+function create_if_block_1$1 ( state, component ) {
 	var tr, td;
 
 	function get_block ( state ) {
-		if ( state.isLoading ) return create_if_block_2;
+		if ( state.isLoading ) return create_if_block_2$1;
 		return create_if_block_3;
 	}
 
@@ -770,7 +925,7 @@ function click_handler ( event ) {
 
 function Users ( options ) {
 	options = options || {};
-	this._state = assign( template$2.data(), options.data );
+	this._state = assign( template$3.data(), options.data );
 	recompute( this._state, this._state, {}, true );
 
 	this._observers = {
@@ -785,7 +940,7 @@ function Users ( options ) {
 
 	this._torndown = false;
 
-	this._fragment = create_main_fragment$2( this._state, this );
+	this._fragment = create_main_fragment$4( this._state, this );
 
 	if ( options.target ) {
 		this._fragment.create();
@@ -793,7 +948,7 @@ function Users ( options ) {
 	}
 }
 
-assign( Users.prototype, template$2.methods, proto );
+assign( Users.prototype, template$3.methods, proto );
 
 Users.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
@@ -815,46 +970,8 @@ Users.prototype.teardown = Users.prototype.destroy = function destroy ( detach )
 	this._torndown = true;
 };
 
-var template = (function () {
-  return {
-    data () {
-      return {
-        isLoading: false,
-        count: 0,
-        items: []
-      }
-    },
-    methods: {
-        doInc: function (count) {
-            // TODO emit semantic event and get index.html to update localStorage, so the component knows nothing!
-            window.localStorage.count = parseInt(count, 10) + 1;
-            this.set({ count: window.localStorage.count });
-        },
-        requestData: function () {
-          // TODO isLoading... localise to Users component?
-          this.set({ isLoading: true });
-          this.fire('requestData');
-        },
-        setData: function (data) {
-          data.isLoading = false;
-          data.originalItems = data.items.slice(); // make a shallow copy for filtering etc.
-          this.set(data);
-        }
-    }
-  }
-}());
-
-function create_main_fragment ( state, component ) {
-	var div, h1, text, text_1_value, text_1, text_2, p, text_3, text_4_value, text_4, text_5, button, text_6, text_7, button_1, text_8, text_9, text_10;
-
-	function click_handler ( event ) {
-		var state = component.get();
-		component.doInc(state.count);
-	}
-
-	function click_handler_1 ( event ) {
-		component.set({ count: 0 });
-	}
+function create_main_fragment$2 ( state, component ) {
+	var div, text;
 
 	var filters = new Filters({
 		_root: component._root
@@ -873,7 +990,7 @@ function create_main_fragment ( state, component ) {
 	});
 
 	users.on( 'requestData', function ( event ) {
-		component.requestData();
+		component.fire("requestData", event);
 	});
 
 	users.on( 'deleteItem', function ( event ) {
@@ -883,63 +1000,24 @@ function create_main_fragment ( state, component ) {
 	return {
 		create: function () {
 			div = createElement( 'div' );
-			h1 = createElement( 'h1' );
-			text = createText( "Hello " );
-			text_1 = createText( text_1_value = state.name );
-			text_2 = createText( "\n  " );
-			p = createElement( 'p' );
-			text_3 = createText( "Count: " );
-			text_4 = createText( text_4_value = state.count );
-			text_5 = createText( " " );
-			button = createElement( 'button' );
-			text_6 = createText( "Increment" );
-			text_7 = createText( " " );
-			button_1 = createElement( 'button' );
-			text_8 = createText( "Reset" );
-			text_9 = createText( "\n\n  " );
 			filters._fragment.create();
-			text_10 = createText( "\n\n  " );
+			text = createText( "\r\n  " );
 			users._fragment.create();
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-4240337790', '' );
-			div.className = "helloWorld";
-			addListener( button, 'click', click_handler );
-			addListener( button_1, 'click', click_handler_1 );
+			div.className = "listUsers";
 		},
 
 		mount: function ( target, anchor ) {
 			insertNode( div, target, anchor );
-			appendNode( h1, div );
-			appendNode( text, h1 );
-			appendNode( text_1, h1 );
-			appendNode( text_2, div );
-			appendNode( p, div );
-			appendNode( text_3, p );
-			appendNode( text_4, p );
-			appendNode( text_5, p );
-			appendNode( button, p );
-			appendNode( text_6, button );
-			appendNode( text_7, p );
-			appendNode( button_1, p );
-			appendNode( text_8, button_1 );
-			appendNode( text_9, div );
 			filters._fragment.mount( div, null );
-			appendNode( text_10, div );
+			appendNode( text, div );
 			users._fragment.mount( div, null );
 		},
 
 		update: function ( changed, state ) {
-			if ( text_1_value !== ( text_1_value = state.name ) ) {
-				text_1.data = text_1_value;
-			}
-
-			if ( text_4_value !== ( text_4_value = state.count ) ) {
-				text_4.data = text_4_value;
-			}
-
 			var users_changes = {};
 
 			if ( 'isLoading' in changed ) users_changes.isLoading = state.isLoading;
@@ -953,15 +1031,344 @@ function create_main_fragment ( state, component ) {
 		},
 
 		destroy: function () {
-			removeListener( button, 'click', click_handler );
-			removeListener( button_1, 'click', click_handler_1 );
 			filters.destroy( false );
 			users.destroy( false );
 		}
 	};
 }
 
-function HelloWorld ( options ) {
+function ListUsers ( options ) {
+	options = options || {};
+	this._state = options.data || {};
+
+	this._observers = {
+		pre: Object.create( null ),
+		post: Object.create( null )
+	};
+
+	this._handlers = Object.create( null );
+
+	this._root = options._root || this;
+	this._yield = options._yield;
+
+	this._torndown = false;
+
+	if ( !options._root ) {
+		this._oncreate = [];
+		this._beforecreate = [];
+		this._aftercreate = [];
+	}
+
+	this._fragment = create_main_fragment$2( this._state, this );
+
+	if ( options.target ) {
+		this._fragment.create();
+		this._fragment.mount( options.target, null );
+	}
+
+	if ( !options._root ) {
+		this._lock = true;
+		callAll(this._beforecreate);
+		callAll(this._oncreate);
+		callAll(this._aftercreate);
+		this._lock = false;
+	}
+}
+
+assign( ListUsers.prototype, proto );
+
+ListUsers.prototype._set = function _set ( newState ) {
+	var oldState = this._state;
+	this._state = assign( {}, oldState, newState );
+	dispatchObservers( this, this._observers.pre, newState, oldState );
+	this._fragment.update( newState, this._state );
+	dispatchObservers( this, this._observers.post, newState, oldState );
+};
+
+ListUsers.prototype.teardown = ListUsers.prototype.destroy = function destroy ( detach ) {
+	this.fire( 'destroy' );
+
+	if ( detach !== false ) this._fragment.unmount();
+	this._fragment.destroy();
+	this._fragment = null;
+
+	this._state = {};
+	this._torndown = true;
+};
+
+var template = (function () {
+  return {
+    data () {
+      return {
+        route: Config.routes.default,
+        routes: Config.routes,
+        isLoading: false,
+        count: 0,
+        items: []
+      }
+    },
+    methods: {
+        doRoute: function (event, data) {
+          event.preventDefault();
+          window.history.pushState(data, data.route, event.originalTarget.getAttribute('href'));
+          this.set({ route: data.route });
+        },
+        doPopState: function (event) {
+          // TODO Repeated code from main.js.
+          let currentRoute = window.location.hash.slice(1) || Config.routes.default;
+          this.set({ route: currentRoute });
+        },
+        requestData: function () {
+          // TODO isLoading... localise to Users component?
+          this.set({ isLoading: true });
+          this.fire('requestData');
+        },
+        setData: function (data) {
+          data.isLoading = false;
+          data.originalItems = data.items.slice(); // make a shallow copy for filtering etc.
+          this.set(data);
+        }
+    }
+  }
+}());
+
+function create_main_fragment ( state, component ) {
+	var text, div, div_1, a, a_href_value, text_1, text_2, a_1, a_1_href_value, text_3, text_4, a_2, a_2_href_value, text_5, text_7;
+
+	function onwindowpopstate ( event ) {
+		component.doPopState(event);
+	}
+	window.addEventListener( 'popstate', onwindowpopstate );
+
+	function click_handler ( event ) {
+		var state = component.get();
+		component.doRoute(event, { route: state.routes.splash});
+	}
+
+	function click_handler_1 ( event ) {
+		var state = component.get();
+		component.doRoute(event, { route: state.routes.listUsers });
+	}
+
+	function click_handler_2 ( event ) {
+		var state = component.get();
+		component.doRoute(event, { route: state.routes.testBroken });
+	}
+
+	function get_block ( state ) {
+		if ( state.route === state.routes.splash ) return create_if_block;
+		if ( state.route === state.routes.listUsers ) return create_if_block_1;
+		return create_if_block_2;
+	}
+
+	var current_block = get_block( state );
+	var if_block = current_block( state, component );
+
+	return {
+		create: function () {
+			text = createText( "\n\n" );
+			div = createElement( 'div' );
+			div_1 = createElement( 'div' );
+			a = createElement( 'a' );
+			text_1 = createText( "Home" );
+			text_2 = createText( "\n    " );
+			a_1 = createElement( 'a' );
+			text_3 = createText( "List Users" );
+			text_4 = createText( "\n    " );
+			a_2 = createElement( 'a' );
+			text_5 = createText( "Test Broken" );
+			text_7 = createText( "\n\n  " );
+			if_block.create();
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			setAttribute( div, 'svelte-3619653468', '' );
+			div.className = "helloWorld";
+			div_1.className = "navLinks";
+			a.href = a_href_value = "#" + ( state.routes.splash );
+			addListener( a, 'click', click_handler );
+			a_1.href = a_1_href_value = "#" + ( state.routes.listUsers );
+			addListener( a_1, 'click', click_handler_1 );
+			a_2.href = a_2_href_value = "#" + ( state.routes.testBroken );
+			addListener( a_2, 'click', click_handler_2 );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( text, target, anchor );
+			insertNode( div, target, anchor );
+			appendNode( div_1, div );
+			appendNode( a, div_1 );
+			appendNode( text_1, a );
+			appendNode( text_2, div_1 );
+			appendNode( a_1, div_1 );
+			appendNode( text_3, a_1 );
+			appendNode( text_4, div_1 );
+			appendNode( a_2, div_1 );
+			appendNode( text_5, a_2 );
+			appendNode( text_7, div );
+			if_block.mount( div, null );
+		},
+
+		update: function ( changed, state ) {
+			if ( a_href_value !== ( a_href_value = "#" + ( state.routes.splash ) ) ) {
+				a.href = a_href_value;
+			}
+
+			if ( a_1_href_value !== ( a_1_href_value = "#" + ( state.routes.listUsers ) ) ) {
+				a_1.href = a_1_href_value;
+			}
+
+			if ( a_2_href_value !== ( a_2_href_value = "#" + ( state.routes.testBroken ) ) ) {
+				a_2.href = a_2_href_value;
+			}
+
+			if ( current_block === ( current_block = get_block( state ) ) && if_block ) {
+				if_block.update( changed, state );
+			} else {
+				if_block.unmount();
+				if_block.destroy();
+				if_block = current_block( state, component );
+				if_block.create();
+				if_block.mount( div, null );
+			}
+		},
+
+		unmount: function () {
+			detachNode( text );
+			detachNode( div );
+			if_block.unmount();
+		},
+
+		destroy: function () {
+			window.removeEventListener( 'popstate', onwindowpopstate );
+
+			removeListener( a, 'click', click_handler );
+			removeListener( a_1, 'click', click_handler_1 );
+			removeListener( a_2, 'click', click_handler_2 );
+			if_block.destroy();
+		}
+	};
+}
+
+function create_if_block ( state, component ) {
+
+	var splash = new Splash({
+		_root: component._root,
+		data: { name: state.name, count: state.count }
+	});
+
+	return {
+		create: function () {
+			splash._fragment.create();
+		},
+
+		mount: function ( target, anchor ) {
+			splash._fragment.mount( target, anchor );
+		},
+
+		update: function ( changed, state ) {
+			var splash_changes = {};
+
+			if ( 'name' in changed ) splash_changes.name = state.name;
+			if ( 'count' in changed ) splash_changes.count = state.count;
+
+			if ( Object.keys( splash_changes ).length ) splash.set( splash_changes );
+		},
+
+		unmount: function () {
+			splash._fragment.unmount();
+		},
+
+		destroy: function () {
+			splash.destroy( false );
+		}
+	};
+}
+
+function create_if_block_1 ( state, component ) {
+
+	var listusers = new ListUsers({
+		_root: component._root,
+		data: {
+			isLoading: state.isLoading,
+			items: state.items
+		}
+	});
+
+	listusers.on( 'filterData', function ( event ) {
+		component.fire("filterData", event);
+	});
+
+	listusers.on( 'requestData', function ( event ) {
+		component.requestData();
+	});
+
+	listusers.on( 'deleteItem', function ( event ) {
+		component.fire("deleteItem", event);
+	});
+
+	return {
+		create: function () {
+			listusers._fragment.create();
+		},
+
+		mount: function ( target, anchor ) {
+			listusers._fragment.mount( target, anchor );
+		},
+
+		update: function ( changed, state ) {
+			var listusers_changes = {};
+
+			if ( 'isLoading' in changed ) listusers_changes.isLoading = state.isLoading;
+			if ( 'items' in changed ) listusers_changes.items = state.items;
+
+			if ( Object.keys( listusers_changes ).length ) listusers.set( listusers_changes );
+		},
+
+		unmount: function () {
+			listusers._fragment.unmount();
+		},
+
+		destroy: function () {
+			listusers.destroy( false );
+		}
+	};
+}
+
+function create_if_block_2 ( state, component ) {
+	var p, text, text_1_value, text_1, text_2;
+
+	return {
+		create: function () {
+			p = createElement( 'p' );
+			text = createText( "No route found for '" );
+			text_1 = createText( text_1_value = state.route );
+			text_2 = createText( "'" );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( p, target, anchor );
+			appendNode( text, p );
+			appendNode( text_1, p );
+			appendNode( text_2, p );
+		},
+
+		update: function ( changed, state ) {
+			if ( text_1_value !== ( text_1_value = state.route ) ) {
+				text_1.data = text_1_value;
+			}
+		},
+
+		unmount: function () {
+			detachNode( p );
+		},
+
+		destroy: noop
+	};
+}
+
+function SvelteDemoApp ( options ) {
 	options = options || {};
 	this._state = assign( template.data(), options.data );
 
@@ -999,9 +1406,9 @@ function HelloWorld ( options ) {
 	}
 }
 
-assign( HelloWorld.prototype, template.methods, proto );
+assign( SvelteDemoApp.prototype, template.methods, proto );
 
-HelloWorld.prototype._set = function _set ( newState ) {
+SvelteDemoApp.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
 	this._state = assign( {}, oldState, newState );
 	dispatchObservers( this, this._observers.pre, newState, oldState );
@@ -1009,7 +1416,7 @@ HelloWorld.prototype._set = function _set ( newState ) {
 	dispatchObservers( this, this._observers.post, newState, oldState );
 };
 
-HelloWorld.prototype.teardown = HelloWorld.prototype.destroy = function destroy ( detach ) {
+SvelteDemoApp.prototype.teardown = SvelteDemoApp.prototype.destroy = function destroy ( detach ) {
 	this.fire( 'destroy' );
 
 	if ( detach !== false ) this._fragment.unmount();
@@ -1027,11 +1434,14 @@ const MIN_FILTER_LENGTH = 1; // allow for id searches
 // A bit of fun with localStorage.
 let oldCount = parseInt(window.localStorage.count || 0, 10);
 
+// Support page refreshes with different routes.
+let currentRoute = location.hash.slice(1) || Config.routes.default;
+
 // Top-level component is the "app".
-var app = new HelloWorld({
+var app = new SvelteDemoApp({
     target: document.querySelector('main'),
-    data:
-    {
+    data: {
+        route: currentRoute,
         name: 'Scott',
         count: oldCount,
         items: []
