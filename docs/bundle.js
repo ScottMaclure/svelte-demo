@@ -7,7 +7,8 @@ var Config = {
     routes: {
         default: ROUTE_DEFAULT,
         splash: ROUTE_DEFAULT,
-        listUsers: 'ListUsers'
+        listUsers: 'ListUsers',
+        testBroken: 'TestBroken'
     }
 };
 
@@ -38,7 +39,6 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
-// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
@@ -339,7 +339,7 @@ var template$2 = (function () {
     }
 }());
 
-function create_main_fragment$2 ( state, component ) {
+function create_main_fragment$3 ( state, component ) {
 	var div, label, text, text_1, input;
 
 	function keyup_handler ( event ) {
@@ -400,7 +400,7 @@ function Filters ( options ) {
 
 	this._torndown = false;
 
-	this._fragment = create_main_fragment$2( this._state, this );
+	this._fragment = create_main_fragment$3( this._state, this );
 
 	if ( options.target ) {
 		this._fragment.create();
@@ -507,7 +507,7 @@ var template$3 = (function () {
     }
 }());
 
-function create_main_fragment$3 ( state, component ) {
+function create_main_fragment$4 ( state, component ) {
 	var div, table, thead, th, a, text, text_1_value, text_1, text_2, th_1, a_1, text_3, text_4_value, text_4, text_5, th_2, a_2, text_6, text_7_value, text_7, text_8, th_3, a_3, text_9, text_10_value, text_10, text_11, th_4, text_12, text_14, tbody;
 
 	function click_handler ( event ) {
@@ -939,7 +939,7 @@ function Users ( options ) {
 
 	this._torndown = false;
 
-	this._fragment = create_main_fragment$3( this._state, this );
+	this._fragment = create_main_fragment$4( this._state, this );
 
 	if ( options.target ) {
 		this._fragment.create();
@@ -969,6 +969,132 @@ Users.prototype.teardown = Users.prototype.destroy = function destroy ( detach )
 	this._torndown = true;
 };
 
+function create_main_fragment$2 ( state, component ) {
+	var div, text;
+
+	var filters = new Filters({
+		_root: component._root
+	});
+
+	filters.on( 'filterData', function ( event ) {
+		component.fire("filterData", event);
+	});
+
+	var users = new Users({
+		_root: component._root,
+		data: {
+			isLoading: state.isLoading,
+			items: state.items
+		}
+	});
+
+	users.on( 'requestData', function ( event ) {
+		component.fire("requestData", event);
+	});
+
+	users.on( 'deleteItem', function ( event ) {
+		component.fire("deleteItem", event);
+	});
+
+	return {
+		create: function () {
+			div = createElement( 'div' );
+			filters._fragment.create();
+			text = createText( "\r\n  " );
+			users._fragment.create();
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			div.className = "listUsers";
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( div, target, anchor );
+			filters._fragment.mount( div, null );
+			appendNode( text, div );
+			users._fragment.mount( div, null );
+		},
+
+		update: function ( changed, state ) {
+			var users_changes = {};
+
+			if ( 'isLoading' in changed ) users_changes.isLoading = state.isLoading;
+			if ( 'items' in changed ) users_changes.items = state.items;
+
+			if ( Object.keys( users_changes ).length ) users.set( users_changes );
+		},
+
+		unmount: function () {
+			detachNode( div );
+		},
+
+		destroy: function () {
+			filters.destroy( false );
+			users.destroy( false );
+		}
+	};
+}
+
+function ListUsers ( options ) {
+	options = options || {};
+	this._state = options.data || {};
+
+	this._observers = {
+		pre: Object.create( null ),
+		post: Object.create( null )
+	};
+
+	this._handlers = Object.create( null );
+
+	this._root = options._root || this;
+	this._yield = options._yield;
+
+	this._torndown = false;
+
+	if ( !options._root ) {
+		this._oncreate = [];
+		this._beforecreate = [];
+		this._aftercreate = [];
+	}
+
+	this._fragment = create_main_fragment$2( this._state, this );
+
+	if ( options.target ) {
+		this._fragment.create();
+		this._fragment.mount( options.target, null );
+	}
+
+	if ( !options._root ) {
+		this._lock = true;
+		callAll(this._beforecreate);
+		callAll(this._oncreate);
+		callAll(this._aftercreate);
+		this._lock = false;
+	}
+}
+
+assign( ListUsers.prototype, proto );
+
+ListUsers.prototype._set = function _set ( newState ) {
+	var oldState = this._state;
+	this._state = assign( {}, oldState, newState );
+	dispatchObservers( this, this._observers.pre, newState, oldState );
+	this._fragment.update( newState, this._state );
+	dispatchObservers( this, this._observers.post, newState, oldState );
+};
+
+ListUsers.prototype.teardown = ListUsers.prototype.destroy = function destroy ( detach ) {
+	this.fire( 'destroy' );
+
+	if ( detach !== false ) this._fragment.unmount();
+	this._fragment.destroy();
+	this._fragment = null;
+
+	this._state = {};
+	this._torndown = true;
+};
+
 var template = (function () {
   return {
     data () {
@@ -983,7 +1109,13 @@ var template = (function () {
     methods: {
         doRoute: function (event, data) {
           event.preventDefault();
+          window.history.pushState(data, data.route, event.originalTarget.getAttribute('href'));
           this.set({ route: data.route });
+        },
+        doPopState: function (event) {
+          // TODO Repeated code from main.js.
+          let currentRoute = window.location.hash.slice(1) || Config.routes.default;
+          this.set({ route: currentRoute });
         },
         requestData: function () {
           // TODO isLoading... localise to Users component?
@@ -1000,7 +1132,12 @@ var template = (function () {
 }());
 
 function create_main_fragment ( state, component ) {
-	var div, div_1, a, a_href_value, text, text_1, a_1, a_1_href_value, text_2, text_3, a_2, text_4, text_6;
+	var text, div, div_1, a, a_href_value, text_1, text_2, a_1, a_1_href_value, text_3, text_4, a_2, a_2_href_value, text_5, text_7;
+
+	function onwindowpopstate ( event ) {
+		component.doPopState(event);
+	}
+	window.addEventListener( 'popstate', onwindowpopstate );
 
 	function click_handler ( event ) {
 		var state = component.get();
@@ -1013,7 +1150,8 @@ function create_main_fragment ( state, component ) {
 	}
 
 	function click_handler_2 ( event ) {
-		component.doRoute(event, { route: "testBroken" });
+		var state = component.get();
+		component.doRoute(event, { route: state.routes.testBroken });
 	}
 
 	function get_block ( state ) {
@@ -1027,55 +1165,61 @@ function create_main_fragment ( state, component ) {
 
 	return {
 		create: function () {
+			text = createText( "\n\n" );
 			div = createElement( 'div' );
 			div_1 = createElement( 'div' );
 			a = createElement( 'a' );
-			text = createText( "Home" );
-			text_1 = createText( "\n    " );
+			text_1 = createText( "Home" );
+			text_2 = createText( "\n    " );
 			a_1 = createElement( 'a' );
-			text_2 = createText( "List Users" );
-			text_3 = createText( "\n    " );
+			text_3 = createText( "List Users" );
+			text_4 = createText( "\n    " );
 			a_2 = createElement( 'a' );
-			text_4 = createText( "Test Broken" );
-			text_6 = createText( "\n\n  " );
+			text_5 = createText( "Test Broken" );
+			text_7 = createText( "\n\n  " );
 			if_block.create();
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2475337159', '' );
+			setAttribute( div, 'svelte-3619653468', '' );
 			div.className = "helloWorld";
 			div_1.className = "navLinks";
-			a.href = a_href_value = "/" + ( state.routes.splash );
+			a.href = a_href_value = "#" + ( state.routes.splash );
 			addListener( a, 'click', click_handler );
-			a_1.href = a_1_href_value = "/" + ( state.routes.listUsers );
+			a_1.href = a_1_href_value = "#" + ( state.routes.listUsers );
 			addListener( a_1, 'click', click_handler_1 );
-			a_2.href = "/testBroken";
+			a_2.href = a_2_href_value = "#" + ( state.routes.testBroken );
 			addListener( a_2, 'click', click_handler_2 );
 		},
 
 		mount: function ( target, anchor ) {
+			insertNode( text, target, anchor );
 			insertNode( div, target, anchor );
 			appendNode( div_1, div );
 			appendNode( a, div_1 );
-			appendNode( text, a );
-			appendNode( text_1, div_1 );
+			appendNode( text_1, a );
+			appendNode( text_2, div_1 );
 			appendNode( a_1, div_1 );
-			appendNode( text_2, a_1 );
-			appendNode( text_3, div_1 );
+			appendNode( text_3, a_1 );
+			appendNode( text_4, div_1 );
 			appendNode( a_2, div_1 );
-			appendNode( text_4, a_2 );
-			appendNode( text_6, div );
+			appendNode( text_5, a_2 );
+			appendNode( text_7, div );
 			if_block.mount( div, null );
 		},
 
 		update: function ( changed, state ) {
-			if ( a_href_value !== ( a_href_value = "/" + ( state.routes.splash ) ) ) {
+			if ( a_href_value !== ( a_href_value = "#" + ( state.routes.splash ) ) ) {
 				a.href = a_href_value;
 			}
 
-			if ( a_1_href_value !== ( a_1_href_value = "/" + ( state.routes.listUsers ) ) ) {
+			if ( a_1_href_value !== ( a_1_href_value = "#" + ( state.routes.listUsers ) ) ) {
 				a_1.href = a_1_href_value;
+			}
+
+			if ( a_2_href_value !== ( a_2_href_value = "#" + ( state.routes.testBroken ) ) ) {
+				a_2.href = a_2_href_value;
 			}
 
 			if ( current_block === ( current_block = get_block( state ) ) && if_block ) {
@@ -1090,11 +1234,14 @@ function create_main_fragment ( state, component ) {
 		},
 
 		unmount: function () {
+			detachNode( text );
 			detachNode( div );
 			if_block.unmount();
 		},
 
 		destroy: function () {
+			window.removeEventListener( 'popstate', onwindowpopstate );
+
 			removeListener( a, 'click', click_handler );
 			removeListener( a_1, 'click', click_handler_1 );
 			removeListener( a_2, 'click', click_handler_2 );
@@ -1139,17 +1286,8 @@ function create_if_block ( state, component ) {
 }
 
 function create_if_block_1 ( state, component ) {
-	var text;
 
-	var filters = new Filters({
-		_root: component._root
-	});
-
-	filters.on( 'filterData', function ( event ) {
-		component.fire("filterData", event);
-	});
-
-	var users = new Users({
+	var listusers = new ListUsers({
 		_root: component._root,
 		data: {
 			isLoading: state.isLoading,
@@ -1157,45 +1295,42 @@ function create_if_block_1 ( state, component ) {
 		}
 	});
 
-	users.on( 'requestData', function ( event ) {
+	listusers.on( 'filterData', function ( event ) {
+		component.fire("filterData", event);
+	});
+
+	listusers.on( 'requestData', function ( event ) {
 		component.requestData();
 	});
 
-	users.on( 'deleteItem', function ( event ) {
+	listusers.on( 'deleteItem', function ( event ) {
 		component.fire("deleteItem", event);
 	});
 
 	return {
 		create: function () {
-			filters._fragment.create();
-			text = createText( "\n    " );
-			users._fragment.create();
+			listusers._fragment.create();
 		},
 
 		mount: function ( target, anchor ) {
-			filters._fragment.mount( target, anchor );
-			insertNode( text, target, anchor );
-			users._fragment.mount( target, anchor );
+			listusers._fragment.mount( target, anchor );
 		},
 
 		update: function ( changed, state ) {
-			var users_changes = {};
+			var listusers_changes = {};
 
-			if ( 'isLoading' in changed ) users_changes.isLoading = state.isLoading;
-			if ( 'items' in changed ) users_changes.items = state.items;
+			if ( 'isLoading' in changed ) listusers_changes.isLoading = state.isLoading;
+			if ( 'items' in changed ) listusers_changes.items = state.items;
 
-			if ( Object.keys( users_changes ).length ) users.set( users_changes );
+			if ( Object.keys( listusers_changes ).length ) listusers.set( listusers_changes );
 		},
 
 		unmount: function () {
-			filters._fragment.unmount();
-			detachNode( text );
-			users._fragment.unmount();
+			listusers._fragment.unmount();
 		},
 
 		destroy: function () {
-			filters.destroy( false );
-			users.destroy( false );
+			listusers.destroy( false );
 		}
 	};
 }
@@ -1298,11 +1433,14 @@ const MIN_FILTER_LENGTH = 1; // allow for id searches
 // A bit of fun with localStorage.
 let oldCount = parseInt(window.localStorage.count || 0, 10);
 
+// Support page refreshes with different routes.
+let currentRoute = location.hash.slice(1) || Config.routes.default;
+
 // Top-level component is the "app".
 var app = new HelloWorld({
     target: document.querySelector('main'),
     data: {
-        route: Config.routes.default,
+        route: currentRoute,
         name: 'Scott',
         count: oldCount,
         items: []

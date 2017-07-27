@@ -1,9 +1,11 @@
+<:Window on:popstate='doPopState(event)'/>
+
 <div class="helloWorld">
 
   <div class="navLinks">
-    <a href="/{{routes.splash}}" on:click='doRoute(event, { route: routes.splash})'>Home</a>
-    <a href="/{{routes.listUsers}}" on:click='doRoute(event, { route: routes.listUsers })'>List Users</a>
-    <a href="/testBroken" on:click='doRoute(event, { route: "testBroken" })'>Test Broken</a>
+    <a href="#{{routes.splash}}" on:click='doRoute(event, { route: routes.splash})'>Home</a>
+    <a href="#{{routes.listUsers}}" on:click='doRoute(event, { route: routes.listUsers })'>List Users</a>
+    <a href="#{{routes.testBroken}}" on:click='doRoute(event, { route: routes.testBroken })'>Test Broken</a>
   </div>
 
   {{#if route === routes.splash}}
@@ -12,10 +14,10 @@
 
   {{elseif route === routes.listUsers}}
 
-    <Filters on:filterData='fire("filterData", event)'/>
-    <Users
+    <ListUsers
       isLoading='{{isLoading}}'
       items='{{items}}'
+      on:filterData='fire("filterData", event)'
       on:requestData='requestData()'
       on:deleteItem='fire("deleteItem", event)'
     />
@@ -31,15 +33,13 @@
 <script>
   import Config from './config.js'
   import Splash from './Splash.html'
-  import Filters from './Filters.html'
-  import Users from './Users.html'
+  import ListUsers from './ListUsers.html'
 
   export default {
     components: {
       Config,
       Splash,
-      Filters,
-      Users
+      ListUsers
     },
     data () {
       return {
@@ -53,7 +53,13 @@
     methods: {
         doRoute: function (event, data) {
           event.preventDefault()
+          window.history.pushState(data, data.route, event.originalTarget.getAttribute('href'))
           this.set({ route: data.route })
+        },
+        doPopState: function (event) {
+          // TODO Repeated code from main.js.
+          let currentRoute = window.location.hash.slice(1) || Config.routes.default
+          this.set({ route: currentRoute })
         },
         requestData: function () {
           // TODO isLoading... localise to Users component?

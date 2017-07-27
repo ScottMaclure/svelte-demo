@@ -8,11 +8,14 @@ const MIN_FILTER_LENGTH = 1 // allow for id searches
 // A bit of fun with localStorage.
 let oldCount = parseInt(window.localStorage.count || 0, 10)
 
+// Support page refreshes with different routes.
+let currentRoute = location.hash.slice(1) || Config.routes.default
+
 // Top-level component is the "app".
 var app = new HelloWorld({
     target: document.querySelector('main'),
     data: {
-        route: Config.routes.default,
+        route: currentRoute,
         name: 'Scott',
         count: oldCount,
         items: []
