@@ -1,5 +1,6 @@
 // Kickstart the application.
 
+import Config from './config.js'
 import HelloWorld from './HelloWorld.html'
 
 const MIN_FILTER_LENGTH = 1 // allow for id searches
@@ -10,8 +11,8 @@ let oldCount = parseInt(window.localStorage.count || 0, 10)
 // Top-level component is the "app".
 var app = new HelloWorld({
     target: document.querySelector('main'),
-    data:
-    {
+    data: {
+        route: Config.routes.default,
         name: 'Scott',
         count: oldCount,
         items: []

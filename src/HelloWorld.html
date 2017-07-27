@@ -1,39 +1,50 @@
 <div class="helloWorld">
-  <h1>Hello {{name}}</h1>
-  <p>Count: {{count}} <button on:click='doInc(count)'>Increment</button> <button on:click='set({ count: 0 })'>Reset</button></p>
 
-  <Filters on:filterData='fire("filterData", event)'/>
+  {{#if route === routes.splash}}
 
-  <Users
-    isLoading='{{isLoading}}'
-    items='{{items}}'
-    on:requestData='requestData()'
-    on:deleteItem='fire("deleteItem", event)'
-  />
+    <Splash name='{{name}}' count='{{count}}'/>
+
+  {{elseif route === routes.listUsers}}
+
+    <Filters on:filterData='fire("filterData", event)'/>
+    <Users
+      isLoading='{{isLoading}}'
+      items='{{items}}'
+      on:requestData='requestData()'
+      on:deleteItem='fire("deleteItem", event)'
+    />
+
+  {{else}}
+
+    <p>No route found for '{{route}}'</p>
+
+  {{/if}}
+
 </div>
 
 <script>
+  import Config from './config.js'
+  import Splash from './Splash.html'
   import Filters from './Filters.html'
   import Users from './Users.html'
 
   export default {
     components: {
+      Config,
+      Splash,
       Filters,
       Users
     },
     data () {
       return {
+        route: Config.routes.default,
+        routes: Config.routes,
         isLoading: false,
         count: 0,
         items: []
       }
     },
     methods: {
-        doInc: function (count) {
-            // TODO emit semantic event and get index.html to update localStorage, so the component knows nothing!
-            window.localStorage.count = parseInt(count, 10) + 1
-            this.set({ count: window.localStorage.count })
-        },
         requestData: function () {
           // TODO isLoading... localise to Users component?
           this.set({ isLoading: true })
