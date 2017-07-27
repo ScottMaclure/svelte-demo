@@ -1,6 +1,6 @@
 <div class="filters">
     <label for="filter">Filter:</label>
-    <input type="text" id="filter" name="filter" on:keyup='possibleFilter(event)'/>
+    <input type="text" id="filter" name="filter" value="{{filter}}" on:keyup='possibleFilter(event)'/>
 </div>
 <script>
     const FILTER_WAIT = 250
@@ -8,6 +8,11 @@
     var timer;
 
     export default {
+        data () {
+            return {
+                filter: ''
+            }
+        },
         methods: {
             /**
              * Only fire after a certain number of characters have been typed.

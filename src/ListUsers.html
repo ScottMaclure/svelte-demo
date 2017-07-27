@@ -1,5 +1,8 @@
 <div class="listUsers">
-  <Filters on:filterData='fire("filterData", event)'/>
+  <Filters
+    filter='{{filter}}'
+    on:filterData='fire("filterData", event)'
+  />
   <Users
     isLoading='{{isLoading}}'
     items='{{items}}'

@@ -316,6 +316,11 @@ var template$2 = (function () {
     var timer;
 
     return {
+        data () {
+            return {
+                filter: ''
+            }
+        },
         methods: {
             /**
              * Only fire after a certain number of characters have been typed.
@@ -340,7 +345,7 @@ var template$2 = (function () {
 }());
 
 function create_main_fragment$3 ( state, component ) {
-	var div, label, text, text_1, input;
+	var div, label, text, text_1, input, input_value_value;
 
 	function keyup_handler ( event ) {
 		component.possibleFilter(event);
@@ -357,12 +362,13 @@ function create_main_fragment$3 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2871249186', '' );
+			setAttribute( div, 'svelte-2175086471', '' );
 			div.className = "filters";
 			label.htmlFor = "filter";
 			input.type = "text";
 			input.id = "filter";
 			input.name = "filter";
+			input.value = input_value_value = state.filter;
 			addListener( input, 'keyup', keyup_handler );
 		},
 
@@ -372,6 +378,12 @@ function create_main_fragment$3 ( state, component ) {
 			appendNode( text, label );
 			appendNode( text_1, div );
 			appendNode( input, div );
+		},
+
+		update: function ( changed, state ) {
+			if ( input_value_value !== ( input_value_value = state.filter ) ) {
+				input.value = input_value_value;
+			}
 		},
 
 		unmount: function () {
@@ -386,7 +398,7 @@ function create_main_fragment$3 ( state, component ) {
 
 function Filters ( options ) {
 	options = options || {};
-	this._state = options.data || {};
+	this._state = assign( template$2.data(), options.data );
 
 	this._observers = {
 		pre: Object.create( null ),
@@ -414,6 +426,7 @@ Filters.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
 	this._state = assign( {}, oldState, newState );
 	dispatchObservers( this, this._observers.pre, newState, oldState );
+	this._fragment.update( newState, this._state );
 	dispatchObservers( this, this._observers.post, newState, oldState );
 };
 
@@ -958,7 +971,8 @@ function create_main_fragment$2 ( state, component ) {
 	var div, text;
 
 	var filters = new Filters({
-		_root: component._root
+		_root: component._root,
+		data: { filter: state.filter }
 	});
 
 	filters.on( 'filterData', function ( event ) {
@@ -1007,6 +1021,12 @@ function create_main_fragment$2 ( state, component ) {
 		},
 
 		update: function ( changed, state ) {
+			var filters_changes = {};
+
+			if ( 'filter' in changed ) filters_changes.filter = state.filter;
+
+			if ( Object.keys( filters_changes ).length ) filters.set( filters_changes );
+
 			var users_changes = {};
 
 			if ( 'isLoading' in changed ) users_changes.isLoading = state.isLoading;
@@ -1095,6 +1115,7 @@ var template = (function () {
         isLoading: false,
         count: 0,
         items: [],
+        filter: '',
         sorting: {} // TODO Defining data structures at multiple levels...
       }
     },
@@ -1174,7 +1195,7 @@ function create_main_fragment ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2549192579', '' );
+			setAttribute( div, 'svelte-692618268', '' );
 			div.className = "helloWorld";
 			div_1.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );
@@ -1284,7 +1305,8 @@ function create_if_block_1 ( state, component ) {
 		data: {
 			isLoading: state.isLoading,
 			items: state.items,
-			sorting: state.sorting
+			sorting: state.sorting,
+			filter: state.filter
 		}
 	});
 
@@ -1319,6 +1341,7 @@ function create_if_block_1 ( state, component ) {
 			if ( 'isLoading' in changed ) listusers_changes.isLoading = state.isLoading;
 			if ( 'items' in changed ) listusers_changes.items = state.items;
 			if ( 'sorting' in changed ) listusers_changes.sorting = state.sorting;
+			if ( 'filter' in changed ) listusers_changes.filter = state.filter;
 
 			if ( Object.keys( listusers_changes ).length ) listusers.set( listusers_changes );
 		},
@@ -1442,6 +1465,7 @@ var app = new SvelteDemoApp({
         name: 'Scott',
         count: oldCount,
         items: [],
+        filter: '',
         sorting: {
             active: true,
             fieldName: 'id',
@@ -1494,7 +1518,7 @@ app.on('filterData', event => {
         })
     });
 
-    app.set({ items: items });
+    app.set({ items: items, filter: filterValue });
 });
 
 app.on('updateSorting', event => {

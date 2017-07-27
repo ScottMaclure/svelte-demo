@@ -19,6 +19,7 @@ var app = new SvelteDemoApp({
         name: 'Scott',
         count: oldCount,
         items: [],
+        filter: '',
         sorting: {
             active: true,
             fieldName: 'id',
@@ -71,7 +72,7 @@ app.on('filterData', event => {
         })
     })
 
-    app.set({ items: items })
+    app.set({ items: items, filter: filterValue })
 })
 
 app.on('updateSorting', event => {
