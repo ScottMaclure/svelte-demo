@@ -209,14 +209,14 @@ function create_main_fragment$1 ( state, component ) {
 			h1 = createElement( 'h1' );
 			text = createText( "Hello " );
 			text_1 = createText( text_1_value = state.name );
-			text_2 = createText( "\r\n  " );
+			text_2 = createText( "\n  " );
 			p = createElement( 'p' );
 			text_3 = createText( "Count: " );
 			text_4 = createText( text_4_value = state.count );
-			text_5 = createText( "\r\n    " );
+			text_5 = createText( "\n    " );
 			button = createElement( 'button' );
 			text_6 = createText( "Increment" );
-			text_7 = createText( "\r\n    " );
+			text_7 = createText( "\n    " );
 			button_1 = createElement( 'button' );
 			text_8 = createText( "Reset" );
 			this.hydrate();
@@ -1001,7 +1001,7 @@ function create_main_fragment$2 ( state, component ) {
 		create: function () {
 			div = createElement( 'div' );
 			filters._fragment.create();
-			text = createText( "\r\n  " );
+			text = createText( "\n  " );
 			users._fragment.create();
 			this.hydrate();
 		},
@@ -1110,10 +1110,10 @@ var template = (function () {
     methods: {
         doRoute: function (event, data) {
           event.preventDefault();
-          window.history.pushState(data, data.route, event.originalTarget.getAttribute('href'));
+          window.history.pushState(data, data.route, event.target.getAttribute('href'));
           this.set({ route: data.route });
         },
-        doPopState: function (event) {
+        doPopState: function () {
           // TODO Repeated code from main.js.
           let currentRoute = window.location.hash.slice(1) || Config.routes.default;
           this.set({ route: currentRoute });
@@ -1183,7 +1183,7 @@ function create_main_fragment ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-3619653468', '' );
+			setAttribute( div, 'svelte-3462766327', '' );
 			div.className = "helloWorld";
 			div_1.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );

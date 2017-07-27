@@ -53,10 +53,10 @@
     methods: {
         doRoute: function (event, data) {
           event.preventDefault()
-          window.history.pushState(data, data.route, event.originalTarget.getAttribute('href'))
+          window.history.pushState(data, data.route, event.target.getAttribute('href'))
           this.set({ route: data.route })
         },
-        doPopState: function (event) {
+        doPopState: function () {
           // TODO Repeated code from main.js.
           let currentRoute = window.location.hash.slice(1) || Config.routes.default
           this.set({ route: currentRoute })
