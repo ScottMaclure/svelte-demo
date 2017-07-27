@@ -3,8 +3,10 @@
   <Users
     isLoading='{{isLoading}}'
     items='{{items}}'
+    sorting='{{sorting}}'
     on:requestData='fire("requestData", event)'
     on:deleteItem='fire("deleteItem", event)'
+    on:updateSorting='fire("updateSorting", event)'
   />
 </div>
 <script>

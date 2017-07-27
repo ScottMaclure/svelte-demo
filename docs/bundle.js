@@ -480,28 +480,12 @@ var template$3 = (function () {
         },
         methods: {
             /**
-             * TODO Move sorting data up and out - either 2-way bound, or fire(). Else you lose the sorting when you switch between routes.
-             * Sorting localised to the component.
              * When user changes sorting we only update the "sorting" meta-data.
-             * The actual sorting happens as a computed property.
+             * The actual sorting happens as a computed property (processedItems).
              */
             sortItems: function(event, params) {
-
                 event.preventDefault();
-
-                let sorting = this.get('sorting');
-                sorting.active = true;
-                // Wipe the order if switching fields.
-                if (sorting.fieldName !== params.fieldName) {
-                    sorting.order = null;
-                }
-                // Update which field is being sorted.
-                sorting.fieldName = params.fieldName;
-                // Default asc on first click.
-                sorting.order = sorting.order === 'asc' ? 'desc' : 'asc';
-
-                this.set({ sorting: sorting });
-
+                this.fire('updateSorting', params);
             }
         }
     }
@@ -568,7 +552,7 @@ function create_main_fragment$4 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1556876687', '' );
+			setAttribute( div, 'svelte-1701125263', '' );
 			div.className = "users";
 			table.border = "1";
 			setAttribute( table, 'width', "100%" );
@@ -985,7 +969,8 @@ function create_main_fragment$2 ( state, component ) {
 		_root: component._root,
 		data: {
 			isLoading: state.isLoading,
-			items: state.items
+			items: state.items,
+			sorting: state.sorting
 		}
 	});
 
@@ -995,6 +980,10 @@ function create_main_fragment$2 ( state, component ) {
 
 	users.on( 'deleteItem', function ( event ) {
 		component.fire("deleteItem", event);
+	});
+
+	users.on( 'updateSorting', function ( event ) {
+		component.fire("updateSorting", event);
 	});
 
 	return {
@@ -1022,6 +1011,7 @@ function create_main_fragment$2 ( state, component ) {
 
 			if ( 'isLoading' in changed ) users_changes.isLoading = state.isLoading;
 			if ( 'items' in changed ) users_changes.items = state.items;
+			if ( 'sorting' in changed ) users_changes.sorting = state.sorting;
 
 			if ( Object.keys( users_changes ).length ) users.set( users_changes );
 		},
@@ -1104,7 +1094,8 @@ var template = (function () {
         routes: Config.routes,
         isLoading: false,
         count: 0,
-        items: []
+        items: [],
+        sorting: {} // TODO Defining data structures at multiple levels...
       }
     },
     methods: {
@@ -1183,7 +1174,7 @@ function create_main_fragment ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-3462766327', '' );
+			setAttribute( div, 'svelte-2549192579', '' );
 			div.className = "helloWorld";
 			div_1.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );
@@ -1292,7 +1283,8 @@ function create_if_block_1 ( state, component ) {
 		_root: component._root,
 		data: {
 			isLoading: state.isLoading,
-			items: state.items
+			items: state.items,
+			sorting: state.sorting
 		}
 	});
 
@@ -1306,6 +1298,10 @@ function create_if_block_1 ( state, component ) {
 
 	listusers.on( 'deleteItem', function ( event ) {
 		component.fire("deleteItem", event);
+	});
+
+	listusers.on( 'updateSorting', function ( event ) {
+		component.fire("updateSorting", event);
 	});
 
 	return {
@@ -1322,6 +1318,7 @@ function create_if_block_1 ( state, component ) {
 
 			if ( 'isLoading' in changed ) listusers_changes.isLoading = state.isLoading;
 			if ( 'items' in changed ) listusers_changes.items = state.items;
+			if ( 'sorting' in changed ) listusers_changes.sorting = state.sorting;
 
 			if ( Object.keys( listusers_changes ).length ) listusers.set( listusers_changes );
 		},
@@ -1444,7 +1441,12 @@ var app = new SvelteDemoApp({
         route: currentRoute,
         name: 'Scott',
         count: oldCount,
-        items: []
+        items: [],
+        sorting: {
+            active: true,
+            fieldName: 'id',
+            order: 'asc'
+        }
     }
 });
 
@@ -1493,6 +1495,26 @@ app.on('filterData', event => {
     });
 
     app.set({ items: items });
+});
+
+app.on('updateSorting', event => {
+
+    let sorting = app.get('sorting');
+
+    sorting.active = true; // ensure flag is on
+
+    // Wipe the order if switching fields.
+    if (sorting.fieldName !== event.fieldName) {
+        sorting.order = null;
+    }
+
+    // Update which field is being sorted.
+    sorting.fieldName = event.fieldName;
+
+    // Default asc on first click.
+    sorting.order = sorting.order === 'asc' ? 'desc' : 'asc';
+
+    app.set({ sorting: sorting });
 });
 
 }());

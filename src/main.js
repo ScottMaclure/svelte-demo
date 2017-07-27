@@ -18,7 +18,12 @@ var app = new SvelteDemoApp({
         route: currentRoute,
         name: 'Scott',
         count: oldCount,
-        items: []
+        items: [],
+        sorting: {
+            active: true,
+            fieldName: 'id',
+            order: 'asc'
+        }
     }
 })
 
@@ -67,4 +72,24 @@ app.on('filterData', event => {
     })
 
     app.set({ items: items })
+})
+
+app.on('updateSorting', event => {
+
+    let sorting = app.get('sorting')
+
+    sorting.active = true // ensure flag is on
+
+    // Wipe the order if switching fields.
+    if (sorting.fieldName !== event.fieldName) {
+        sorting.order = null
+    }
+
+    // Update which field is being sorted.
+    sorting.fieldName = event.fieldName
+
+    // Default asc on first click.
+    sorting.order = sorting.order === 'asc' ? 'desc' : 'asc'
+
+    app.set({ sorting: sorting })
 })

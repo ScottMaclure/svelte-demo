@@ -17,9 +17,11 @@
     <ListUsers
       isLoading='{{isLoading}}'
       items='{{items}}'
+      sorting='{{sorting}}'
       on:filterData='fire("filterData", event)'
       on:requestData='requestData()'
       on:deleteItem='fire("deleteItem", event)'
+      on:updateSorting='fire("updateSorting", event)'
     />
 
   {{else}}
@@ -47,7 +49,8 @@
         routes: Config.routes,
         isLoading: false,
         count: 0,
-        items: []
+        items: [],
+        sorting: {} // TODO Defining data structures at multiple levels...
       }
     },
     methods: {

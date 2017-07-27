@@ -83,28 +83,12 @@
         },
         methods: {
             /**
-             * TODO Move sorting data up and out - either 2-way bound, or fire(). Else you lose the sorting when you switch between routes.
-             * Sorting localised to the component.
              * When user changes sorting we only update the "sorting" meta-data.
-             * The actual sorting happens as a computed property.
+             * The actual sorting happens as a computed property (processedItems).
              */
             sortItems: function(event, params) {
-
                 event.preventDefault();
-
-                let sorting = this.get('sorting')
-                sorting.active = true
-                // Wipe the order if switching fields.
-                if (sorting.fieldName !== params.fieldName) {
-                    sorting.order = null
-                }
-                // Update which field is being sorted.
-                sorting.fieldName = params.fieldName
-                // Default asc on first click.
-                sorting.order = sorting.order === 'asc' ? 'desc' : 'asc'
-
-                this.set({ sorting: sorting })
-
+                this.fire('updateSorting', params)
             }
         }
     }
