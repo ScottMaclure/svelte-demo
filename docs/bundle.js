@@ -39,7 +39,6 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
-// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
@@ -569,6 +568,7 @@ function create_main_fragment$4 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
+			setAttribute( div, 'svelte-1556876687', '' );
 			div.className = "users";
 			table.border = "1";
 			setAttribute( table, 'width', "100%" );

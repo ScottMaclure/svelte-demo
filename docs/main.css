@@ -12,5 +12,10 @@
         margin: var(--spacing-vertical-normal) 0;
     }
 
+type="text/css">
+    [svelte-1556876687].users, [svelte-1556876687] .users {
+        overflow: auto;
+    }
+
 
 /*# sourceMappingURL=main.css.map */
