@@ -43,7 +43,7 @@ npm run watch
 - [x] Setup eslint with some defaults.
 - [x] Add rollup-watch (https://github.com/rollup/rollup-watch) for dev
 - [x] Add a search/filter component above table
-- [ ] Add a basic router, add "pages/routes" (splash screen, Users table) - use History API (pushState)
+- [x] Add a basic router, add "pages/routes" (splash screen, Users table) - use History API (pushState)
 - [ ] Remember filtering and sorting between routes
 - [ ] Add a user edit screen, combine with router
 - [ ] Replace html table with a grid of "cards" or similar, using unicode icons for delete, edit
