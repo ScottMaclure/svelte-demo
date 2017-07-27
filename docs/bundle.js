@@ -198,13 +198,13 @@ function create_main_fragment$1 ( state, component ) {
 			div = createElement( 'div' );
 			label = createElement( 'label' );
 			text = createText( "Filter:" );
-			text_1 = createText( "\r\n    " );
+			text_1 = createText( "\n    " );
 			input = createElement( 'input' );
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2520737836', '' );
+			setAttribute( div, 'svelte-1414020480', '' );
 			div.className = "filters";
 			label.htmlFor = "filter";
 			input.type = "text";
