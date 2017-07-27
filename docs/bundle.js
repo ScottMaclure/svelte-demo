@@ -39,6 +39,7 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
+// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
@@ -1367,7 +1368,7 @@ function create_if_block_2 ( state, component ) {
 	};
 }
 
-function HelloWorld ( options ) {
+function SvelteDemoApp ( options ) {
 	options = options || {};
 	this._state = assign( template.data(), options.data );
 
@@ -1405,9 +1406,9 @@ function HelloWorld ( options ) {
 	}
 }
 
-assign( HelloWorld.prototype, template.methods, proto );
+assign( SvelteDemoApp.prototype, template.methods, proto );
 
-HelloWorld.prototype._set = function _set ( newState ) {
+SvelteDemoApp.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
 	this._state = assign( {}, oldState, newState );
 	dispatchObservers( this, this._observers.pre, newState, oldState );
@@ -1415,7 +1416,7 @@ HelloWorld.prototype._set = function _set ( newState ) {
 	dispatchObservers( this, this._observers.post, newState, oldState );
 };
 
-HelloWorld.prototype.teardown = HelloWorld.prototype.destroy = function destroy ( detach ) {
+SvelteDemoApp.prototype.teardown = SvelteDemoApp.prototype.destroy = function destroy ( detach ) {
 	this.fire( 'destroy' );
 
 	if ( detach !== false ) this._fragment.unmount();
@@ -1437,7 +1438,7 @@ let oldCount = parseInt(window.localStorage.count || 0, 10);
 let currentRoute = location.hash.slice(1) || Config.routes.default;
 
 // Top-level component is the "app".
-var app = new HelloWorld({
+var app = new SvelteDemoApp({
     target: document.querySelector('main'),
     data: {
         route: currentRoute,

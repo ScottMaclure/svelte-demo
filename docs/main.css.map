@@ -2,7 +2,7 @@
   "version": 3,
   "file": "main.css",
   "sources": [
-    "..\\src\\HelloWorld.html",
+    "..\\src\\SvelteDemoApp.html",
     "..\\src\\Filters.html"
   ],
   "sourcesContent": [
