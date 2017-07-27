@@ -44,7 +44,7 @@ npm run watch
 - [x] Add rollup-watch (https://github.com/rollup/rollup-watch) for dev
 - [x] Add a search/filter component above table
 - [x] Add a basic router, add "pages/routes" (splash screen, Users table) - use History API (pushState)
-- [ ] Remember filtering and sorting between routes
+- [x] Remember filtering and sorting between routes (main.js)
 - [ ] Add a user edit screen, combine with router
 - [ ] Replace html table with a grid of "cards" or similar, using unicode icons for delete, edit
 - [ ] Use router5, replace basic routing solution
