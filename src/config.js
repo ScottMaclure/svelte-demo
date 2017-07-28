@@ -6,5 +6,8 @@ export default {
         splash: ROUTE_DEFAULT,
         listUsers: 'ListUsers',
         testBroken: 'TestBroken'
+    },
+    unicodes: {
+        delete: '\u274C'
     }
 }

@@ -18,7 +18,7 @@
                         <td>{{item.lastName}}</td>
                         <td>{{item.email}}</td>
                         <td>
-                            <button on:click='fire("deleteItem", { id: item.id })'>Delete</button>
+                            <i class="noselect" on:click='fire("deleteItem", { id: item.id })'>{{unicodes.delete}}</i>
                         </td>
                     </tr>
                 {{/each}}
@@ -38,9 +38,12 @@
 </div>
 
 <script>
+    import Config from './config.js'
+
     export default {
         data() {
             return {
+                unicodes: Config.unicodes,
                 isLoading: false,
                 items: [],
                 sorting: {

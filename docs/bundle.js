@@ -9,6 +9,9 @@ var Config = {
         splash: ROUTE_DEFAULT,
         listUsers: 'ListUsers',
         testBroken: 'TestBroken'
+    },
+    unicodes: {
+        delete: '\u274C'
     }
 };
 
@@ -451,6 +454,7 @@ var template$3 = (function () {
     return {
         data() {
             return {
+                unicodes: Config.unicodes,
                 isLoading: false,
                 items: [],
                 sorting: {
@@ -565,7 +569,7 @@ function create_main_fragment$4 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1701125263', '' );
+			setAttribute( div, 'svelte-1734130584', '' );
 			div.className = "users";
 			table.border = "1";
 			setAttribute( table, 'width', "100%" );
@@ -654,7 +658,7 @@ function create_main_fragment$4 ( state, component ) {
 }
 
 function create_each_block ( state, each_block_value, item, item_index, component ) {
-	var tr, td, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, button, text_8;
+	var tr, td, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, i, text_8_value, text_8;
 
 	return {
 		create: function () {
@@ -672,15 +676,16 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			text_6 = createText( text_6_value = item.email );
 			text_7 = createText( "\n                        " );
 			td_4 = createElement( 'td' );
-			button = createElement( 'button' );
-			text_8 = createText( "Delete" );
+			i = createElement( 'i' );
+			text_8 = createText( text_8_value = state.unicodes.delete );
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			addListener( button, 'click', click_handler );
+			i.className = "noselect";
+			addListener( i, 'click', click_handler );
 
-			button._svelte = {
+			i._svelte = {
 				component: component,
 				each_block_value: each_block_value,
 				item_index: item_index
@@ -702,8 +707,8 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			appendNode( text_6, td_3 );
 			appendNode( text_7, tr );
 			appendNode( td_4, tr );
-			appendNode( button, td_4 );
-			appendNode( text_8, button );
+			appendNode( i, td_4 );
+			appendNode( text_8, i );
 		},
 
 		update: function ( changed, state, each_block_value, item, item_index ) {
@@ -723,8 +728,12 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 				text_6.data = text_6_value;
 			}
 
-			button._svelte.each_block_value = each_block_value;
-			button._svelte.item_index = item_index;
+			i._svelte.each_block_value = each_block_value;
+			i._svelte.item_index = item_index;
+
+			if ( text_8_value !== ( text_8_value = state.unicodes.delete ) ) {
+				text_8.data = text_8_value;
+			}
 		},
 
 		unmount: function () {
@@ -732,7 +741,7 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 		},
 
 		destroy: function () {
-			removeListener( button, 'click', click_handler );
+			removeListener( i, 'click', click_handler );
 		}
 	};
 }
@@ -831,7 +840,7 @@ function create_if_block$1 ( state, component ) {
 		update: function ( changed, state ) {
 			var each_block_value = state.processedItems;
 
-			if ( 'processedItems' in changed ) {
+			if ( 'processedItems' in changed || 'unicodes' in changed ) {
 				for ( var i = 0; i < each_block_value.length; i += 1 ) {
 					if ( each_block_iterations[i] ) {
 						each_block_iterations[i].update( changed, state, each_block_value, each_block_value[i], i );

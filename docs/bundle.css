@@ -1,0 +1,21 @@
+
+  [svelte-692618268].helloWorld, [svelte-692618268] .helloWorld {
+    background-color: var(--base-background-color, #00f);
+    padding: var(--spacing-vertical-normal);
+  }
+  [svelte-692618268].navLinks a, [svelte-692618268] .navLinks a {
+    margin-right: var(--spacing-horizontal-small);
+  }
+
+
+    [svelte-2175086471].filters, [svelte-2175086471] .filters {
+        margin: var(--spacing-vertical-normal) 0;
+    }
+
+type="text/css">
+    [svelte-1734130584].users, [svelte-1734130584] .users {
+        overflow: auto;
+    }
+
+
+/*# sourceMappingURL=bundle.css.map */

@@ -47,6 +47,7 @@ npm run watch
 - [x] Remember filtering and sorting between routes (main.js)
 - [ ] Add a user edit screen, combine with router
 - [ ] Replace html table with a grid of "cards" or similar, using unicode icons for delete, edit
+- [ ] Use svelte-router, see if it works well
 - [ ] Use router5, replace basic routing solution
 - [ ] Testing components individually (Mocha)
 - [ ] Add a11y test automation and update app with a11y

@@ -28,7 +28,7 @@ export default {
             css: function(css) {
                 // css.code, css.map
                 // pass false as second arg for no sourcemap.
-                css.write('docs/main.css');
+                css.write('docs/bundle.css');
             }
         })
     ]
