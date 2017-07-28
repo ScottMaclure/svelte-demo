@@ -45,8 +45,10 @@ npm run watch
 - [x] Add a search/filter component above table
 - [x] Add a basic router, add "pages/routes" (splash screen, Users table) - use History API (pushState)
 - [x] Remember filtering and sorting between routes (main.js)
+- [x] unicode icons for delete, edit
+- [x] Config.js for shared/common config values between components
 - [ ] Add a user edit screen, combine with router (support initial load, eg http://127.0.0.1:8080/#EditUser/1)
-- [ ] Replace html table with a grid of "cards" or similar, using unicode icons for delete, edit (https://gridbyexample.com/patterns/header-asmany-footer/)
+- [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
 - [ ] Use svelte-router, see if it works well
 - [ ] Use router5, replace basic routing solution
 - [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)
