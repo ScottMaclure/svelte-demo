@@ -45,10 +45,11 @@ npm run watch
 - [x] Add a search/filter component above table
 - [x] Add a basic router, add "pages/routes" (splash screen, Users table) - use History API (pushState)
 - [x] Remember filtering and sorting between routes (main.js)
-- [ ] Add a user edit screen, combine with router
-- [ ] Replace html table with a grid of "cards" or similar, using unicode icons for delete, edit
+- [ ] Add a user edit screen, combine with router (support initial load, eg http://127.0.0.1:8080/#EditUser/1)
+- [ ] Replace html table with a grid of "cards" or similar, using unicode icons for delete, edit (https://gridbyexample.com/patterns/header-asmany-footer/)
 - [ ] Use svelte-router, see if it works well
 - [ ] Use router5, replace basic routing solution
+- [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)
 - [ ] Testing components individually (Mocha)
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
