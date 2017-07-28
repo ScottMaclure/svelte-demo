@@ -1,9 +1,9 @@
 
-  [svelte-692618268].helloWorld, [svelte-692618268] .helloWorld {
+  [svelte-1308340215].helloWorld, [svelte-1308340215] .helloWorld {
     background-color: var(--base-background-color, #00f);
     padding: var(--spacing-vertical-normal);
   }
-  [svelte-692618268].navLinks a, [svelte-692618268] .navLinks a {
+  [svelte-1308340215].navLinks a, [svelte-1308340215] .navLinks a {
     margin-right: var(--spacing-horizontal-small);
   }
 
@@ -13,7 +13,7 @@
     }
 
 type="text/css">
-    [svelte-1734130584].users, [svelte-1734130584] .users {
+    [svelte-2485077542].users, [svelte-2485077542] .users {
         overflow: auto;
     }
 

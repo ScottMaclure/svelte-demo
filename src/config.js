@@ -5,9 +5,11 @@ export default {
         default: ROUTE_DEFAULT,
         splash: ROUTE_DEFAULT,
         listUsers: 'ListUsers',
+        editUser: 'EditUser',
         testBroken: 'TestBroken'
     },
     unicodes: {
-        delete: '\u274C'
+        delete: '\u274C',
+        edit: '\u270E'
     }
 }

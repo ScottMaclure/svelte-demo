@@ -8,10 +8,12 @@ var Config = {
         default: ROUTE_DEFAULT,
         splash: ROUTE_DEFAULT,
         listUsers: 'ListUsers',
+        editUser: 'EditUser',
         testBroken: 'TestBroken'
     },
     unicodes: {
-        delete: '\u274C'
+        delete: '\u274C',
+        edit: '\u270E'
     }
 };
 
@@ -444,7 +446,7 @@ Filters.prototype.teardown = Filters.prototype.destroy = function destroy ( deta
 	this._torndown = true;
 };
 
-function recompute ( state, newState, oldState, isInitial ) {
+function recompute$1 ( state, newState, oldState, isInitial ) {
 	if ( isInitial || ( 'items' in newState && differs( state.items, oldState.items ) ) || ( 'sorting' in newState && differs( state.sorting, oldState.sorting ) ) ) {
 		state.processedItems = newState.processedItems = template$3.computed.processedItems( state.items, state.sorting );
 	}
@@ -569,7 +571,7 @@ function create_main_fragment$4 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1734130584', '' );
+			setAttribute( div, 'svelte-2485077542', '' );
 			div.className = "users";
 			table.border = "1";
 			setAttribute( table, 'width', "100%" );
@@ -658,7 +660,7 @@ function create_main_fragment$4 ( state, component ) {
 }
 
 function create_each_block ( state, each_block_value, item, item_index, component ) {
-	var tr, td, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, i, text_8_value, text_8;
+	var tr, td, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, i, text_8_value, text_8, text_9, i_1, text_10_value, text_10;
 
 	return {
 		create: function () {
@@ -677,7 +679,10 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			text_7 = createText( "\n                        " );
 			td_4 = createElement( 'td' );
 			i = createElement( 'i' );
-			text_8 = createText( text_8_value = state.unicodes.delete );
+			text_8 = createText( text_8_value = state.unicodes.edit );
+			text_9 = createText( "\n                            " );
+			i_1 = createElement( 'i' );
+			text_10 = createText( text_10_value = state.unicodes.delete );
 			this.hydrate();
 		},
 
@@ -686,6 +691,15 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			addListener( i, 'click', click_handler );
 
 			i._svelte = {
+				component: component,
+				each_block_value: each_block_value,
+				item_index: item_index
+			};
+
+			i_1.className = "noselect";
+			addListener( i_1, 'click', click_handler_1 );
+
+			i_1._svelte = {
 				component: component,
 				each_block_value: each_block_value,
 				item_index: item_index
@@ -709,6 +723,9 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			appendNode( td_4, tr );
 			appendNode( i, td_4 );
 			appendNode( text_8, i );
+			appendNode( text_9, td_4 );
+			appendNode( i_1, td_4 );
+			appendNode( text_10, i_1 );
 		},
 
 		update: function ( changed, state, each_block_value, item, item_index ) {
@@ -731,8 +748,15 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			i._svelte.each_block_value = each_block_value;
 			i._svelte.item_index = item_index;
 
-			if ( text_8_value !== ( text_8_value = state.unicodes.delete ) ) {
+			if ( text_8_value !== ( text_8_value = state.unicodes.edit ) ) {
 				text_8.data = text_8_value;
+			}
+
+			i_1._svelte.each_block_value = each_block_value;
+			i_1._svelte.item_index = item_index;
+
+			if ( text_10_value !== ( text_10_value = state.unicodes.delete ) ) {
+				text_10.data = text_10_value;
 			}
 		},
 
@@ -742,6 +766,7 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 
 		destroy: function () {
 			removeListener( i, 'click', click_handler );
+			removeListener( i_1, 'click', click_handler_1 );
 		}
 	};
 }
@@ -773,10 +798,10 @@ function create_if_block_2$1 ( state, component ) {
 	};
 }
 
-function create_if_block_3 ( state, component ) {
+function create_if_block_3$1 ( state, component ) {
 	var text, button, text_1;
 
-	function click_handler_1 ( event ) {
+	function click_handler_2 ( event ) {
 		component.fire("requestData");
 	}
 
@@ -789,7 +814,7 @@ function create_if_block_3 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			addListener( button, 'click', click_handler_1 );
+			addListener( button, 'click', click_handler_2 );
 		},
 
 		mount: function ( target, anchor ) {
@@ -804,7 +829,7 @@ function create_if_block_3 ( state, component ) {
 		},
 
 		destroy: function () {
-			removeListener( button, 'click', click_handler_1 );
+			removeListener( button, 'click', click_handler_2 );
 		}
 	};
 }
@@ -878,7 +903,7 @@ function create_if_block_1$1 ( state, component ) {
 
 	function get_block ( state ) {
 		if ( state.isLoading ) return create_if_block_2$1;
-		return create_if_block_3;
+		return create_if_block_3$1;
 	}
 
 	var current_block = get_block( state );
@@ -926,13 +951,19 @@ function create_if_block_1$1 ( state, component ) {
 function click_handler ( event ) {
 	var component = this._svelte.component;
 	var each_block_value = this._svelte.each_block_value, item_index = this._svelte.item_index, item = each_block_value[item_index];
+	component.fire("editItem", { id: item.id });
+}
+
+function click_handler_1 ( event ) {
+	var component = this._svelte.component;
+	var each_block_value = this._svelte.each_block_value, item_index = this._svelte.item_index, item = each_block_value[item_index];
 	component.fire("deleteItem", { id: item.id });
 }
 
 function Users ( options ) {
 	options = options || {};
 	this._state = assign( template$3.data(), options.data );
-	recompute( this._state, this._state, {}, true );
+	recompute$1( this._state, this._state, {}, true );
 
 	this._observers = {
 		pre: Object.create( null ),
@@ -959,7 +990,7 @@ assign( Users.prototype, template$3.methods, proto );
 Users.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
 	this._state = assign( {}, oldState, newState );
-	recompute( this._state, newState, oldState, false );
+	recompute$1( this._state, newState, oldState, false );
 	dispatchObservers( this, this._observers.pre, newState, oldState );
 	this._fragment.update( newState, this._state );
 	dispatchObservers( this, this._observers.post, newState, oldState );
@@ -1003,6 +1034,10 @@ function create_main_fragment$2 ( state, component ) {
 
 	users.on( 'deleteItem', function ( event ) {
 		component.fire("deleteItem", event);
+	});
+
+	users.on( 'editItem', function ( event ) {
+		component.fire("editItem", event);
 	});
 
 	users.on( 'updateSorting', function ( event ) {
@@ -1115,11 +1150,135 @@ ListUsers.prototype.teardown = ListUsers.prototype.destroy = function destroy ( 
 	this._torndown = true;
 };
 
+var template$4 = (function () {
+  return {
+    data () {
+      return {
+        id: null,
+        firstName: '',
+        lastName: '',
+        email: ''
+      }
+    }
+  }
+}());
+
+function create_main_fragment$5 ( state, component ) {
+	var div, text, text_1_value, text_1, text_2, text_3_value, text_3, text_4, text_5_value, text_5, text_6, text_7_value, text_7;
+
+	return {
+		create: function () {
+			div = createElement( 'div' );
+			text = createText( "TODO Edit user " );
+			text_1 = createText( text_1_value = state.item.id );
+			text_2 = createText( " " );
+			text_3 = createText( text_3_value = state.item.firstName );
+			text_4 = createText( " " );
+			text_5 = createText( text_5_value = state.item.lastName );
+			text_6 = createText( " " );
+			text_7 = createText( text_7_value = state.item.email );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			div.className = "editUser";
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( div, target, anchor );
+			appendNode( text, div );
+			appendNode( text_1, div );
+			appendNode( text_2, div );
+			appendNode( text_3, div );
+			appendNode( text_4, div );
+			appendNode( text_5, div );
+			appendNode( text_6, div );
+			appendNode( text_7, div );
+		},
+
+		update: function ( changed, state ) {
+			if ( text_1_value !== ( text_1_value = state.item.id ) ) {
+				text_1.data = text_1_value;
+			}
+
+			if ( text_3_value !== ( text_3_value = state.item.firstName ) ) {
+				text_3.data = text_3_value;
+			}
+
+			if ( text_5_value !== ( text_5_value = state.item.lastName ) ) {
+				text_5.data = text_5_value;
+			}
+
+			if ( text_7_value !== ( text_7_value = state.item.email ) ) {
+				text_7.data = text_7_value;
+			}
+		},
+
+		unmount: function () {
+			detachNode( div );
+		},
+
+		destroy: noop
+	};
+}
+
+function EditUser ( options ) {
+	options = options || {};
+	this._state = assign( template$4.data(), options.data );
+
+	this._observers = {
+		pre: Object.create( null ),
+		post: Object.create( null )
+	};
+
+	this._handlers = Object.create( null );
+
+	this._root = options._root || this;
+	this._yield = options._yield;
+
+	this._torndown = false;
+
+	this._fragment = create_main_fragment$5( this._state, this );
+
+	if ( options.target ) {
+		this._fragment.create();
+		this._fragment.mount( options.target, null );
+	}
+}
+
+assign( EditUser.prototype, proto );
+
+EditUser.prototype._set = function _set ( newState ) {
+	var oldState = this._state;
+	this._state = assign( {}, oldState, newState );
+	dispatchObservers( this, this._observers.pre, newState, oldState );
+	this._fragment.update( newState, this._state );
+	dispatchObservers( this, this._observers.post, newState, oldState );
+};
+
+EditUser.prototype.teardown = EditUser.prototype.destroy = function destroy ( detach ) {
+	this.fire( 'destroy' );
+
+	if ( detach !== false ) this._fragment.unmount();
+	this._fragment.destroy();
+	this._fragment = null;
+
+	this._state = {};
+	this._torndown = true;
+};
+
+function recompute ( state, newState, oldState, isInitial ) {
+	if ( isInitial || ( 'items' in newState && differs( state.items, oldState.items ) ) || ( 'routeData' in newState && differs( state.routeData, oldState.routeData ) ) ) {
+		state.itemToEdit = newState.itemToEdit = template.computed.itemToEdit( state.items, state.routeData );
+	}
+}
+
 var template = (function () {
   return {
     data () {
       return {
         route: Config.routes.default,
+        routeData: {},
         routes: Config.routes,
         isLoading: false,
         count: 0,
@@ -1128,16 +1287,37 @@ var template = (function () {
         sorting: {} // TODO Defining data structures at multiple levels...
       }
     },
+    computed: {
+      itemToEdit: (items, routeData) => {
+        let foundItem = items.find(item => {
+          return item.id == routeData.id
+        });
+        return foundItem
+      }
+    },
     methods: {
+        /**
+         * Handles events from browsers or semantic events from components.
+         */
         doRoute: function (event, data) {
-          event.preventDefault();
-          window.history.pushState(data, data.route, event.target.getAttribute('href'));
-          this.set({ route: data.route });
+          if (event.preventDefault) { event.preventDefault(); } // semantic events won't have dom events... why should this be here then?
+          let href = event.target ? event.target.getAttribute('href') : data.href; // for semantic events
+          window.history.pushState(data, data.route, href);
+          this.set({ route: data.route, routeData: data });
         },
         doPopState: function () {
           // TODO Repeated code from main.js.
           let currentRoute = window.location.hash.slice(1) || Config.routes.default;
           this.set({ route: currentRoute });
+        },
+        editItem: function (event) {
+          // FIXME How best to handle this kind of route? router5?
+          let data = {
+            route: Config.routes.editUser,
+            href: '#'+Config.routes.editUser+'/'+event.id,
+            id: event.id
+          };
+          this.doRoute(event, data);
         },
         requestData: function () {
           // TODO isLoading... localise to Users component?
@@ -1179,7 +1359,8 @@ function create_main_fragment ( state, component ) {
 	function get_block ( state ) {
 		if ( state.route === state.routes.splash ) return create_if_block;
 		if ( state.route === state.routes.listUsers ) return create_if_block_1;
-		return create_if_block_2;
+		if ( state.route === state.routes.editUser ) return create_if_block_2;
+		return create_if_block_3;
 	}
 
 	var current_block = get_block( state );
@@ -1204,7 +1385,7 @@ function create_main_fragment ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-692618268', '' );
+			setAttribute( div, 'svelte-1308340215', '' );
 			div.className = "helloWorld";
 			div_1.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );
@@ -1327,6 +1508,10 @@ function create_if_block_1 ( state, component ) {
 		component.requestData();
 	});
 
+	listusers.on( 'editItem', function ( event ) {
+		component.editItem(event);
+	});
+
 	listusers.on( 'deleteItem', function ( event ) {
 		component.fire("deleteItem", event);
 	});
@@ -1366,6 +1551,40 @@ function create_if_block_1 ( state, component ) {
 }
 
 function create_if_block_2 ( state, component ) {
+
+	var edituser = new EditUser({
+		_root: component._root,
+		data: { item: state.itemToEdit }
+	});
+
+	return {
+		create: function () {
+			edituser._fragment.create();
+		},
+
+		mount: function ( target, anchor ) {
+			edituser._fragment.mount( target, anchor );
+		},
+
+		update: function ( changed, state ) {
+			var edituser_changes = {};
+
+			if ( 'itemToEdit' in changed ) edituser_changes.item = state.itemToEdit;
+
+			if ( Object.keys( edituser_changes ).length ) edituser.set( edituser_changes );
+		},
+
+		unmount: function () {
+			edituser._fragment.unmount();
+		},
+
+		destroy: function () {
+			edituser.destroy( false );
+		}
+	};
+}
+
+function create_if_block_3 ( state, component ) {
 	var p, text, text_1_value, text_1, text_2;
 
 	return {
@@ -1400,6 +1619,7 @@ function create_if_block_2 ( state, component ) {
 function SvelteDemoApp ( options ) {
 	options = options || {};
 	this._state = assign( template.data(), options.data );
+	recompute( this._state, this._state, {}, true );
 
 	this._observers = {
 		pre: Object.create( null ),
@@ -1440,6 +1660,7 @@ assign( SvelteDemoApp.prototype, template.methods, proto );
 SvelteDemoApp.prototype._set = function _set ( newState ) {
 	var oldState = this._state;
 	this._state = assign( {}, oldState, newState );
+	recompute( this._state, newState, oldState, false );
 	dispatchObservers( this, this._observers.pre, newState, oldState );
 	this._fragment.update( newState, this._state );
 	dispatchObservers( this, this._observers.post, newState, oldState );

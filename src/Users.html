@@ -18,6 +18,7 @@
                         <td>{{item.lastName}}</td>
                         <td>{{item.email}}</td>
                         <td>
+                            <i class="noselect" on:click='fire("editItem", { id: item.id })'>{{unicodes.edit}}</i>
                             <i class="noselect" on:click='fire("deleteItem", { id: item.id })'>{{unicodes.delete}}</i>
                         </td>
                     </tr>

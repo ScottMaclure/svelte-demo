@@ -21,9 +21,16 @@
       filter='{{filter}}'
       on:filterData='fire("filterData", event)'
       on:requestData='requestData()'
+      on:editItem='editItem(event)'
       on:deleteItem='fire("deleteItem", event)'
       on:updateSorting='fire("updateSorting", event)'
     />
+
+  {{elseif route === routes.editUser}}
+
+      <EditUser
+        item='{{itemToEdit}}'
+      />
 
   {{else}}
 
@@ -37,16 +44,19 @@
   import Config from './config.js'
   import Splash from './Splash.html'
   import ListUsers from './ListUsers.html'
+  import EditUser from './EditUser.html'
 
   export default {
     components: {
       Config,
       Splash,
-      ListUsers
+      ListUsers,
+      EditUser
     },
     data () {
       return {
         route: Config.routes.default,
+        routeData: {},
         routes: Config.routes,
         isLoading: false,
         count: 0,
@@ -55,16 +65,37 @@
         sorting: {} // TODO Defining data structures at multiple levels...
       }
     },
+    computed: {
+      itemToEdit: (items, routeData) => {
+        let foundItem = items.find(item => {
+          return item.id == routeData.id
+        })
+        return foundItem
+      }
+    },
     methods: {
+        /**
+         * Handles events from browsers or semantic events from components.
+         */
         doRoute: function (event, data) {
-          event.preventDefault()
-          window.history.pushState(data, data.route, event.target.getAttribute('href'))
-          this.set({ route: data.route })
+          if (event.preventDefault) { event.preventDefault() } // semantic events won't have dom events... why should this be here then?
+          let href = event.target ? event.target.getAttribute('href') : data.href // for semantic events
+          window.history.pushState(data, data.route, href)
+          this.set({ route: data.route, routeData: data })
         },
         doPopState: function () {
           // TODO Repeated code from main.js.
           let currentRoute = window.location.hash.slice(1) || Config.routes.default
           this.set({ route: currentRoute })
+        },
+        editItem: function (event) {
+          // FIXME How best to handle this kind of route? router5?
+          let data = {
+            route: Config.routes.editUser,
+            href: '#'+Config.routes.editUser+'/'+event.id,
+            id: event.id
+          }
+          this.doRoute(event, data)
         },
         requestData: function () {
           // TODO isLoading... localise to Users component?
