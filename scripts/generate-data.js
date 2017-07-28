@@ -3,7 +3,7 @@
 
 const fs = require('fs')
 
-const MAX_ROWS = 1000
+const MAX_ROWS = 100
 const FILE_NAME = __dirname + '/../docs/data.json'
 
 const FULL_NAMES = [
