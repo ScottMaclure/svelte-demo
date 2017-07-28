@@ -2,11 +2,11 @@
 
 <div class="helloWorld">
 
-  <div class="navLinks">
-    <a href="#{{routes.splash}}" on:click='doRoute(event, { route: routes.splash})'>Home</a>
-    <a href="#{{routes.listUsers}}" on:click='doRoute(event, { route: routes.listUsers })'>List Users</a>
-    <a href="#{{routes.testBroken}}" on:click='doRoute(event, { route: routes.testBroken })'>Test Broken</a>
-  </div>
+  <nav class="navLinks">
+    <a href="#{{routes.splash}}" on:click='doRoute()'>Home</a>
+    <a href="#{{routes.listUsers}}" on:click='doRoute()'>List Users</a>
+    <a href="#{{routes.testBroken}}" on:click='doRoute()'>Test Broken</a>
+  </nav>
 
   {{#if route === routes.splash}}
 
@@ -46,6 +46,11 @@
   import ListUsers from './ListUsers.html'
   import EditUser from './EditUser.html'
 
+  const getRouteParts = (href) => {
+    // Break up Foo/bar/blah/etc/1 into parts. Individual routes know how to read their own subroutes.
+    return (href || location.hash.slice(1) || Config.routes.default).split('/')
+  }
+
   export default {
     components: {
       Config,
@@ -53,10 +58,12 @@
       ListUsers,
       EditUser
     },
+    // oncreate () {
+    //   this.set({ routeParts: getRouteParts() }) // Set initial view.
+    // },
     data () {
       return {
-        route: Config.routes.default,
-        routeData: {},
+        routeParts: getRouteParts(),
         routes: Config.routes,
         isLoading: false,
         count: 0,
@@ -66,36 +73,39 @@
       }
     },
     computed: {
-      itemToEdit: (items, routeData) => {
+      route: (routeParts) => {
+        if (!routeParts) {
+          return Config.routes.default // defensive?
+        }
+        return routeParts[0] // the zero-eth part is always the main "view" of the route.
+      },
+      itemToEdit: (items, routeParts) => {
+        // routeParts should always be defined due to oncreate method already running?
         let foundItem = items.find(item => {
-          return item.id == routeData.id
+          return item.id.toString() === routeParts[1] // See editItem.
         })
-        return foundItem
+        return foundItem || {}
       }
     },
     methods: {
         /**
-         * Handles events from browsers or semantic events from components.
+         * Handles events triggered from a) dom nodes or b) semantic events fire'd components.
          */
-        doRoute: function (event, data) {
+        doRoute: function (event) {
           if (event.preventDefault) { event.preventDefault() } // semantic events won't have dom events... why should this be here then?
-          let href = event.target ? event.target.getAttribute('href') : data.href // for semantic events
-          window.history.pushState(data, data.route, href)
-          this.set({ route: data.route, routeData: data })
+          let href = event.target ? event.target.getAttribute('href') : event.href // remove hash from href attributes
+          let routeParts = getRouteParts(href) // for semantic events
+          window.history.pushState(routeParts, routeParts[0], ('#' + href)) // FIXME Adding the hash here...
+          this.set({ routeParts: routeParts })
         },
         doPopState: function () {
           // TODO Repeated code from main.js.
-          let currentRoute = window.location.hash.slice(1) || Config.routes.default
-          this.set({ route: currentRoute })
+          let routeParts = getRouteParts()
+          this.set({ routeParts: routeParts })
         },
         editItem: function (event) {
-          // FIXME How best to handle this kind of route? router5?
-          let data = {
-            route: Config.routes.editUser,
-            href: '#'+Config.routes.editUser+'/'+event.id,
-            id: event.id
-          }
-          this.doRoute(event, data)
+          // So, this means that Users component knows nothing about route generation, it just fired up the id.
+          this.doRoute({ href: Config.routes.editUser+'/'+event.id }) // FIXME weaksauce route url construction.
         },
         requestData: function () {
           // TODO isLoading... localise to Users component?

@@ -1268,17 +1268,28 @@ EditUser.prototype.teardown = EditUser.prototype.destroy = function destroy ( de
 };
 
 function recompute ( state, newState, oldState, isInitial ) {
-	if ( isInitial || ( 'items' in newState && differs( state.items, oldState.items ) ) || ( 'routeData' in newState && differs( state.routeData, oldState.routeData ) ) ) {
-		state.itemToEdit = newState.itemToEdit = template.computed.itemToEdit( state.items, state.routeData );
+	if ( isInitial || ( 'routeParts' in newState && differs( state.routeParts, oldState.routeParts ) ) ) {
+		state.route = newState.route = template.computed.route( state.routeParts );
+	}
+
+	if ( isInitial || ( 'items' in newState && differs( state.items, oldState.items ) ) || ( 'routeParts' in newState && differs( state.routeParts, oldState.routeParts ) ) ) {
+		state.itemToEdit = newState.itemToEdit = template.computed.itemToEdit( state.items, state.routeParts );
 	}
 }
 
 var template = (function () {
+  const getRouteParts = (href) => {
+    // Break up Foo/bar/blah/etc/1 into parts. Individual routes know how to read their own subroutes.
+    return (href || location.hash.slice(1) || Config.routes.default).split('/')
+  };
+
   return {
+    // oncreate () {
+    //   this.set({ routeParts: getRouteParts() }) // Set initial view.
+    // },
     data () {
       return {
-        route: Config.routes.default,
-        routeData: {},
+        routeParts: getRouteParts(),
         routes: Config.routes,
         isLoading: false,
         count: 0,
@@ -1288,36 +1299,39 @@ var template = (function () {
       }
     },
     computed: {
-      itemToEdit: (items, routeData) => {
+      route: (routeParts) => {
+        if (!routeParts) {
+          return Config.routes.default // defensive?
+        }
+        return routeParts[0] // the zero-eth part is always the main "view" of the route.
+      },
+      itemToEdit: (items, routeParts) => {
+        // routeParts should always be defined due to oncreate method already running?
         let foundItem = items.find(item => {
-          return item.id == routeData.id
+          return item.id.toString() === routeParts[1] // See editItem.
         });
-        return foundItem
+        return foundItem || {}
       }
     },
     methods: {
         /**
-         * Handles events from browsers or semantic events from components.
+         * Handles events triggered from a) dom nodes or b) semantic events fire'd components.
          */
-        doRoute: function (event, data) {
+        doRoute: function (event) {
           if (event.preventDefault) { event.preventDefault(); } // semantic events won't have dom events... why should this be here then?
-          let href = event.target ? event.target.getAttribute('href') : data.href; // for semantic events
-          window.history.pushState(data, data.route, href);
-          this.set({ route: data.route, routeData: data });
+          let href = event.target ? event.target.getAttribute('href') : event.href; // remove hash from href attributes
+          let routeParts = getRouteParts(href); // for semantic events
+          window.history.pushState(routeParts, routeParts[0], ('#' + href)); // FIXME Adding the hash here...
+          this.set({ routeParts: routeParts });
         },
         doPopState: function () {
           // TODO Repeated code from main.js.
-          let currentRoute = window.location.hash.slice(1) || Config.routes.default;
-          this.set({ route: currentRoute });
+          let routeParts = getRouteParts();
+          this.set({ routeParts: routeParts });
         },
         editItem: function (event) {
-          // FIXME How best to handle this kind of route? router5?
-          let data = {
-            route: Config.routes.editUser,
-            href: '#'+Config.routes.editUser+'/'+event.id,
-            id: event.id
-          };
-          this.doRoute(event, data);
+          // So, this means that Users component knows nothing about route generation, it just fired up the id.
+          this.doRoute({ href: Config.routes.editUser+'/'+event.id }); // FIXME weaksauce route url construction.
         },
         requestData: function () {
           // TODO isLoading... localise to Users component?
@@ -1334,7 +1348,7 @@ var template = (function () {
 }());
 
 function create_main_fragment ( state, component ) {
-	var text, div, div_1, a, a_href_value, text_1, text_2, a_1, a_1_href_value, text_3, text_4, a_2, a_2_href_value, text_5, text_7;
+	var text, div, nav, a, a_href_value, text_1, text_2, a_1, a_1_href_value, text_3, text_4, a_2, a_2_href_value, text_5, text_7;
 
 	function onwindowpopstate ( event ) {
 		component.doPopState(event);
@@ -1342,18 +1356,15 @@ function create_main_fragment ( state, component ) {
 	window.addEventListener( 'popstate', onwindowpopstate );
 
 	function click_handler ( event ) {
-		var state = component.get();
-		component.doRoute(event, { route: state.routes.splash});
+		component.doRoute();
 	}
 
 	function click_handler_1 ( event ) {
-		var state = component.get();
-		component.doRoute(event, { route: state.routes.listUsers });
+		component.doRoute();
 	}
 
 	function click_handler_2 ( event ) {
-		var state = component.get();
-		component.doRoute(event, { route: state.routes.testBroken });
+		component.doRoute();
 	}
 
 	function get_block ( state ) {
@@ -1370,7 +1381,7 @@ function create_main_fragment ( state, component ) {
 		create: function () {
 			text = createText( "\n\n" );
 			div = createElement( 'div' );
-			div_1 = createElement( 'div' );
+			nav = createElement( 'nav' );
 			a = createElement( 'a' );
 			text_1 = createText( "Home" );
 			text_2 = createText( "\n    " );
@@ -1385,9 +1396,9 @@ function create_main_fragment ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1308340215', '' );
+			setAttribute( div, 'svelte-2579825537', '' );
 			div.className = "helloWorld";
-			div_1.className = "navLinks";
+			nav.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );
 			addListener( a, 'click', click_handler );
 			a_1.href = a_1_href_value = "#" + ( state.routes.listUsers );
@@ -1399,14 +1410,14 @@ function create_main_fragment ( state, component ) {
 		mount: function ( target, anchor ) {
 			insertNode( text, target, anchor );
 			insertNode( div, target, anchor );
-			appendNode( div_1, div );
-			appendNode( a, div_1 );
+			appendNode( nav, div );
+			appendNode( a, nav );
 			appendNode( text_1, a );
-			appendNode( text_2, div_1 );
-			appendNode( a_1, div_1 );
+			appendNode( text_2, nav );
+			appendNode( a_1, nav );
 			appendNode( text_3, a_1 );
-			appendNode( text_4, div_1 );
-			appendNode( a_2, div_1 );
+			appendNode( text_4, nav );
+			appendNode( a_2, nav );
 			appendNode( text_5, a_2 );
 			appendNode( text_7, div );
 			if_block.mount( div, null );
@@ -1681,19 +1692,12 @@ SvelteDemoApp.prototype.teardown = SvelteDemoApp.prototype.destroy = function de
 
 const MIN_FILTER_LENGTH = 1; // allow for id searches
 
-// A bit of fun with localStorage.
-let oldCount = parseInt(window.localStorage.count || 0, 10);
-
-// Support page refreshes with different routes.
-let currentRoute = location.hash.slice(1) || Config.routes.default;
-
 // Top-level component is the "app".
 var app = new SvelteDemoApp({
     target: document.querySelector('main'),
     data: {
-        route: currentRoute,
         name: 'Scott',
-        count: oldCount,
+        count: parseInt(window.localStorage.count || 0, 10), // A bit of fun with localStorage.
         items: [],
         filter: '',
         sorting: {
