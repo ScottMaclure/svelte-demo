@@ -3,9 +3,9 @@
 <div class="helloWorld">
 
   <nav class="navLinks">
-    <a href="#{{routes.splash}}" on:click='doRoute()'>Home</a>
-    <a href="#{{routes.listUsers}}" on:click='doRoute()'>List Users</a>
-    <a href="#{{routes.testBroken}}" on:click='doRoute()'>Test Broken</a>
+    <a href="#{{routes.splash}}" on:click='doRoute(event)'>Home</a>
+    <a href="#{{routes.listUsers}}" on:click='doRoute(event)'>List Users</a>
+    <a href="#{{routes.testBroken}}" on:click='doRoute(event)'>Test Broken</a>
   </nav>
 
   {{#if route === routes.splash}}
@@ -29,7 +29,9 @@
   {{elseif route === routes.editUser}}
 
       <EditUser
+        items='{{items}}'
         item='{{itemToEdit}}'
+        on:requestData='requestData()'
       />
 
   {{else}}
@@ -59,7 +61,8 @@
       EditUser
     },
     // oncreate () {
-    //   this.set({ routeParts: getRouteParts() }) // Set initial view.
+    //   // this.set({ routeParts: getRouteParts() }) // Set initial view. (default data removes need for this.)
+    //   console.log('SvelteDemoApp oncreate')
     // },
     data () {
       return {
@@ -93,7 +96,7 @@
          */
         doRoute: function (event) {
           if (event.preventDefault) { event.preventDefault() } // semantic events won't have dom events... why should this be here then?
-          let href = event.target ? event.target.getAttribute('href') : event.href // remove hash from href attributes
+          let href = event.target ? event.target.getAttribute('href').slice(1) : event.href // remove hash from href attributes
           let routeParts = getRouteParts(href) // for semantic events
           window.history.pushState(routeParts, routeParts[0], ('#' + href)) // FIXME Adding the hash here...
           this.set({ routeParts: routeParts })
@@ -104,6 +107,7 @@
           this.set({ routeParts: routeParts })
         },
         editItem: function (event) {
+          // TODO Could check for populated items array at this point?
           // So, this means that Users component knows nothing about route generation, it just fired up the id.
           this.doRoute({ href: Config.routes.editUser+'/'+event.id }) // FIXME weaksauce route url construction.
         },

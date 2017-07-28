@@ -1,9 +1,9 @@
 
-  [svelte-2579825537].helloWorld, [svelte-2579825537] .helloWorld {
+  [svelte-54850208].helloWorld, [svelte-54850208] .helloWorld {
     background-color: var(--base-background-color, #00f);
     padding: var(--spacing-vertical-normal);
   }
-  [svelte-2579825537].navLinks a, [svelte-2579825537] .navLinks a {
+  [svelte-54850208].navLinks a, [svelte-54850208] .navLinks a {
     margin-right: var(--spacing-horizontal-small);
   }
 

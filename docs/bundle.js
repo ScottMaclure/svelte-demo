@@ -1154,29 +1154,49 @@ var template$4 = (function () {
   return {
     data () {
       return {
-        id: null,
-        firstName: '',
-        lastName: '',
-        email: ''
+        isLoading: false, // TODO What about passing this in>
+        item: {},
+        items: []
+      }
+    },
+    oncreate () {
+
+      // Some trickery so that if the items haven't been loaded yet, trigger that request and, once done, update the component's state.
+      if (this.get('items').length === 0) {
+        var self = this;
+        this.set({ isLoading: true });
+
+        let observer = null;
+        observer = this.observe('items', () => {
+          self.set({ isLoading: false });
+          observer.cancel();
+        }, { init: false });
+
+        // FIXME Hack because main.js use of app.on() for requestData is bound after app is finished being created!
+        setTimeout(() => {
+          self.fire('requestData');
+        }, 250);
+
       }
     }
   }
 }());
 
 function create_main_fragment$5 ( state, component ) {
-	var div, text, text_1_value, text_1, text_2, text_3_value, text_3, text_4, text_5_value, text_5, text_6, text_7_value, text_7;
+	var div;
+
+	function get_block ( state ) {
+		if ( state.isLoading ) return create_if_block$2;
+		return create_if_block_1$2;
+	}
+
+	var current_block = get_block( state );
+	var if_block = current_block( state, component );
 
 	return {
 		create: function () {
 			div = createElement( 'div' );
-			text = createText( "TODO Edit user " );
-			text_1 = createText( text_1_value = state.item.id );
-			text_2 = createText( " " );
-			text_3 = createText( text_3_value = state.item.firstName );
-			text_4 = createText( " " );
-			text_5 = createText( text_5_value = state.item.lastName );
-			text_6 = createText( " " );
-			text_7 = createText( text_7_value = state.item.email );
+			if_block.create();
 			this.hydrate();
 		},
 
@@ -1186,14 +1206,78 @@ function create_main_fragment$5 ( state, component ) {
 
 		mount: function ( target, anchor ) {
 			insertNode( div, target, anchor );
-			appendNode( text, div );
-			appendNode( text_1, div );
-			appendNode( text_2, div );
-			appendNode( text_3, div );
-			appendNode( text_4, div );
-			appendNode( text_5, div );
-			appendNode( text_6, div );
-			appendNode( text_7, div );
+			if_block.mount( div, null );
+		},
+
+		update: function ( changed, state ) {
+			if ( current_block === ( current_block = get_block( state ) ) && if_block ) {
+				if_block.update( changed, state );
+			} else {
+				if_block.unmount();
+				if_block.destroy();
+				if_block = current_block( state, component );
+				if_block.create();
+				if_block.mount( div, null );
+			}
+		},
+
+		unmount: function () {
+			detachNode( div );
+			if_block.unmount();
+		},
+
+		destroy: function () {
+			if_block.destroy();
+		}
+	};
+}
+
+function create_if_block$2 ( state, component ) {
+	var text;
+
+	return {
+		create: function () {
+			text = createText( "Loading data..." );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( text, target, anchor );
+		},
+
+		update: noop,
+
+		unmount: function () {
+			detachNode( text );
+		},
+
+		destroy: noop
+	};
+}
+
+function create_if_block_1$2 ( state, component ) {
+	var text, text_1_value, text_1, text_2, text_3_value, text_3, text_4, text_5_value, text_5, text_6, text_7_value, text_7;
+
+	return {
+		create: function () {
+			text = createText( "TODO Edit user " );
+			text_1 = createText( text_1_value = state.item.id );
+			text_2 = createText( " " );
+			text_3 = createText( text_3_value = state.item.firstName );
+			text_4 = createText( " " );
+			text_5 = createText( text_5_value = state.item.lastName );
+			text_6 = createText( " " );
+			text_7 = createText( text_7_value = state.item.email );
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( text, target, anchor );
+			insertNode( text_1, target, anchor );
+			insertNode( text_2, target, anchor );
+			insertNode( text_3, target, anchor );
+			insertNode( text_4, target, anchor );
+			insertNode( text_5, target, anchor );
+			insertNode( text_6, target, anchor );
+			insertNode( text_7, target, anchor );
 		},
 
 		update: function ( changed, state ) {
@@ -1215,7 +1299,14 @@ function create_main_fragment$5 ( state, component ) {
 		},
 
 		unmount: function () {
-			detachNode( div );
+			detachNode( text );
+			detachNode( text_1 );
+			detachNode( text_2 );
+			detachNode( text_3 );
+			detachNode( text_4 );
+			detachNode( text_5 );
+			detachNode( text_6 );
+			detachNode( text_7 );
 		},
 
 		destroy: noop
@@ -1238,11 +1329,23 @@ function EditUser ( options ) {
 
 	this._torndown = false;
 
+	var oncreate = template$4.oncreate.bind( this );
+
+	if ( !options._root ) {
+		this._oncreate = [oncreate];
+	} else {
+	 	this._root._oncreate.push(oncreate);
+	 }
+
 	this._fragment = create_main_fragment$5( this._state, this );
 
 	if ( options.target ) {
 		this._fragment.create();
 		this._fragment.mount( options.target, null );
+	}
+
+	if ( !options._root ) {
+		callAll(this._oncreate);
 	}
 }
 
@@ -1285,7 +1388,8 @@ var template = (function () {
 
   return {
     // oncreate () {
-    //   this.set({ routeParts: getRouteParts() }) // Set initial view.
+    //   // this.set({ routeParts: getRouteParts() }) // Set initial view. (default data removes need for this.)
+    //   console.log('SvelteDemoApp oncreate')
     // },
     data () {
       return {
@@ -1319,7 +1423,7 @@ var template = (function () {
          */
         doRoute: function (event) {
           if (event.preventDefault) { event.preventDefault(); } // semantic events won't have dom events... why should this be here then?
-          let href = event.target ? event.target.getAttribute('href') : event.href; // remove hash from href attributes
+          let href = event.target ? event.target.getAttribute('href').slice(1) : event.href; // remove hash from href attributes
           let routeParts = getRouteParts(href); // for semantic events
           window.history.pushState(routeParts, routeParts[0], ('#' + href)); // FIXME Adding the hash here...
           this.set({ routeParts: routeParts });
@@ -1330,6 +1434,7 @@ var template = (function () {
           this.set({ routeParts: routeParts });
         },
         editItem: function (event) {
+          // TODO Could check for populated items array at this point?
           // So, this means that Users component knows nothing about route generation, it just fired up the id.
           this.doRoute({ href: Config.routes.editUser+'/'+event.id }); // FIXME weaksauce route url construction.
         },
@@ -1356,15 +1461,15 @@ function create_main_fragment ( state, component ) {
 	window.addEventListener( 'popstate', onwindowpopstate );
 
 	function click_handler ( event ) {
-		component.doRoute();
+		component.doRoute(event);
 	}
 
 	function click_handler_1 ( event ) {
-		component.doRoute();
+		component.doRoute(event);
 	}
 
 	function click_handler_2 ( event ) {
-		component.doRoute();
+		component.doRoute(event);
 	}
 
 	function get_block ( state ) {
@@ -1396,7 +1501,7 @@ function create_main_fragment ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2579825537', '' );
+			setAttribute( div, 'svelte-54850208', '' );
 			div.className = "helloWorld";
 			nav.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );
@@ -1565,7 +1670,11 @@ function create_if_block_2 ( state, component ) {
 
 	var edituser = new EditUser({
 		_root: component._root,
-		data: { item: state.itemToEdit }
+		data: { items: state.items, item: state.itemToEdit }
+	});
+
+	edituser.on( 'requestData', function ( event ) {
+		component.requestData();
 	});
 
 	return {
@@ -1580,6 +1689,7 @@ function create_if_block_2 ( state, component ) {
 		update: function ( changed, state ) {
 			var edituser_changes = {};
 
+			if ( 'items' in changed ) edituser_changes.items = state.items;
 			if ( 'itemToEdit' in changed ) edituser_changes.item = state.itemToEdit;
 
 			if ( Object.keys( edituser_changes ).length ) edituser.set( edituser_changes );
@@ -1708,9 +1818,9 @@ var app = new SvelteDemoApp({
     }
 });
 
-// Listen for semantic event and fetch data from server. Can take event.
-app.on('requestData', () =>
-{
+// Listen for semantic events and talk to servers, modify data etc.
+
+app.on('requestData', () => {
     fetch('data.json').then(function (response) {
         response.json().then(function (json) {
             app.setData(json);

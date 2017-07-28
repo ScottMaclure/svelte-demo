@@ -20,9 +20,9 @@ var app = new SvelteDemoApp({
     }
 })
 
-// Listen for semantic event and fetch data from server. Can take event.
-app.on('requestData', () =>
-{
+// Listen for semantic events and talk to servers, modify data etc.
+
+app.on('requestData', () => {
     fetch('data.json').then(function (response) {
         response.json().then(function (json) {
             app.setData(json)

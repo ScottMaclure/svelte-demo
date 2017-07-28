@@ -1,14 +1,38 @@
 <div class="editUser">
-  TODO Edit user {{item.id}} {{item.firstName}} {{item.lastName}} {{item.email}}
+  {{#if isLoading}}
+    Loading data...
+  {{else}}
+    <!-- TODO new vs edit -->
+    TODO Edit user {{item.id}} {{item.firstName}} {{item.lastName}} {{item.email}}
+  {{/if}}
 </div>
 <script>
   export default {
     data () {
       return {
-        id: null,
-        firstName: '',
-        lastName: '',
-        email: ''
+        isLoading: false, // TODO What about passing this in>
+        item: {},
+        items: []
+      }
+    },
+    oncreate () {
+
+      // Some trickery so that if the items haven't been loaded yet, trigger that request and, once done, update the component's state.
+      if (this.get('items').length === 0) {
+        var self = this
+        this.set({ isLoading: true })
+
+        let observer = null;
+        observer = this.observe('items', () => {
+          self.set({ isLoading: false })
+          observer.cancel()
+        }, { init: false })
+
+        // FIXME Hack because main.js use of app.on() for requestData is bound after app is finished being created!
+        setTimeout(() => {
+          self.fire('requestData')
+        }, 250)
+
       }
     }
   }
