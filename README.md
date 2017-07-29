@@ -47,8 +47,11 @@ npm run watch
 - [x] Remember filtering and sorting between routes (main.js)
 - [x] unicode icons for delete, edit
 - [x] Config.js for shared/common config values between components
-- [ ] Add a user edit screen, combine with router (support initial load, eg http://127.0.0.1:8080/#EditUser/1)
+- [x] Support lazy load of items for direct page load of edit route (#EditUser/1)
+- [ ] Add a user edit screen, combine with router, save
+- [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
+- [ ] Edit user - add validation to the input fields
 - [ ] Use svelte-router, see if it works well
 - [ ] Use router5, replace basic routing solution
 - [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)
