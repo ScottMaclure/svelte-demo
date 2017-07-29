@@ -12,9 +12,9 @@
         margin: var(--spacing-vertical-normal) 0;
     }
 
-type="text/css">
-    [svelte-2485077542].users, [svelte-2485077542] .users {
-        overflow: auto;
+
+    [svelte-1359850470].users, [svelte-1359850470] .users {
+        overflow: scroll;
     }
 
 
