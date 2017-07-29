@@ -505,6 +505,10 @@ var template$3 = (function () {
             sortItems: function(event, params) {
                 event.preventDefault();
                 this.fire('updateSorting', params);
+            },
+            doEditItem: function (event, item) {
+                event.preventDefault();
+                this.fire('editItem', { id: item.id });
             }
         }
     }
@@ -571,7 +575,7 @@ function create_main_fragment$4 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1359850470', '' );
+			setAttribute( div, 'svelte-1777175650', '' );
 			div.className = "users";
 			table.border = "1";
 			setAttribute( table, 'width', "100%" );
@@ -660,12 +664,13 @@ function create_main_fragment$4 ( state, component ) {
 }
 
 function create_each_block ( state, each_block_value, item, item_index, component ) {
-	var tr, td, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, i, text_8_value, text_8, text_9, i_1, text_10_value, text_10;
+	var tr, td, a, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, i, text_8_value, text_8, text_9, i_1, text_10_value, text_10;
 
 	return {
 		create: function () {
 			tr = createElement( 'tr' );
 			td = createElement( 'td' );
+			a = createElement( 'a' );
 			text = createText( text_value = item.id );
 			text_1 = createText( "\n                        " );
 			td_1 = createElement( 'td' );
@@ -687,8 +692,17 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 		},
 
 		hydrate: function ( nodes ) {
+			a.href = "#";
+			addListener( a, 'click', click_handler );
+
+			a._svelte = {
+				component: component,
+				each_block_value: each_block_value,
+				item_index: item_index
+			};
+
 			i.className = "noselect";
-			addListener( i, 'click', click_handler );
+			addListener( i, 'click', click_handler_1 );
 
 			i._svelte = {
 				component: component,
@@ -697,7 +711,7 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 			};
 
 			i_1.className = "noselect";
-			addListener( i_1, 'click', click_handler_1 );
+			addListener( i_1, 'click', click_handler_2 );
 
 			i_1._svelte = {
 				component: component,
@@ -709,7 +723,8 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 		mount: function ( target, anchor ) {
 			insertNode( tr, target, anchor );
 			appendNode( td, tr );
-			appendNode( text, td );
+			appendNode( a, td );
+			appendNode( text, a );
 			appendNode( text_1, tr );
 			appendNode( td_1, tr );
 			appendNode( text_2, td_1 );
@@ -729,6 +744,9 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 		},
 
 		update: function ( changed, state, each_block_value, item, item_index ) {
+			a._svelte.each_block_value = each_block_value;
+			a._svelte.item_index = item_index;
+
 			if ( text_value !== ( text_value = item.id ) ) {
 				text.data = text_value;
 			}
@@ -765,8 +783,9 @@ function create_each_block ( state, each_block_value, item, item_index, componen
 		},
 
 		destroy: function () {
-			removeListener( i, 'click', click_handler );
-			removeListener( i_1, 'click', click_handler_1 );
+			removeListener( a, 'click', click_handler );
+			removeListener( i, 'click', click_handler_1 );
+			removeListener( i_1, 'click', click_handler_2 );
 		}
 	};
 }
@@ -801,7 +820,7 @@ function create_if_block_2$1 ( state, component ) {
 function create_if_block_3$1 ( state, component ) {
 	var text, button, text_1;
 
-	function click_handler_2 ( event ) {
+	function click_handler_3 ( event ) {
 		component.fire("requestData");
 	}
 
@@ -814,7 +833,7 @@ function create_if_block_3$1 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			addListener( button, 'click', click_handler_2 );
+			addListener( button, 'click', click_handler_3 );
 		},
 
 		mount: function ( target, anchor ) {
@@ -829,7 +848,7 @@ function create_if_block_3$1 ( state, component ) {
 		},
 
 		destroy: function () {
-			removeListener( button, 'click', click_handler_2 );
+			removeListener( button, 'click', click_handler_3 );
 		}
 	};
 }
@@ -951,10 +970,16 @@ function create_if_block_1$1 ( state, component ) {
 function click_handler ( event ) {
 	var component = this._svelte.component;
 	var each_block_value = this._svelte.each_block_value, item_index = this._svelte.item_index, item = each_block_value[item_index];
-	component.fire("editItem", { id: item.id });
+	component.doEditItem(event, item);
 }
 
 function click_handler_1 ( event ) {
+	var component = this._svelte.component;
+	var each_block_value = this._svelte.each_block_value, item_index = this._svelte.item_index, item = each_block_value[item_index];
+	component.doEditItem(event, item);
+}
+
+function click_handler_2 ( event ) {
 	var component = this._svelte.component;
 	var each_block_value = this._svelte.each_block_value, item_index = this._svelte.item_index, item = each_block_value[item_index];
 	component.fire("deleteItem", { id: item.id });

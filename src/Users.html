@@ -13,12 +13,12 @@
             {{#if items && items.length > 0}}
                 {{#each processedItems as item}}
                     <tr>
-                        <td>{{item.id}}</td>
+                        <td><a href="#" on:click='doEditItem(event, item)'>{{item.id}}</a></td>
                         <td>{{item.firstName}}</td>
                         <td>{{item.lastName}}</td>
                         <td>{{item.email}}</td>
                         <td>
-                            <i class="noselect" on:click='fire("editItem", { id: item.id })'>{{unicodes.edit}}</i>
+                            <i class="noselect" on:click='doEditItem(event, item)'>{{unicodes.edit}}</i>
                             <i class="noselect" on:click='fire("deleteItem", { id: item.id })'>{{unicodes.delete}}</i>
                         </td>
                     </tr>
@@ -93,6 +93,10 @@
             sortItems: function(event, params) {
                 event.preventDefault();
                 this.fire('updateSorting', params)
+            },
+            doEditItem: function (event, item) {
+                event.preventDefault()
+                this.fire('editItem', { id: item.id })
             }
         }
     }
