@@ -86,3 +86,15 @@ app.on('updateSorting', event => {
 
     app.set({ sorting: sorting })
 })
+
+app.on('saveUser', event => {
+    let items = app.get('items')
+    let foundIdx = items.findIndex((item) => {
+        return item.id === event.id
+    })
+    if (foundIdx === -1) {
+        throw 'Failed to find item by id=' + event.id
+    }
+    items[foundIdx] = event // new data
+    app.set({ items: items })
+})

@@ -32,6 +32,8 @@
         items='{{items}}'
         item='{{itemToEdit}}'
         on:requestData='requestData()'
+        on:cancelEdit='cancelEdit(event)'
+        on:saveUser='fire("saveUser", event)'
       />
 
   {{else}}
@@ -110,6 +112,9 @@
           // TODO Could check for populated items array at this point?
           // So, this means that Users component knows nothing about route generation, it just fired up the id.
           this.doRoute({ href: Config.routes.editUser+'/'+event.id }) // FIXME weaksauce route url construction.
+        },
+        cancelEdit: function () {
+          this.doRoute({ href: Config.routes.listUsers})
         },
         requestData: function () {
           // TODO isLoading... localise to Users component?

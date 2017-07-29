@@ -2,7 +2,9 @@
 :root {
     --base-background-color: #eee;
     --spacing-vertical-normal: 1em;
+    --spacing-vertical-small: 0.5em;
     --spacing-horizontal-small: 0.25em;
+    --max-width-normal: 30em;
 }
 
 body {

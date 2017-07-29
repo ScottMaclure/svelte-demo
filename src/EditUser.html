@@ -3,10 +3,39 @@
     Loading data...
   {{else}}
     <!-- TODO new vs edit -->
-    TODO Edit user {{item.id}} {{item.firstName}} {{item.lastName}} {{item.email}}
+    <form on:submit="saveUser(event)">
+      <fieldset>
+        <legend>Edit User #{{item.id}}</legend>
+        <input type="hidden" name="id" value="{{item.id}}">
+
+        <div class="row">
+          <label for="firstName">First name</label>
+          <input ref:firstName name="firstName" type="text" placeholder="e.g. Bob" value="{{item.firstName}}">
+        </div>
+
+        <div class="row">
+          <label for="lastName">Last name</label>
+          <input ref:lastName name="lastName" type="text" placeholder="e.g. Connor" value="{{item.lastName}}">
+        </div>
+
+        <div class="row">
+          <label for="email">Email</label>
+          <input ref:email name="email" type="email" placeholder="bob@connor.com" value="{{item.email}}">
+        </div>
+
+        <div class="row">
+          <input type="submit" name="Submit"> <a href="#" on:click="cancelEdit(event)">Cancel</a>
+        </div>
+
+      </fieldset>
+
+    </form>
   {{/if}}
 </div>
 <script>
+
+  import isEqual from 'lodash.isequal'
+
   export default {
     data () {
       return {
@@ -34,6 +63,52 @@
         }, 250)
 
       }
+    },
+    methods: {
+      /**
+       * TODO Best practice here? Two-way bindings for convenience?
+       */
+      saveUser: function (event) {
+        event.preventDefault()
+
+        // TODO validate a user item, return a payload the UI can use. Standardise.
+
+        let item = this.get('item') // original item
+
+        let editItem = JSON.parse(JSON.stringify(this.get('item')))
+        editItem.firstName = this.refs.firstName.value
+        editItem.lastName = this.refs.lastName.value
+        editItem.email = this.refs.email.value
+
+        // Check any fields were actually changed first.
+        if (isEqual(item, editItem)) {
+          return
+        }
+
+        // Changed
+        this.fire('saveUser', editItem)
+      },
+      /**
+       * Interesting.. don't put routing knowledge into this component, just fire the semantic event and let the "app" take care of it.
+       * Keeps routing within the app component, rather than scattered throughout the subcomponents?
+       */
+      cancelEdit: function (event) {
+        event.preventDefault()
+        this.fire('cancelEdit', event)
+      }
     }
   }
 </script>
+
+<style>
+  .editUser label {
+    display: block;
+  }
+  .editUser .row {
+    margin-bottom: var(--spacing-vertical-small);
+  }
+  .editUser input[type=text], .editUser input[type=email] {
+    width: 100%;
+    max-width: var(--max-width-normal);
+  }
+</style>

@@ -2,6 +2,8 @@
 // https://github.com/rollup/rollup-plugin-svelte
 
 import svelte from 'rollup-plugin-svelte';
+import nodeResolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
 
 export default {
     entry: 'src/main.js',
@@ -11,6 +13,14 @@ export default {
         exclude: ['node_modules/**']
     },
     plugins: [
+        nodeResolve({
+            jsnext: true,
+            main: true
+        }),
+        commonjs({
+            include: 'node_modules/**',  // Default: undefined
+            sourceMap: false,  // Default: true
+        }),
         svelte({
             // By default, all .html and .svelte files are compiled
             // extensions: [ '.my-custom-extension' ],

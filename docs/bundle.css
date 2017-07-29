@@ -1,9 +1,9 @@
 
-  [svelte-54850208].helloWorld, [svelte-54850208] .helloWorld {
+  [svelte-3656195501].helloWorld, [svelte-3656195501] .helloWorld {
     background-color: var(--base-background-color, #00f);
     padding: var(--spacing-vertical-normal);
   }
-  [svelte-54850208].navLinks a, [svelte-54850208] .navLinks a {
+  [svelte-3656195501].navLinks a, [svelte-3656195501] .navLinks a {
     margin-right: var(--spacing-horizontal-small);
   }
 
@@ -16,6 +16,18 @@
     [svelte-1777175650].users, [svelte-1777175650] .users {
         overflow: scroll;
     }
+
+
+  [svelte-2471117103].editUser label, [svelte-2471117103] .editUser label {
+    display: block;
+  }
+  [svelte-2471117103].editUser .row, [svelte-2471117103] .editUser .row {
+    margin-bottom: var(--spacing-vertical-small);
+  }
+  [svelte-2471117103].editUser input[type=text], [svelte-2471117103] .editUser input[type=text], [svelte-2471117103].editUser input[type=email], [svelte-2471117103] .editUser input[type=email] {
+    width: 100%;
+    max-width: var(--max-width-normal);
+  }
 
 
 /*# sourceMappingURL=bundle.css.map */
