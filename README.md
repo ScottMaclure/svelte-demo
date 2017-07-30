@@ -49,7 +49,9 @@ npm run watch
 - [x] Config.js for shared/common config values between components
 - [x] Support lazy load of items for direct page load of edit route (#EditUser/1)
 - [x] Add support for loading commonjs node_modules (lodash isEqual, etc)
+- [x] Add <noscript> element for PWA audit
 - [ ] Add a user edit screen, combine with router, save
+- [ ] Add service worker for Chrome Audit (Lighthouse)
 - [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
 - [ ] Edit user - add validation to the input fields
