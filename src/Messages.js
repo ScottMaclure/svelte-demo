@@ -6,6 +6,7 @@ import Config from './config.js'
 export function publishMessage(app, message) {
 
     message.id = message.id || Date.now() // FIXME should be fine...
+    message.type = message.type || Config.messages.types.default
 
     let messages = app.get('messages') || []
     messages.push(message)

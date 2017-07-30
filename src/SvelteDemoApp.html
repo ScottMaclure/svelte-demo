@@ -2,23 +2,25 @@
 
 <div class="helloWorld">
 
-  <nav class="navLinks">
-    <a href="#{{routes.splash}}" on:click='doRoute(event)'>Home</a>
-    <a href="#{{routes.listUsers}}" on:click='doRoute(event)'>List Users</a>
-    <a href="#{{routes.testBroken}}" on:click='doRoute(event)'>Test Broken</a>
-  </nav>
-
   <!-- TODO refactor into component -->
   {{#if messages.length > 0}}
     <div class="messages">
       {{#each messages as message}}
-        <div class="message">
+        <div class="alert alert-{{message.type}}">
           <div>{{message.title}}</div>
           <div>{{message.content}}</div>
         </div>
       {{/each}}
     </div>
   {{/if}}
+
+  <h1>Svelte Demo App</h1>
+
+  <nav class="navLinks">
+    <a href="#{{routes.splash}}" on:click='doRoute(event)'>Home</a>
+    <a href="#{{routes.listUsers}}" on:click='doRoute(event)'>List Users</a>
+    <a href="#{{routes.testBroken}}" on:click='doRoute(event)'>Test Broken</a>
+  </nav>
 
   {{#if route === routes.splash}}
 
@@ -144,7 +146,6 @@
 </script>
 <style>
   .helloWorld {
-    background-color: var(--base-background-color, #00f);
     padding: var(--spacing-vertical-normal);
   }
   .helloWorld nav {
@@ -152,5 +153,10 @@
   }
   .helloWorld .navLinks a {
     margin-right: var(--spacing-horizontal-small);
+  }
+  .messages {
+    position: fixed;
+    top: var(--spacing-vertical-small);
+    width: 95%;
   }
 </style>

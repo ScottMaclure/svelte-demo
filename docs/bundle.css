@@ -1,13 +1,17 @@
 
-  [svelte-179600932].helloWorld, [svelte-179600932] .helloWorld {
-    background-color: var(--base-background-color, #00f);
+  [svelte-199660517].helloWorld, [svelte-199660517] .helloWorld {
     padding: var(--spacing-vertical-normal);
   }
-  [svelte-179600932].helloWorld nav, [svelte-179600932] .helloWorld nav {
+  [svelte-199660517].helloWorld nav, [svelte-199660517] .helloWorld nav {
     margin-bottom: var(--spacing-vertical-normal);
   }
-  [svelte-179600932].helloWorld .navLinks a, [svelte-179600932] .helloWorld .navLinks a {
+  [svelte-199660517].helloWorld .navLinks a, [svelte-199660517] .helloWorld .navLinks a {
     margin-right: var(--spacing-horizontal-small);
+  }
+  [svelte-199660517].messages, [svelte-199660517] .messages {
+    position: fixed;
+    top: var(--spacing-vertical-small);
+    width: 95%;
   }
 
 
@@ -16,18 +20,18 @@
     }
 
 
-    [svelte-1777175650].users, [svelte-1777175650] .users {
+    [svelte-2304966913].users, [svelte-2304966913] .users {
         overflow: scroll;
     }
 
 
-  [svelte-2471117103].editUser label, [svelte-2471117103] .editUser label {
+  [svelte-2377242188].editUser label, [svelte-2377242188] .editUser label {
     display: block;
   }
-  [svelte-2471117103].editUser .row, [svelte-2471117103] .editUser .row {
+  [svelte-2377242188].editUser .row, [svelte-2377242188] .editUser .row {
     margin-bottom: var(--spacing-vertical-small);
   }
-  [svelte-2471117103].editUser input[type=text], [svelte-2471117103] .editUser input[type=text], [svelte-2471117103].editUser input[type=email], [svelte-2471117103] .editUser input[type=email] {
+  [svelte-2377242188].editUser input[type=text], [svelte-2377242188] .editUser input[type=text], [svelte-2377242188].editUser input[type=email], [svelte-2377242188] .editUser input[type=email] {
     width: 100%;
     max-width: var(--max-width-normal);
   }

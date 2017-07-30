@@ -41,6 +41,7 @@ app.on('deleteItem', event => {
     app.set({ items: items })
 
     publishMessage(app, {
+        type: Config.messages.types.success,
         title: 'User Deleted',
         content: 'User ' + event.id + ' deleted successfully.'
     })
@@ -112,6 +113,7 @@ app.on('saveUser', event => {
     app.set({ items: items})
 
     publishMessage(app, {
+        type: Config.messages.types.success,
         title: 'User Saved',
         content: 'User ' + event.id + ' updated successfully.'
     })

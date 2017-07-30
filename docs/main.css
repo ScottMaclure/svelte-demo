@@ -1,20 +1,10 @@
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables */
 :root {
-    --base-background-color: #eee;
+    --body-bg-color: #fff;
     --spacing-vertical-normal: 1em;
     --spacing-vertical-small: 0.5em;
     --spacing-horizontal-small: 0.25em;
     --max-width-normal: 30em;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-}
-
-h1, h2, h3, h4, h5 {
-    padding-top: 0;
-    margin-top: 0;
 }
 
 i {

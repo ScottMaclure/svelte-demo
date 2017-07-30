@@ -16,13 +16,22 @@ var Config = {
         edit: '\u270E'
     },
     messages: {
-        displayTime: 5000
+        displayTime: 3000,
+        types: {
+            default: 'default',
+            success: 'success',
+            info: 'info',
+            warning: 'warning',
+            danger: 'danger',
+            inverse: 'inverse'
+        }
     }
 };
 
 function publishMessage(app, message) {
 
     message.id = message.id || Date.now(); // FIXME should be fine...
+    message.type = message.type || Config.messages.types.default;
 
     let messages = app.get('messages') || [];
     messages.push(message);
@@ -219,7 +228,7 @@ return {
 }());
 
 function create_main_fragment$1 ( state, component ) {
-	var div, h1, text, text_1_value, text_1, text_2, p, text_3, text_4_value, text_4, text_5, button, text_6, text_7, button_1, text_8;
+	var div, h2, text, text_1_value, text_1, text_2, p, text_3, text_4_value, text_4, text_5, button, text_6, text_7, button_1, text_8;
 
 	function click_handler ( event ) {
 		var state = component.get();
@@ -233,7 +242,7 @@ function create_main_fragment$1 ( state, component ) {
 	return {
 		create: function () {
 			div = createElement( 'div' );
-			h1 = createElement( 'h1' );
+			h2 = createElement( 'h2' );
 			text = createText( "Hello " );
 			text_1 = createText( text_1_value = state.name );
 			text_2 = createText( "\n  " );
@@ -257,9 +266,9 @@ function create_main_fragment$1 ( state, component ) {
 
 		mount: function ( target, anchor ) {
 			insertNode( div, target, anchor );
-			appendNode( h1, div );
-			appendNode( text, h1 );
-			appendNode( text_1, h1 );
+			appendNode( h2, div );
+			appendNode( text, h2 );
+			appendNode( text_1, h2 );
 			appendNode( text_2, div );
 			appendNode( p, div );
 			appendNode( text_3, p );
@@ -598,10 +607,8 @@ function create_main_fragment$4 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1777175650', '' );
+			setAttribute( div, 'svelte-2304966913', '' );
 			div.className = "users";
-			table.border = "1";
-			setAttribute( table, 'width', "100%" );
 			a.href = "#";
 			addListener( a, 'click', click_handler );
 			a_1.href = "#";
@@ -3148,7 +3155,7 @@ function create_main_fragment$5 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2471117103', '' );
+			setAttribute( div, 'svelte-2377242188', '' );
 			div.className = "editUser";
 		},
 
@@ -3275,6 +3282,7 @@ function create_if_block_1$2 ( state, component ) {
 			div_3.className = "row";
 			input_4.type = "submit";
 			input_4.name = "Submit";
+			input_4.value = "Save";
 			a.href = "#";
 			addListener( a, 'click', click_handler );
 		},
@@ -3497,12 +3505,14 @@ var template = (function () {
 }());
 
 function create_main_fragment ( state, component ) {
-	var text, div, nav, a, a_href_value, text_1, text_2, a_1, a_1_href_value, text_3, text_4, a_2, a_2_href_value, text_5, text_7, text_8;
+	var text, div, text_1, h1, text_2, text_3, nav, a, a_href_value, text_4, text_5, a_1, a_1_href_value, text_6, text_7, a_2, a_2_href_value, text_8, text_10;
 
 	function onwindowpopstate ( event ) {
 		component.doPopState(event);
 	}
 	window.addEventListener( 'popstate', onwindowpopstate );
+
+	var if_block = (state.messages.length > 0) && create_if_block( state, component );
 
 	function click_handler ( event ) {
 		component.doRoute(event);
@@ -3515,8 +3525,6 @@ function create_main_fragment ( state, component ) {
 	function click_handler_2 ( event ) {
 		component.doRoute(event);
 	}
-
-	var if_block = (state.messages.length > 0) && create_if_block( state, component );
 
 	function get_block ( state ) {
 		if ( state.route === state.routes.splash ) return create_if_block_1;
@@ -3532,24 +3540,27 @@ function create_main_fragment ( state, component ) {
 		create: function () {
 			text = createText( "\n\n" );
 			div = createElement( 'div' );
+			if ( if_block ) if_block.create();
+			text_1 = createText( "\n\n  " );
+			h1 = createElement( 'h1' );
+			text_2 = createText( "Svelte Demo App" );
+			text_3 = createText( "\n\n  " );
 			nav = createElement( 'nav' );
 			a = createElement( 'a' );
-			text_1 = createText( "Home" );
-			text_2 = createText( "\n    " );
+			text_4 = createText( "Home" );
+			text_5 = createText( "\n    " );
 			a_1 = createElement( 'a' );
-			text_3 = createText( "List Users" );
-			text_4 = createText( "\n    " );
+			text_6 = createText( "List Users" );
+			text_7 = createText( "\n    " );
 			a_2 = createElement( 'a' );
-			text_5 = createText( "Test Broken" );
-			text_7 = createText( "\n\n  \n  " );
-			if ( if_block ) if_block.create();
-			text_8 = createText( "\n\n  " );
+			text_8 = createText( "Test Broken" );
+			text_10 = createText( "\n\n  " );
 			if_block_1.create();
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-179600932', '' );
+			setAttribute( div, 'svelte-199660517', '' );
 			div.className = "helloWorld";
 			nav.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );
@@ -3563,22 +3574,39 @@ function create_main_fragment ( state, component ) {
 		mount: function ( target, anchor ) {
 			insertNode( text, target, anchor );
 			insertNode( div, target, anchor );
+			if ( if_block ) if_block.mount( div, null );
+			appendNode( text_1, div );
+			appendNode( h1, div );
+			appendNode( text_2, h1 );
+			appendNode( text_3, div );
 			appendNode( nav, div );
 			appendNode( a, nav );
-			appendNode( text_1, a );
-			appendNode( text_2, nav );
+			appendNode( text_4, a );
+			appendNode( text_5, nav );
 			appendNode( a_1, nav );
-			appendNode( text_3, a_1 );
-			appendNode( text_4, nav );
+			appendNode( text_6, a_1 );
+			appendNode( text_7, nav );
 			appendNode( a_2, nav );
-			appendNode( text_5, a_2 );
-			appendNode( text_7, div );
-			if ( if_block ) if_block.mount( div, null );
-			appendNode( text_8, div );
+			appendNode( text_8, a_2 );
+			appendNode( text_10, div );
 			if_block_1.mount( div, null );
 		},
 
 		update: function ( changed, state ) {
+			if ( state.messages.length > 0 ) {
+				if ( if_block ) {
+					if_block.update( changed, state );
+				} else {
+					if_block = create_if_block( state, component );
+					if_block.create();
+					if_block.mount( div, text_1 );
+				}
+			} else if ( if_block ) {
+				if_block.unmount();
+				if_block.destroy();
+				if_block = null;
+			}
+
 			if ( a_href_value !== ( a_href_value = "#" + ( state.routes.splash ) ) ) {
 				a.href = a_href_value;
 			}
@@ -3589,20 +3617,6 @@ function create_main_fragment ( state, component ) {
 
 			if ( a_2_href_value !== ( a_2_href_value = "#" + ( state.routes.testBroken ) ) ) {
 				a_2.href = a_2_href_value;
-			}
-
-			if ( state.messages.length > 0 ) {
-				if ( if_block ) {
-					if_block.update( changed, state );
-				} else {
-					if_block = create_if_block( state, component );
-					if_block.create();
-					if_block.mount( div, text_8 );
-				}
-			} else if ( if_block ) {
-				if_block.unmount();
-				if_block.destroy();
-				if_block = null;
 			}
 
 			if ( current_block === ( current_block = get_block( state ) ) && if_block_1 ) {
@@ -3626,17 +3640,17 @@ function create_main_fragment ( state, component ) {
 		destroy: function () {
 			window.removeEventListener( 'popstate', onwindowpopstate );
 
+			if ( if_block ) if_block.destroy();
 			removeListener( a, 'click', click_handler );
 			removeListener( a_1, 'click', click_handler_1 );
 			removeListener( a_2, 'click', click_handler_2 );
-			if ( if_block ) if_block.destroy();
 			if_block_1.destroy();
 		}
 	};
 }
 
 function create_each_block ( state, each_block_value, message, message_index, component ) {
-	var div, div_1, text_value, text, text_1, div_2, text_2_value, text_2;
+	var div, div_class_value, div_1, text_value, text, text_1, div_2, text_2_value, text_2;
 
 	return {
 		create: function () {
@@ -3650,7 +3664,7 @@ function create_each_block ( state, each_block_value, message, message_index, co
 		},
 
 		hydrate: function ( nodes ) {
-			div.className = "message";
+			div.className = div_class_value = "alert alert-" + ( message.type );
 		},
 
 		mount: function ( target, anchor ) {
@@ -3663,6 +3677,10 @@ function create_each_block ( state, each_block_value, message, message_index, co
 		},
 
 		update: function ( changed, state, each_block_value, message, message_index ) {
+			if ( div_class_value !== ( div_class_value = "alert alert-" + ( message.type ) ) ) {
+				div.className = div_class_value;
+			}
+
 			if ( text_value !== ( text_value = message.title ) ) {
 				text.data = text_value;
 			}
@@ -4028,6 +4046,7 @@ app.on('deleteItem', event => {
     app.set({ items: items });
 
     publishMessage(app, {
+        type: Config.messages.types.success,
         title: 'User Deleted',
         content: 'User ' + event.id + ' deleted successfully.'
     });
@@ -4099,6 +4118,7 @@ app.on('saveUser', event => {
     app.set({ items: items});
 
     publishMessage(app, {
+        type: Config.messages.types.success,
         title: 'User Saved',
         content: 'User ' + event.id + ' updated successfully.'
     });

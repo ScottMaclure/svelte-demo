@@ -13,6 +13,14 @@ export default {
         edit: '\u270E'
     },
     messages: {
-        displayTime: 5000
+        displayTime: 3000,
+        types: {
+            default: 'default',
+            success: 'success',
+            info: 'info',
+            warning: 'warning',
+            danger: 'danger',
+            inverse: 'inverse'
+        }
     }
 }
