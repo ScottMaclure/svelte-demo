@@ -6,13 +6,13 @@
         <meta charset="utf-8">
         <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link rel="icon" type="image/png" href="/favicon.png">
-        <link rel="stylesheet" href="main.css" type="text/css">
-        <link rel="stylesheet" href="bundle.css" type="text/css">
+        <link rel="stylesheet" href="main.css" type="text/css" media="none" onload="if(media!=='all')media='all'">
+        <link rel="stylesheet" href="bundle.css" type="text/css" media="none" onload="if(media!=='all')media='all'">
     </head>
 
     <body>
         <main></main>
-        <script src='bundle.js'></script>
+        <script src="bundle.js" async="true"></script>
         <noscript>
             <h1>Enable JavaScript</h1>
             <p>SvelteDemo requires JavaScript to be enabled - it's a SPA. Useless without it.</p>

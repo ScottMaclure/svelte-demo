@@ -3521,7 +3521,7 @@ function create_main_fragment ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-3656195501', '' );
+			setAttribute( div, 'svelte-2727292841', '' );
 			div.className = "helloWorld";
 			nav.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );
