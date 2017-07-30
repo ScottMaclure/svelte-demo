@@ -50,14 +50,14 @@ npm run watch
 - [x] Support lazy load of items for direct page load of edit route (#EditUser/1)
 - [x] Add support for loading commonjs node_modules (lodash isEqual, etc)
 - [x] Add <noscript> element for PWA audit
-- [ ] Add a user edit screen, combine with router, save
-- [ ] Add service worker for Chrome Audit (Lighthouse)
+- [ ] Add a user edit screen, combine with router, save, route to ListUsers, success message
 - [ ] Refactor edit user to add user, auto-inc the id
+- [ ] Add https://shoelace.style/ for base css L&F
+- [ ] Edit user - client validation
+- [ ] Add service worker for Chrome Audit (Lighthouse)
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
-- [ ] Edit user - add validation to the input fields
-- [ ] Use svelte-router, see if it works well
-- [ ] Use router5, replace basic routing solution
+- [ ] Use svelte-router or router5, see if it works better than homebrew (if keep homebrew, refactor to mixin/import/node_module)
 - [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)
-- [ ] Testing components individually (Mocha)
+- [ ] Testing components individually (Mocha?)
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
