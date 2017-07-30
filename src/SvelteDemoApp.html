@@ -8,6 +8,18 @@
     <a href="#{{routes.testBroken}}" on:click='doRoute(event)'>Test Broken</a>
   </nav>
 
+  <!-- TODO refactor into component -->
+  {{#if messages.length > 0}}
+    <div class="messages">
+      {{#each messages as message}}
+        <div class="message">
+          <div>{{message.title}}</div>
+          <div>{{message.content}}</div>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+
   {{#if route === routes.splash}}
 
     <Splash name='{{name}}' count='{{count}}'/>
@@ -71,6 +83,7 @@
         routeParts: getRouteParts(),
         routes: Config.routes,
         isLoading: false,
+        messages: [],
         count: 0,
         items: [],
         filter: '',

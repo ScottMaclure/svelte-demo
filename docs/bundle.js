@@ -14,8 +14,31 @@ var Config = {
     unicodes: {
         delete: '\u274C',
         edit: '\u270E'
+    },
+    messages: {
+        displayTime: 5000
     }
 };
+
+function publishMessage(app, message) {
+
+    message.id = message.id || Date.now(); // FIXME should be fine...
+
+    let messages = app.get('messages') || [];
+    messages.push(message);
+    app.set({ messages: messages });
+
+    // Remove this message after N seconds.
+    // FIXME Not ideal - better to change in place?
+    // TODO Should be easily shared with other, unrelated actions.
+    setTimeout(() => {
+        let newMessages = app.get('messages').filter((e) => {
+            return e.id !== message.id
+        });
+        app.set({ messages: newMessages });
+    }, Config.messages.displayTime);
+
+}
 
 function noop() {}
 
@@ -663,7 +686,7 @@ function create_main_fragment$4 ( state, component ) {
 	};
 }
 
-function create_each_block ( state, each_block_value, item, item_index, component ) {
+function create_each_block$1 ( state, each_block_value, item, item_index, component ) {
 	var tr, td, a, text_value, text, text_1, td_1, text_2_value, text_2, text_3, td_2, text_4_value, text_4, text_5, td_3, text_6_value, text_6, text_7, td_4, i, text_8_value, text_8, text_9, i_1, text_10_value, text_10;
 
 	return {
@@ -861,7 +884,7 @@ function create_if_block$1 ( state, component ) {
 	var each_block_iterations = [];
 
 	for ( var i = 0; i < each_block_value.length; i += 1 ) {
-		each_block_iterations[i] = create_each_block( state, each_block_value, each_block_value[i], i, component );
+		each_block_iterations[i] = create_each_block$1( state, each_block_value, each_block_value[i], i, component );
 	}
 
 	return {
@@ -889,7 +912,7 @@ function create_if_block$1 ( state, component ) {
 					if ( each_block_iterations[i] ) {
 						each_block_iterations[i].update( changed, state, each_block_value, each_block_value[i], i );
 					} else {
-						each_block_iterations[i] = create_each_block( state, each_block_value, each_block_value[i], i, component );
+						each_block_iterations[i] = create_each_block$1( state, each_block_value, each_block_value[i], i, component );
 						each_block_iterations[i].create();
 						each_block_iterations[i].mount( each_block_anchor.parentNode, each_block_anchor );
 					}
@@ -3413,6 +3436,7 @@ var template = (function () {
         routeParts: getRouteParts(),
         routes: Config.routes,
         isLoading: false,
+        messages: [],
         count: 0,
         items: [],
         filter: '',
@@ -3473,7 +3497,7 @@ var template = (function () {
 }());
 
 function create_main_fragment ( state, component ) {
-	var text, div, nav, a, a_href_value, text_1, text_2, a_1, a_1_href_value, text_3, text_4, a_2, a_2_href_value, text_5, text_7;
+	var text, div, nav, a, a_href_value, text_1, text_2, a_1, a_1_href_value, text_3, text_4, a_2, a_2_href_value, text_5, text_7, text_8;
 
 	function onwindowpopstate ( event ) {
 		component.doPopState(event);
@@ -3492,15 +3516,17 @@ function create_main_fragment ( state, component ) {
 		component.doRoute(event);
 	}
 
+	var if_block = (state.messages.length > 0) && create_if_block( state, component );
+
 	function get_block ( state ) {
-		if ( state.route === state.routes.splash ) return create_if_block;
-		if ( state.route === state.routes.listUsers ) return create_if_block_1;
-		if ( state.route === state.routes.editUser ) return create_if_block_2;
-		return create_if_block_3;
+		if ( state.route === state.routes.splash ) return create_if_block_1;
+		if ( state.route === state.routes.listUsers ) return create_if_block_2;
+		if ( state.route === state.routes.editUser ) return create_if_block_3;
+		return create_if_block_4;
 	}
 
 	var current_block = get_block( state );
-	var if_block = current_block( state, component );
+	var if_block_1 = current_block( state, component );
 
 	return {
 		create: function () {
@@ -3515,13 +3541,15 @@ function create_main_fragment ( state, component ) {
 			text_4 = createText( "\n    " );
 			a_2 = createElement( 'a' );
 			text_5 = createText( "Test Broken" );
-			text_7 = createText( "\n\n  " );
-			if_block.create();
+			text_7 = createText( "\n\n  \n  " );
+			if ( if_block ) if_block.create();
+			text_8 = createText( "\n\n  " );
+			if_block_1.create();
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2727292841', '' );
+			setAttribute( div, 'svelte-179600932', '' );
 			div.className = "helloWorld";
 			nav.className = "navLinks";
 			a.href = a_href_value = "#" + ( state.routes.splash );
@@ -3545,7 +3573,9 @@ function create_main_fragment ( state, component ) {
 			appendNode( a_2, nav );
 			appendNode( text_5, a_2 );
 			appendNode( text_7, div );
-			if_block.mount( div, null );
+			if ( if_block ) if_block.mount( div, null );
+			appendNode( text_8, div );
+			if_block_1.mount( div, null );
 		},
 
 		update: function ( changed, state ) {
@@ -3561,21 +3591,36 @@ function create_main_fragment ( state, component ) {
 				a_2.href = a_2_href_value;
 			}
 
-			if ( current_block === ( current_block = get_block( state ) ) && if_block ) {
-				if_block.update( changed, state );
-			} else {
+			if ( state.messages.length > 0 ) {
+				if ( if_block ) {
+					if_block.update( changed, state );
+				} else {
+					if_block = create_if_block( state, component );
+					if_block.create();
+					if_block.mount( div, text_8 );
+				}
+			} else if ( if_block ) {
 				if_block.unmount();
 				if_block.destroy();
-				if_block = current_block( state, component );
-				if_block.create();
-				if_block.mount( div, null );
+				if_block = null;
+			}
+
+			if ( current_block === ( current_block = get_block( state ) ) && if_block_1 ) {
+				if_block_1.update( changed, state );
+			} else {
+				if_block_1.unmount();
+				if_block_1.destroy();
+				if_block_1 = current_block( state, component );
+				if_block_1.create();
+				if_block_1.mount( div, null );
 			}
 		},
 
 		unmount: function () {
 			detachNode( text );
 			detachNode( div );
-			if_block.unmount();
+			if ( if_block ) if_block.unmount();
+			if_block_1.unmount();
 		},
 
 		destroy: function () {
@@ -3584,12 +3629,127 @@ function create_main_fragment ( state, component ) {
 			removeListener( a, 'click', click_handler );
 			removeListener( a_1, 'click', click_handler_1 );
 			removeListener( a_2, 'click', click_handler_2 );
-			if_block.destroy();
+			if ( if_block ) if_block.destroy();
+			if_block_1.destroy();
 		}
 	};
 }
 
+function create_each_block ( state, each_block_value, message, message_index, component ) {
+	var div, div_1, text_value, text, text_1, div_2, text_2_value, text_2;
+
+	return {
+		create: function () {
+			div = createElement( 'div' );
+			div_1 = createElement( 'div' );
+			text = createText( text_value = message.title );
+			text_1 = createText( "\n          " );
+			div_2 = createElement( 'div' );
+			text_2 = createText( text_2_value = message.content );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			div.className = "message";
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( div, target, anchor );
+			appendNode( div_1, div );
+			appendNode( text, div_1 );
+			appendNode( text_1, div );
+			appendNode( div_2, div );
+			appendNode( text_2, div_2 );
+		},
+
+		update: function ( changed, state, each_block_value, message, message_index ) {
+			if ( text_value !== ( text_value = message.title ) ) {
+				text.data = text_value;
+			}
+
+			if ( text_2_value !== ( text_2_value = message.content ) ) {
+				text_2.data = text_2_value;
+			}
+		},
+
+		unmount: function () {
+			detachNode( div );
+		},
+
+		destroy: noop
+	};
+}
+
 function create_if_block ( state, component ) {
+	var div;
+
+	var each_block_value = state.messages;
+
+	var each_block_iterations = [];
+
+	for ( var i = 0; i < each_block_value.length; i += 1 ) {
+		each_block_iterations[i] = create_each_block( state, each_block_value, each_block_value[i], i, component );
+	}
+
+	return {
+		create: function () {
+			div = createElement( 'div' );
+
+			for ( var i = 0; i < each_block_iterations.length; i += 1 ) {
+				each_block_iterations[i].create();
+			}
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			div.className = "messages";
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( div, target, anchor );
+
+			for ( var i = 0; i < each_block_iterations.length; i += 1 ) {
+				each_block_iterations[i].mount( div, null );
+			}
+		},
+
+		update: function ( changed, state ) {
+			var each_block_value = state.messages;
+
+			if ( 'messages' in changed ) {
+				for ( var i = 0; i < each_block_value.length; i += 1 ) {
+					if ( each_block_iterations[i] ) {
+						each_block_iterations[i].update( changed, state, each_block_value, each_block_value[i], i );
+					} else {
+						each_block_iterations[i] = create_each_block( state, each_block_value, each_block_value[i], i, component );
+						each_block_iterations[i].create();
+						each_block_iterations[i].mount( div, null );
+					}
+				}
+
+				for ( ; i < each_block_iterations.length; i += 1 ) {
+					each_block_iterations[i].unmount();
+					each_block_iterations[i].destroy();
+				}
+				each_block_iterations.length = each_block_value.length;
+			}
+		},
+
+		unmount: function () {
+			detachNode( div );
+
+			for ( var i = 0; i < each_block_iterations.length; i += 1 ) {
+				each_block_iterations[i].unmount();
+			}
+		},
+
+		destroy: function () {
+			destroyEach( each_block_iterations, false, 0 );
+		}
+	};
+}
+
+function create_if_block_1 ( state, component ) {
 
 	var splash = new Splash({
 		_root: component._root,
@@ -3624,7 +3784,7 @@ function create_if_block ( state, component ) {
 	};
 }
 
-function create_if_block_1 ( state, component ) {
+function create_if_block_2 ( state, component ) {
 
 	var listusers = new ListUsers({
 		_root: component._root,
@@ -3686,11 +3846,14 @@ function create_if_block_1 ( state, component ) {
 	};
 }
 
-function create_if_block_2 ( state, component ) {
+function create_if_block_3 ( state, component ) {
 
 	var edituser = new EditUser({
 		_root: component._root,
-		data: { items: state.items, item: state.itemToEdit }
+		data: {
+			items: state.items,
+			item: state.itemToEdit
+		}
 	});
 
 	edituser.on( 'requestData', function ( event ) {
@@ -3733,7 +3896,7 @@ function create_if_block_2 ( state, component ) {
 	};
 }
 
-function create_if_block_3 ( state, component ) {
+function create_if_block_4 ( state, component ) {
 	var p, text, text_1_value, text_1, text_2;
 
 	return {
@@ -3857,10 +4020,18 @@ app.on('requestData', () => {
 });
 
 app.on('deleteItem', event => {
+
     let items = app.get('items').filter(function (item) {
       return item.id !== event.id
     });
+
     app.set({ items: items });
+
+    publishMessage(app, {
+        title: 'User Deleted',
+        content: 'User ' + event.id + ' deleted successfully.'
+    });
+
 });
 
 app.on('filterData', event => {
@@ -3914,15 +4085,26 @@ app.on('updateSorting', event => {
 });
 
 app.on('saveUser', event => {
+
     let items = app.get('items');
+
     let foundIdx = items.findIndex((item) => {
         return item.id === event.id
     });
     if (foundIdx === -1) {
         throw 'Failed to find item by id=' + event.id
     }
+
     items[foundIdx] = event; // new data
-    app.set({ items: items });
+    app.set({ items: items});
+
+    publishMessage(app, {
+        title: 'User Saved',
+        content: 'User ' + event.id + ' updated successfully.'
+    });
+
+    app.doRoute({ href: Config.routes.listUsers });
+
 });
 
 }());

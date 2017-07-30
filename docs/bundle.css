@@ -1,12 +1,12 @@
 
-  [svelte-2727292841].helloWorld, [svelte-2727292841] .helloWorld {
+  [svelte-179600932].helloWorld, [svelte-179600932] .helloWorld {
     background-color: var(--base-background-color, #00f);
     padding: var(--spacing-vertical-normal);
   }
-  [svelte-2727292841].helloWorld nav, [svelte-2727292841] .helloWorld nav {
+  [svelte-179600932].helloWorld nav, [svelte-179600932] .helloWorld nav {
     margin-bottom: var(--spacing-vertical-normal);
   }
-  [svelte-2727292841].helloWorld .navLinks a, [svelte-2727292841] .helloWorld .navLinks a {
+  [svelte-179600932].helloWorld .navLinks a, [svelte-179600932] .helloWorld .navLinks a {
     margin-right: var(--spacing-horizontal-small);
   }
 

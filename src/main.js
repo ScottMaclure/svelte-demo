@@ -1,5 +1,7 @@
 // Kickstart the application.
 
+import Config from './config.js'
+import {publishMessage} from './Messages.js'
 import SvelteDemoApp from './SvelteDemoApp.html'
 
 const MIN_FILTER_LENGTH = 1 // allow for id searches
@@ -31,10 +33,18 @@ app.on('requestData', () => {
 })
 
 app.on('deleteItem', event => {
+
     let items = app.get('items').filter(function (item) {
       return item.id !== event.id
     })
+
     app.set({ items: items })
+
+    publishMessage(app, {
+        title: 'User Deleted',
+        content: 'User ' + event.id + ' deleted successfully.'
+    })
+
 })
 
 app.on('filterData', event => {
@@ -88,13 +98,24 @@ app.on('updateSorting', event => {
 })
 
 app.on('saveUser', event => {
+
     let items = app.get('items')
+
     let foundIdx = items.findIndex((item) => {
         return item.id === event.id
     })
     if (foundIdx === -1) {
         throw 'Failed to find item by id=' + event.id
     }
+
     items[foundIdx] = event // new data
-    app.set({ items: items })
+    app.set({ items: items})
+
+    publishMessage(app, {
+        title: 'User Saved',
+        content: 'User ' + event.id + ' updated successfully.'
+    })
+
+    app.doRoute({ href: Config.routes.listUsers })
+
 })

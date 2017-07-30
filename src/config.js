@@ -11,5 +11,8 @@ export default {
     unicodes: {
         delete: '\u274C',
         edit: '\u270E'
+    },
+    messages: {
+        displayTime: 5000
     }
 }
