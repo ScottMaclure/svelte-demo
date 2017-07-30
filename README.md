@@ -62,4 +62,4 @@ npm run watch
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
 - [ ] Refactor messages into generic system
-- [ ] Add isDirty computed property on EditUser form, to disable/enable the Save button
+- [ ] Add isDirty computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
