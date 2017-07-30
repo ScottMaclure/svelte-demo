@@ -607,7 +607,7 @@ function create_main_fragment$4 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2304966913', '' );
+			setAttribute( div, 'svelte-1867172274', '' );
 			div.className = "users";
 			a.href = "#";
 			addListener( a, 'click', click_handler );
@@ -821,22 +821,20 @@ function create_each_block$1 ( state, each_block_value, item, item_index, compon
 }
 
 function create_if_block_2$1 ( state, component ) {
-	var span, text;
+	var span;
 
 	return {
 		create: function () {
 			span = createElement( 'span' );
-			text = createText( "Loading..." );
 			this.hydrate();
 		},
 
 		hydrate: function ( nodes ) {
-			span.className = "loading";
+			span.className = "loader";
 		},
 
 		mount: function ( target, anchor ) {
 			insertNode( span, target, anchor );
-			appendNode( text, span );
 		},
 
 		unmount: function () {
@@ -3155,7 +3153,7 @@ function create_main_fragment$5 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-3571352161', '' );
+			setAttribute( div, 'svelte-3175477618', '' );
 			div.className = "editUser";
 		},
 
@@ -3188,21 +3186,26 @@ function create_main_fragment$5 ( state, component ) {
 }
 
 function create_if_block$2 ( state, component ) {
-	var text;
+	var span;
 
 	return {
 		create: function () {
-			text = createText( "Loading data..." );
+			span = createElement( 'span' );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			span.className = "loader";
 		},
 
 		mount: function ( target, anchor ) {
-			insertNode( text, target, anchor );
+			insertNode( span, target, anchor );
 		},
 
 		update: noop,
 
 		unmount: function () {
-			detachNode( text );
+			detachNode( span );
 		},
 
 		destroy: noop
@@ -3227,31 +3230,31 @@ function create_if_block_1$2 ( state, component ) {
 			legend = createElement( 'legend' );
 			text = createText( "Edit User #" );
 			text_1 = createText( text_1_value = state.item.id );
-			text_2 = createText( "\r\n        " );
+			text_2 = createText( "\n        " );
 			input = createElement( 'input' );
-			text_3 = createText( "\r\n\r\n        " );
+			text_3 = createText( "\n\n        " );
 			div = createElement( 'div' );
 			label = createElement( 'label' );
 			text_4 = createText( "First name" );
-			text_5 = createText( "\r\n          " );
+			text_5 = createText( "\n          " );
 			input_1 = createElement( 'input' );
-			text_7 = createText( "\r\n\r\n        " );
+			text_7 = createText( "\n\n        " );
 			div_1 = createElement( 'div' );
 			label_1 = createElement( 'label' );
 			text_8 = createText( "Last name" );
-			text_9 = createText( "\r\n          " );
+			text_9 = createText( "\n          " );
 			input_2 = createElement( 'input' );
-			text_11 = createText( "\r\n\r\n        " );
+			text_11 = createText( "\n\n        " );
 			div_2 = createElement( 'div' );
 			label_2 = createElement( 'label' );
 			text_12 = createText( "Email" );
-			text_13 = createText( "\r\n          " );
+			text_13 = createText( "\n          " );
 			input_3 = createElement( 'input' );
-			text_15 = createText( "\r\n\r\n        " );
+			text_15 = createText( "\n\n        " );
 			div_3 = createElement( 'div' );
 			button = createElement( 'button' );
 			text_16 = createText( "Save" );
-			text_17 = createText( "\r\n          " );
+			text_17 = createText( "\n          " );
 			a = createElement( 'a' );
 			text_18 = createText( "Cancel" );
 			this.hydrate();

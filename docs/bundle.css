@@ -20,18 +20,18 @@
     }
 
 
-    [svelte-2304966913].users, [svelte-2304966913] .users {
+    [svelte-1867172274].users, [svelte-1867172274] .users {
         overflow: scroll;
     }
 
 
-  [svelte-3571352161].editUser label, [svelte-3571352161] .editUser label {
+  [svelte-3175477618].editUser label, [svelte-3175477618] .editUser label {
     display: block;
   }
-  [svelte-3571352161].editUser .row, [svelte-3571352161] .editUser .row {
+  [svelte-3175477618].editUser .row, [svelte-3175477618] .editUser .row {
     margin-bottom: var(--spacing-vertical-small);
   }
-  [svelte-3571352161].editUser input[type=text], [svelte-3571352161] .editUser input[type=text], [svelte-3571352161].editUser input[type=email], [svelte-3571352161] .editUser input[type=email] {
+  [svelte-3175477618].editUser input[type=text], [svelte-3175477618] .editUser input[type=text], [svelte-3175477618].editUser input[type=email], [svelte-3175477618] .editUser input[type=email] {
     width: 100%;
     max-width: var(--max-width-normal);
   }

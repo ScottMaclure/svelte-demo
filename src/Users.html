@@ -27,7 +27,8 @@
                 <tr>
                     <td colspan="5">
                         {{#if isLoading}}
-                            <span class="loading">Loading...</span> {{else}} No rows present.
+                            <span class="loader"></span>
+                        {{else}} No rows present.
                             <button on:click='fire("requestData")'>Load</button>
                         {{/if}}
                     </td>

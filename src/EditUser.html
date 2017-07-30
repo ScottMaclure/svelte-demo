@@ -1,6 +1,6 @@
 <div class="editUser">
   {{#if isLoading}}
-    Loading data...
+    <span class="loader"></span>
   {{else}}
     <!-- TODO new vs edit -->
     <form on:submit="saveUser(event)">
