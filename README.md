@@ -63,3 +63,4 @@ npm run watch
 - [ ] Testing components individually (Mocha?)
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
+- [ ] Client pagination feature, see if it can be generic
