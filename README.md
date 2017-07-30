@@ -53,7 +53,7 @@ npm run watch
 - [x] Add a user edit screen, combine with router, save, route to ListUsers, success message
 - [x] Add https://shoelace.style/ for base css L&F
 - [x] Refactor messages into generic system
-- [ ] Add service worker for Chrome Audit (Lighthouse)
+- [ ] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache)
 - [ ] Add isDirty computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
 - [ ] Edit user - client validation
 - [ ] Refactor edit user to add user, auto-inc the id
