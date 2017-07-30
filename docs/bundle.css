@@ -25,13 +25,13 @@
     }
 
 
-  [svelte-2377242188].editUser label, [svelte-2377242188] .editUser label {
+  [svelte-3571352161].editUser label, [svelte-3571352161] .editUser label {
     display: block;
   }
-  [svelte-2377242188].editUser .row, [svelte-2377242188] .editUser .row {
+  [svelte-3571352161].editUser .row, [svelte-3571352161] .editUser .row {
     margin-bottom: var(--spacing-vertical-small);
   }
-  [svelte-2377242188].editUser input[type=text], [svelte-2377242188] .editUser input[type=text], [svelte-2377242188].editUser input[type=email], [svelte-2377242188] .editUser input[type=email] {
+  [svelte-3571352161].editUser input[type=text], [svelte-3571352161] .editUser input[type=text], [svelte-3571352161].editUser input[type=email], [svelte-3571352161] .editUser input[type=email] {
     width: 100%;
     max-width: var(--max-width-normal);
   }

@@ -3155,7 +3155,7 @@ function create_main_fragment$5 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-2377242188', '' );
+			setAttribute( div, 'svelte-3571352161', '' );
 			div.className = "editUser";
 		},
 
@@ -3210,7 +3210,7 @@ function create_if_block$2 ( state, component ) {
 }
 
 function create_if_block_1$2 ( state, component ) {
-	var form, fieldset, legend, text, text_1_value, text_1, text_2, input, input_value_value, text_3, div, label, text_4, text_5, input_1, input_1_value_value, text_7, div_1, label_1, text_8, text_9, input_2, input_2_value_value, text_11, div_2, label_2, text_12, text_13, input_3, input_3_value_value, text_15, div_3, input_4, text_16, a, text_17;
+	var form, fieldset, legend, text, text_1_value, text_1, text_2, input, input_value_value, text_3, div, label, text_4, text_5, input_1, input_1_value_value, text_7, div_1, label_1, text_8, text_9, input_2, input_2_value_value, text_11, div_2, label_2, text_12, text_13, input_3, input_3_value_value, text_15, div_3, button, text_16, text_17, a, text_18;
 
 	function submit_handler ( event ) {
 		component.saveUser(event);
@@ -3249,10 +3249,11 @@ function create_if_block_1$2 ( state, component ) {
 			input_3 = createElement( 'input' );
 			text_15 = createText( "\r\n\r\n        " );
 			div_3 = createElement( 'div' );
-			input_4 = createElement( 'input' );
-			text_16 = createText( " " );
+			button = createElement( 'button' );
+			text_16 = createText( "Save" );
+			text_17 = createText( "\r\n          " );
 			a = createElement( 'a' );
-			text_17 = createText( "Cancel" );
+			text_18 = createText( "Cancel" );
 			this.hydrate();
 		},
 
@@ -3280,9 +3281,8 @@ function create_if_block_1$2 ( state, component ) {
 			input_3.placeholder = "bob@connor.com";
 			input_3.value = input_3_value_value = state.item.email;
 			div_3.className = "row";
-			input_4.type = "submit";
-			input_4.name = "Submit";
-			input_4.value = "Save";
+			button.type = "submit";
+			button.className = "button";
 			a.href = "#";
 			addListener( a, 'click', click_handler );
 		},
@@ -3318,10 +3318,11 @@ function create_if_block_1$2 ( state, component ) {
 			component.refs.email = input_3;
 			appendNode( text_15, fieldset );
 			appendNode( div_3, fieldset );
-			appendNode( input_4, div_3 );
-			appendNode( text_16, div_3 );
+			appendNode( button, div_3 );
+			appendNode( text_16, button );
+			appendNode( text_17, div_3 );
 			appendNode( a, div_3 );
-			appendNode( text_17, a );
+			appendNode( text_18, a );
 		},
 
 		update: function ( changed, state ) {
