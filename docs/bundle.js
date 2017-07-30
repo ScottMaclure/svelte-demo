@@ -607,8 +607,9 @@ function create_main_fragment$4 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-1867172274', '' );
+			setAttribute( div, 'svelte-170560113', '' );
 			div.className = "users";
+			table.className = "table-striped";
 			a.href = "#";
 			addListener( a, 'click', click_handler );
 			a_1.href = "#";
