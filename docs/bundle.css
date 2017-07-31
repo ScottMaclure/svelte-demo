@@ -25,13 +25,13 @@
     }
 
 
-  [svelte-3175477618].editUser label, [svelte-3175477618] .editUser label {
+  [svelte-2259445432].editUser label, [svelte-2259445432] .editUser label {
     display: block;
   }
-  [svelte-3175477618].editUser .row, [svelte-3175477618] .editUser .row {
+  [svelte-2259445432].editUser .row, [svelte-2259445432] .editUser .row {
     margin-bottom: var(--spacing-vertical-small);
   }
-  [svelte-3175477618].editUser input[type=text], [svelte-3175477618] .editUser input[type=text], [svelte-3175477618].editUser input[type=email], [svelte-3175477618] .editUser input[type=email] {
+  [svelte-2259445432].editUser input[type=text], [svelte-2259445432] .editUser input[type=text], [svelte-2259445432].editUser input[type=email], [svelte-2259445432] .editUser input[type=email] {
     width: 100%;
     max-width: var(--max-width-normal);
   }

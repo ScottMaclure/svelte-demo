@@ -28,6 +28,9 @@ var Config = {
     }
 };
 
+/**
+ * TODO Use a display boolean flag instead?
+ */
 function publishMessage(app, message) {
 
     message.id = message.id || Date.now(); // FIXME should be fine...
@@ -76,6 +79,7 @@ function detachNode(node) {
 	node.parentNode.removeChild(node);
 }
 
+// TODO this is out of date
 function destroyEach(iterations, detach, start) {
 	for (var i = start; i < iterations.length; i += 1) {
 		if (iterations[i]) iterations[i].destroy(detach);
@@ -3099,6 +3103,11 @@ var template$4 = (function () {
 
       }
     },
+    helpers: {
+      isDirty(item, refs) {
+        return item && refs
+      }
+    },
     methods: {
       /**
        * TODO Best practice here? Two-way bindings for convenience?
@@ -3154,7 +3163,7 @@ function create_main_fragment$5 ( state, component ) {
 		},
 
 		hydrate: function ( nodes ) {
-			setAttribute( div, 'svelte-3175477618', '' );
+			setAttribute( div, 'svelte-2259445432', '' );
 			div.className = "editUser";
 		},
 
@@ -3186,6 +3195,63 @@ function create_main_fragment$5 ( state, component ) {
 	};
 }
 
+function create_if_block_2$2 ( state, component ) {
+	var button, text;
+
+	return {
+		create: function () {
+			button = createElement( 'button' );
+			text = createText( "Save" );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			button.type = "submit";
+			button.className = "button";
+			button.disabled = '';
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( button, target, anchor );
+			appendNode( text, button );
+		},
+
+		unmount: function () {
+			detachNode( button );
+		},
+
+		destroy: noop
+	};
+}
+
+function create_if_block_3$2 ( state, component ) {
+	var button, text;
+
+	return {
+		create: function () {
+			button = createElement( 'button' );
+			text = createText( "Save" );
+			this.hydrate();
+		},
+
+		hydrate: function ( nodes ) {
+			button.type = "submit";
+			button.className = "button";
+		},
+
+		mount: function ( target, anchor ) {
+			insertNode( button, target, anchor );
+			appendNode( text, button );
+		},
+
+		unmount: function () {
+			detachNode( button );
+		},
+
+		destroy: noop
+	};
+}
+
 function create_if_block$2 ( state, component ) {
 	var span;
 
@@ -3214,11 +3280,19 @@ function create_if_block$2 ( state, component ) {
 }
 
 function create_if_block_1$2 ( state, component ) {
-	var form, fieldset, legend, text, text_1_value, text_1, text_2, input, input_value_value, text_3, div, label, text_4, text_5, input_1, input_1_value_value, text_7, div_1, label_1, text_8, text_9, input_2, input_2_value_value, text_11, div_2, label_2, text_12, text_13, input_3, input_3_value_value, text_15, div_3, button, text_16, text_17, a, text_18;
+	var form, fieldset, legend, text, text_1_value, text_1, text_2, input, input_value_value, text_3, div, label, text_4, text_5, input_1, input_1_value_value, text_7, div_1, label_1, text_8, text_9, input_2, input_2_value_value, text_11, div_2, label_2, text_12, text_13, input_3, input_3_value_value, text_15, div_3, text_16, a, text_17;
 
 	function submit_handler ( event ) {
 		component.saveUser(event);
 	}
+
+	function get_block ( state ) {
+		if ( template$4.helpers.isDirty(state.item, state.refs) ) return create_if_block_2$2;
+		return create_if_block_3$2;
+	}
+
+	var current_block = get_block( state );
+	var if_block_1 = current_block( state, component );
 
 	function click_handler ( event ) {
 		component.cancelEdit(event);
@@ -3253,11 +3327,10 @@ function create_if_block_1$2 ( state, component ) {
 			input_3 = createElement( 'input' );
 			text_15 = createText( "\n\n        " );
 			div_3 = createElement( 'div' );
-			button = createElement( 'button' );
-			text_16 = createText( "Save" );
-			text_17 = createText( "\n          " );
+			if_block_1.create();
+			text_16 = createText( "\n          " );
 			a = createElement( 'a' );
-			text_18 = createText( "Cancel" );
+			text_17 = createText( "Cancel" );
 			this.hydrate();
 		},
 
@@ -3285,8 +3358,6 @@ function create_if_block_1$2 ( state, component ) {
 			input_3.placeholder = "bob@connor.com";
 			input_3.value = input_3_value_value = state.item.email;
 			div_3.className = "row";
-			button.type = "submit";
-			button.className = "button";
 			a.href = "#";
 			addListener( a, 'click', click_handler );
 		},
@@ -3322,11 +3393,10 @@ function create_if_block_1$2 ( state, component ) {
 			component.refs.email = input_3;
 			appendNode( text_15, fieldset );
 			appendNode( div_3, fieldset );
-			appendNode( button, div_3 );
-			appendNode( text_16, button );
-			appendNode( text_17, div_3 );
+			if_block_1.mount( div_3, null );
+			appendNode( text_16, div_3 );
 			appendNode( a, div_3 );
-			appendNode( text_18, a );
+			appendNode( text_17, a );
 		},
 
 		update: function ( changed, state ) {
@@ -3349,6 +3419,14 @@ function create_if_block_1$2 ( state, component ) {
 			if ( input_3_value_value !== ( input_3_value_value = state.item.email ) ) {
 				input_3.value = input_3_value_value;
 			}
+
+			if ( current_block !== ( current_block = get_block( state ) ) ) {
+				if_block_1.unmount();
+				if_block_1.destroy();
+				if_block_1 = current_block( state, component );
+				if_block_1.create();
+				if_block_1.mount( div_3, text_16 );
+			}
 		},
 
 		unmount: function () {
@@ -3356,10 +3434,12 @@ function create_if_block_1$2 ( state, component ) {
 			if ( component.refs.firstName === input_1 ) component.refs.firstName = null;
 			if ( component.refs.lastName === input_2 ) component.refs.lastName = null;
 			if ( component.refs.email === input_3 ) component.refs.email = null;
+			if_block_1.unmount();
 		},
 
 		destroy: function () {
 			removeListener( form, 'submit', submit_handler );
+			if_block_1.destroy();
 			removeListener( a, 'click', click_handler );
 		}
 	};

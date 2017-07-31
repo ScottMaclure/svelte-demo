@@ -8,10 +8,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "eslint src/**/* && rollup -c && npm run vendor && http-server docs -g",
+    "build": "eslint src/**/* && rollup -c && npm run vendor",
+    "vendor": "./node_modules/.bin/ncp ./node_modules/shoelace-css/dist/shoelace.css docs/shoelace.css",
+    "start": "npm run build && http-server docs -g",
     "watch": "rollup -c -w",
-    "ncu": "ncu -g && ncu --packageFile package.json",
-    "vendor": "./node_modules/.bin/ncp ./node_modules/shoelace-css/dist/shoelace.css docs/shoelace.css"
+    "ncu": "ncu -g && ncu --packageFile package.json"
   },
   "repository": {
     "type": "git",

@@ -24,7 +24,11 @@
         </div>
 
         <div class="row">
-          <button type="submit" class="button">Save</button>
+          {{#if isDirty(item, refs)}}
+            <button type="submit" class="button" disabled="">Save</button>
+          {{else}}
+            <button type="submit" class="button">Save</button>
+          {{/if}}
           <a href="#" on:click="cancelEdit(event)">Cancel</a>
         </div>
 
@@ -63,6 +67,11 @@
           self.fire('requestData')
         }, 250)
 
+      }
+    },
+    helpers: {
+      isDirty(item, refs) {
+        return item && refs
       }
     },
     methods: {
