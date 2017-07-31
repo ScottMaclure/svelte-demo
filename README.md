@@ -1,6 +1,6 @@
 # Svelte Demo
 
-http://scott.maclure.info/svelte-demo/
+http://svelte-demo.maclure.info/
 
 ## Running
 
@@ -65,3 +65,4 @@ npm run watch
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
 - [ ] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache) (Need HTTPS first!)
 - [ ] uglify the js code for prod - see https://github.com/rollup/rollup-starter-app/blob/master/rollup.config.js
+- [ ] Load package.json version, display on page
