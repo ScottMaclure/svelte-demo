@@ -53,14 +53,15 @@ npm run watch
 - [x] Add a user edit screen, combine with router, save, route to ListUsers, success message
 - [x] Add https://shoelace.style/ for base css L&F
 - [x] Refactor messages into generic system
-- [ ] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache)
-- [ ] Add isDirty computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
+- [ ] Add isDirty (or... isValid?) computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
 - [ ] Edit user - client validation
 - [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
+- [ ] Client pagination feature, see if it can be generic
 - [ ] Use svelte-router or router5, see if it works better than homebrew (if keep homebrew, refactor to mixin/import/node_module)
 - [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)
 - [ ] Testing components individually (Mocha?)
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
-- [ ] Client pagination feature, see if it can be generic
+- [ ] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache) (Need HTTPS first!)
+- [ ] uglify the js code for prod - see https://github.com/rollup/rollup-starter-app/blob/master/rollup.config.js
