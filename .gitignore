@@ -1,3 +1,8 @@
 # Normally we'd ignore compiled assets, but have left most in for hosting convenience.
 
 node_modules
+docs/*
+!docs/*.html
+!docs/index.*
+!docs/main.*
+!docs/manifest.json
