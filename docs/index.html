@@ -6,6 +6,7 @@
         <meta charset="utf-8">
         <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link rel="icon" type="image/png" href="/favicon.png">
+        <link rel="manifest" href="/manifest.json">
         <link rel="stylesheet" href="shoelace.css" type="text/css" media="screen">
         <link rel="stylesheet" href="main.css" type="text/css" media="screen">
         <link rel="stylesheet" href="bundle.css" type="text/css" media="screen">
@@ -14,6 +15,19 @@
     <body>
         <main></main>
         <script src="bundle.js" async="true"></script>
+        <script type="text/javascript">
+            // If browser supports it, use ServiceWorker to provide offline app.
+            // See https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(function () {
+                        console.log('ServiceWorker registered.');
+                    })
+                    .catch(function (err) {
+                        console.error('ServiceWorker failed registration, err:', err);
+                    });
+            }
+        </script>
         <noscript>
             <h1>Enable JavaScript</h1>
             <p>SvelteDemo requires JavaScript to be enabled - it's a SPA. Useless without it.</p>

@@ -31,7 +31,7 @@ While server is running, run app (rollup) in watch mode:
 npm run watch
 ```
 
-## TODO
+## TODO - Sooner
 
 - [x] Initial setup with 1k rows, delete row functionality
 - [x] Deploy to github
@@ -53,16 +53,20 @@ npm run watch
 - [x] Add a user edit screen, combine with router, save, route to ListUsers, success message
 - [x] Add https://shoelace.style/ for base css L&F
 - [x] Refactor messages into generic system
-- [ ] Add isDirty (or... isValid?) computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
+- [x] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache) (Need HTTPS first!)
+- [x] Add isDirty (or... isValid?) computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
 - [ ] Edit user - client validation
 - [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
+
+## TODO - Later
+
 - [ ] Client pagination feature, see if it can be generic
-- [ ] Use svelte-router or router5, see if it works better than homebrew (if keep homebrew, refactor to mixin/import/node_module)
 - [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)
 - [ ] Testing components individually (Mocha?)
+- [ ] uglify the js code for prod - see https://github.com/rollup/rollup-starter-app/blob/master/rollup.config.js
+- [ ] bundle/minify css output to 1 asset?
+- [ ] Use svelte-router or router5, see if it works better than homebrew (if keep homebrew, refactor to mixin/import/node_module)
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
-- [ ] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache) (Need HTTPS first!)
-- [ ] uglify the js code for prod - see https://github.com/rollup/rollup-starter-app/blob/master/rollup.config.js
 - [ ] Load package.json version, display on page
