@@ -1,6 +1,6 @@
 # Svelte Demo
 
-http://scott.maclure.info/svelte-demo/
+http://svelte-demo.maclure.info/
 
 ## Running
 
@@ -69,3 +69,4 @@ npm run watch
 - [ ] Use svelte-router or router5, see if it works better than homebrew (if keep homebrew, refactor to mixin/import/node_module)
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
+- [ ] Load package.json version, display on page
