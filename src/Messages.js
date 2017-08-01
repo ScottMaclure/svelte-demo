@@ -1,4 +1,4 @@
-import Config from './config.js'
+import Config from './Config.js'
 
 /**
  * TODO Use a display boolean flag instead?

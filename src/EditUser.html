@@ -10,17 +10,17 @@
 
         <div class="row">
           <label for="firstName">First name</label>
-          <input name="firstName" type="text" placeholder="e.g. Bob" ref:firstName bind:value="item.firstName">
+          <input name="firstName" type="text" placeholder="e.g. Bob" required ref:firstName bind:value="item.firstName">
         </div>
 
         <div class="row">
           <label for="lastName">Last name</label>
-          <input name="lastName" type="text" placeholder="e.g. Connor" bind:value="item.lastName">
+          <input name="lastName" type="text" placeholder="e.g. Connor" required bind:value="item.lastName">
         </div>
 
         <div class="row">
           <label for="email">Email</label>
-          <input name="email" type="email" placeholder="bob@connor.com" bind:value="item.email">
+          <input name="email" type="email" placeholder="bob@connor.com" required bind:value="item.email">
         </div>
 
         <div class="row">

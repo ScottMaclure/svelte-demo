@@ -55,12 +55,13 @@ npm run watch
 - [x] Refactor messages into generic system
 - [x] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache) (Need HTTPS first!)
 - [x] Add isDirty (or... isValid?) computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
-- [ ] Edit user - client validation
+- [ ] Edit user - client validation (parsley.js?)
 - [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
 
 ## TODO - Later
 
+- [ ] Update watch feature to sw-precache as well?
 - [ ] Client pagination feature, see if it can be generic
 - [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)
 - [ ] Testing components individually (Mocha?)

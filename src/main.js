@@ -1,6 +1,6 @@
 // Kickstart the application.
 
-import Config from './config.js'
+import Config from './Config.js'
 import {publishMessage} from './Messages.js'
 import SvelteDemoApp from './SvelteDemoApp.html'
 
