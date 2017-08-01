@@ -4,32 +4,38 @@
   {{else}}
     <!-- TODO new vs edit -->
     <form on:submit="saveUser(event)" class="{{isDirty ? 'isDirty' : ''}}">
+
       <fieldset>
+
         <legend>Edit User #{{item.id}}</legend>
         <input type="hidden" name="id" value="{{item.id}}">
 
-        <div class="input-single">
+        <!-- TODO Refactor to a re-used component. I guess a svelte form fields component library builds up here. -->
+        <div class="input-single {{fieldClass('firstName', isDirty, validate)}}">
           <label for="firstName">First name</label>
           <input name="firstName" type="text" placeholder="e.g. Bob" required autofocus ref:firstName bind:value="item.firstName">
+          {{#if isDirty && !validate.fields.firstName.valid}}
+            <div class="spacer-top-small alert alert-danger">{{validate.fields.firstName.message}}</div>
+          {{/if}}
         </div>
 
-        <div class="input-single">
+        <div class="input-single {{fieldClass('lastName', isDirty, validate)}}">
           <label for="lastName">Last name</label>
           <input name="lastName" type="text" placeholder="e.g. Connor" required bind:value="item.lastName">
         </div>
 
-        <div class="input-single">
+        <div class="input-single {{fieldClass('email', isDirty, validate)}}">
           <label for="email">Email</label>
           <input name="email" type="email" placeholder="bob@connor.com" required bind:value="item.email">
         </div>
 
-        <div class="input-single">
+        <div class="input-single {{fieldClass('iq', isDirty, validate)}}">
           <label for="iq">IQ (value: {{item.iq}})</label>
           <input name="iq" type="range" min="75" max="160" required bind:value="item.iq">
         </div>
 
-        <div class="row">
-            <button type="submit" class="button" disabled="{{!isDirty}}">Save</button>
+        <div class="input-single">
+            <button type="submit" class="button" disabled="{{!isDirty || !validate.valid}}">Save</button>
             <a href="#" on:click="cancelEdit(event)">Cancel</a>
         </div>
 
@@ -88,24 +94,47 @@
       }
 
     },
+    helpers: {
+      fieldClass: (fieldName, isDirty, validate) => {
+        if (!isDirty) { return '' }
+        return validate.fields[fieldName].valid ? 'input-valid' : 'input-invalid'
+      }
+    },
     computed: {
       isDirty: (item, originalItem) => {
         return !isEqual(item, originalItem)
       },
-      // TODO Homebrew, make generic vs using something like
-      validate: (item) => {
-        console.log('validate item:', item)
+      // TODO Homebrew, find some generic validation JS library
+      // Should identify changed fields, validate them according to rules
+      validate: (item, originalItem) => {
+
         let result = {
-          firstName: {
-            valid: true
-          },
-          lastName: {
-            valid: true
-          },
-          email: {
-            valid: true
+          valid: true,
+          fields: {
+            firstName: {
+              valid: true
+            },
+            lastName: {
+              valid: true
+            },
+            email: {
+              valid: true
+            },
+            iq: {
+              valid: true
+            }
           }
         }
+
+        // A demo showing why we need a validation library.
+        if (item.firstName !== originalItem.firstName) {
+          if (item.firstName.split(' ').length > 1) {
+            result.valid = false
+            result.fields.firstName.valid = false
+            result.fields.firstName.message = 'No multiple first-names thanks.'
+          }
+        }
+
         console.log('validate result:', result)
         return result
       }
@@ -118,6 +147,10 @@
         event.preventDefault()
 
         // TODO validate input (or the item), return a payload the UI can use. Standardise.
+        let validate = this.get('validate')
+        if (!validate.valid) {
+          return
+        }
 
         let editItem = this.get('item')
 

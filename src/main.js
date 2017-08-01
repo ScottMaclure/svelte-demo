@@ -100,6 +100,8 @@ app.on('updateSorting', event => {
 
 app.on('saveUser', event => {
 
+    // TODO validation here, rather than in component?
+
     let items = app.get('items')
 
     let foundIdx = items.findIndex((item) => {
