@@ -6,6 +6,7 @@
             <th><a href="#" on:click='sortItems(event, { fieldName: "firstName" })'>First Name {{getSortIcon('firstName', sorting, utfShapes)}}</a></th>
             <th><a href="#" on:click='sortItems(event, { fieldName: "lastName" })'>Last Name {{getSortIcon('lastName', sorting, utfShapes)}}</a></th>
             <th><a href="#" on:click='sortItems(event, { fieldName: "email" })'>Email {{getSortIcon('email', sorting, utfShapes)}}</a></th>
+            <th><a href="#" on:click='sortItems(event, { fieldName: "iq" })'>IQ {{getSortIcon('iq', sorting, utfShapes)}}</a></th>
             <th>Actions</th>
         </thead>
 
@@ -17,15 +18,15 @@
                         <td>{{item.firstName}}</td>
                         <td>{{item.lastName}}</td>
                         <td>{{item.email}}</td>
+                        <td>{{item.iq}}</td>
                         <td>
-                            <i class="noselect" on:click='doEditItem(event, item)'>{{unicodes.edit}}</i>
                             <i class="noselect" on:click='fire("deleteItem", { id: item.id })'>{{unicodes.delete}}</i>
                         </td>
                     </tr>
                 {{/each}}
             {{else}}
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         {{#if isLoading}}
                             <span class="loader"></span>
                         {{else}} No rows present.

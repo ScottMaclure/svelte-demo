@@ -61,6 +61,7 @@ npm run watch
 
 ## TODO - Later
 
+- [ ] unit tests for generate-data
 - [ ] Update watch feature to sw-precache as well?
 - [ ] Client pagination feature, see if it can be generic
 - [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)

@@ -3,7 +3,7 @@
     <span class="loader"></span>
   {{else}}
     <!-- TODO new vs edit -->
-    <form on:submit="saveUser(event)">
+    <form on:submit="saveUser(event)" class="{{isDirty ? 'isDirty' : ''}}">
       <fieldset>
         <legend>Edit User #{{item.id}}</legend>
         <input type="hidden" name="id" value="{{item.id}}">
@@ -21,6 +21,11 @@
         <div class="input-single">
           <label for="email">Email</label>
           <input name="email" type="email" placeholder="bob@connor.com" required bind:value="item.email">
+        </div>
+
+        <div class="input-single">
+          <label for="iq">IQ (value: {{item.iq}})</label>
+          <input name="iq" type="range" min="75" max="160" required bind:value="item.iq">
         </div>
 
         <div class="row">
@@ -89,6 +94,7 @@
       },
       // TODO Homebrew, make generic vs using something like
       validate: (item) => {
+        console.log('validate item:', item)
         let result = {
           firstName: {
             valid: true
@@ -100,6 +106,8 @@
             valid: true
           }
         }
+        console.log('validate result:', result)
+        return result
       }
     },
     methods: {

@@ -59,8 +59,12 @@ const FULL_NAMES = [
     'Arnold Reif'
 ]
 
+const randomNumber = (min, max) => (
+    Math.floor(Math.random() * (max - min + 1) + min)
+)
+
 const randomItem = (items) => (
-    items[Math.floor(Math.random() * items.length)]
+    items[randomNumber(0, (items.length-1))]
 )
 
 const log = (message, ...data) => {
@@ -74,7 +78,8 @@ const createRow = (id) => {
         id: id,
         firstName: firstName,
         lastName: lastName + id,
-        email: firstName + '.' + lastName + '.' + id + '@not.a.tld'
+        email: firstName + '.' + lastName + '.' + id + '@not.a.tld',
+        iq: randomNumber(75, 160)
     }
 }
 
@@ -83,7 +88,13 @@ log('Generating %d rows.', MAX_ROWS)
 let data = {
     version: 1,
     name: 'Scott McDoot',
-    items: []
+    items: [],
+    settings: {
+        iq: {
+            min: 75,
+            max: 160
+        }
+    }
 }
 
 for (let i = 1; i <= MAX_ROWS; i++) {
