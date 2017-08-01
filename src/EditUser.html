@@ -8,17 +8,17 @@
         <legend>Edit User #{{item.id}}</legend>
         <input type="hidden" name="id" value="{{item.id}}">
 
-        <div class="row">
+        <div class="input-single">
           <label for="firstName">First name</label>
           <input name="firstName" type="text" placeholder="e.g. Bob" required ref:firstName bind:value="item.firstName">
         </div>
 
-        <div class="row">
+        <div class="input-single">
           <label for="lastName">Last name</label>
           <input name="lastName" type="text" placeholder="e.g. Connor" required bind:value="item.lastName">
         </div>
 
-        <div class="row">
+        <div class="input-single">
           <label for="email">Email</label>
           <input name="email" type="email" placeholder="bob@connor.com" required bind:value="item.email">
         </div>
@@ -86,6 +86,20 @@
     computed: {
       isDirty: (item, originalItem) => {
         return !isEqual(item, originalItem)
+      },
+      // TODO Homebrew, make generic vs using something like
+      validate: (item) => {
+        let result = {
+          firstName: {
+            valid: true
+          },
+          lastName: {
+            valid: true
+          },
+          email: {
+            valid: true
+          }
+        }
       }
     },
     methods: {
@@ -118,16 +132,3 @@
     }
   }
 </script>
-
-<style>
-  .editUser label {
-    display: block;
-  }
-  .editUser .row {
-    margin-bottom: var(--spacing-vertical-small);
-  }
-  .editUser input[type=text], .editUser input[type=email] {
-    width: 100%;
-    max-width: var(--max-width-normal);
-  }
-</style>

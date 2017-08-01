@@ -18,3 +18,11 @@ i {
   -webkit-user-select: none;
   -ms-user-select: none;
 }
+
+input:required:invalid, input:focus:invalid {
+  border: 1px solid var(--color-primary);
+}
+
+input:required:valid {
+  border: 1px solid var(--color-green);
+}

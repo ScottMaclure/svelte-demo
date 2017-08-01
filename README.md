@@ -51,11 +51,11 @@ npm run watch
 - [x] Add support for loading commonjs node_modules (lodash isEqual, etc)
 - [x] Add <noscript> element for PWA audit
 - [x] Add a user edit screen, combine with router, save, route to ListUsers, success message
-- [x] Add https://shoelace.style/ for base css L&F
+- [x] Add https://shoelace.style/ for base css L&F (see https://shoelace.style/source/css/variables.css)
 - [x] Refactor messages into generic system
 - [x] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache) (Need HTTPS first!)
 - [x] Add isDirty (or... isValid?) computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
-- [ ] Edit user - client validation (parsley.js?)
+- [ ] Edit user - client validation (homebrew first?)
 - [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
 
