@@ -10,26 +10,22 @@
 
         <div class="row">
           <label for="firstName">First name</label>
-          <input ref:firstName name="firstName" type="text" placeholder="e.g. Bob" value="{{item.firstName}}">
+          <input name="firstName" type="text" placeholder="e.g. Bob" ref:firstName bind:value="item.firstName">
         </div>
 
         <div class="row">
           <label for="lastName">Last name</label>
-          <input ref:lastName name="lastName" type="text" placeholder="e.g. Connor" value="{{item.lastName}}">
+          <input name="lastName" type="text" placeholder="e.g. Connor" bind:value="item.lastName">
         </div>
 
         <div class="row">
           <label for="email">Email</label>
-          <input ref:email name="email" type="email" placeholder="bob@connor.com" value="{{item.email}}">
+          <input name="email" type="email" placeholder="bob@connor.com" bind:value="item.email">
         </div>
 
         <div class="row">
-          {{#if isDirty(item, refs)}}
-            <button type="submit" class="button" disabled="">Save</button>
-          {{else}}
-            <button type="submit" class="button">Save</button>
-          {{/if}}
-          <a href="#" on:click="cancelEdit(event)">Cancel</a>
+            <button type="submit" class="button" disabled="{{!isDirty}}">Save</button>
+            <a href="#" on:click="cancelEdit(event)">Cancel</a>
         </div>
 
       </fieldset>
@@ -41,11 +37,15 @@
 
   import isEqual from 'lodash.isequal'
 
+  // TODO Move somewhere generic? Use lodash.clone?
+  const clone = (input) => (JSON.parse(JSON.stringify(input)))
+
   export default {
     data () {
       return {
         isLoading: false, // TODO What about passing this in>
         item: {},
+        originalItem: {},
         items: []
       }
     },
@@ -68,10 +68,24 @@
         }, 250)
 
       }
+
+      // Lazy loaded items code:
+      // Wait for parent component to compute the value of item (see itemToEdit in parent), then store the original version.
+      if (this.get('items').length === 0) {
+        let lazyItemObserver = null
+        lazyItemObserver = this.observe('item', (current) => {
+          this.set({ originalItem: clone(current) })
+          lazyItemObserver.cancel()
+        }, { init: false })
+      } else {
+        // Subsequent loads of the screen will have item passed in immediately, because items will be loaded.
+        this.set({ originalItem: clone(this.get('item')) })
+      }
+
     },
-    helpers: {
-      isDirty(item, refs) {
-        return item && refs
+    computed: {
+      isDirty: (item, originalItem) => {
+        return !isEqual(item, originalItem)
       }
     },
     methods: {
@@ -81,17 +95,12 @@
       saveUser: function (event) {
         event.preventDefault()
 
-        // TODO validate a user item, return a payload the UI can use. Standardise.
+        // TODO validate input (or the item), return a payload the UI can use. Standardise.
 
-        let item = this.get('item') // original item
-
-        let editItem = JSON.parse(JSON.stringify(this.get('item')))
-        editItem.firstName = this.refs.firstName.value
-        editItem.lastName = this.refs.lastName.value
-        editItem.email = this.refs.email.value
+        let editItem = this.get('item')
 
         // Check any fields were actually changed first.
-        if (isEqual(item, editItem)) {
+        if (isEqual(this.get('originalItem'), editItem)) {
           return
         }
 
