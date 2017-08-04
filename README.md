@@ -55,16 +55,17 @@ npm run watch
 - [x] Refactor messages into generic system
 - [x] Add service worker for Chrome Audit (Lighthouse) (https://github.com/GoogleChrome/sw-precache) (Need HTTPS first!)
 - [x] Add isDirty (or... isValid?) computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
-- [ ] Edit user - client validation (homebrew first?)
+- [x] Refactor homebrew routing into es6 module
+- [x] Edit user - client validation (homebrew)
 - [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
 
 ## TODO - Later
 
-- [ ] unit tests for generate-data
-- [ ] Update watch feature to sw-precache as well?
-- [ ] Client pagination feature, see if it can be generic
 - [ ] Testing main.js data functions independently of components (SvelteDemoApp mock?) (https://github.com/ModuleLoader/es-module-loader)
+- [ ] unit tests for generate-data
+- [ ] Update watch feature to sw-precache as well? (PR on rollup/rollup-watch?)
+- [ ] Client pagination feature, see if it can be generic
 - [ ] Testing components individually (Mocha?)
 - [ ] uglify the js code for prod - see https://github.com/rollup/rollup-starter-app/blob/master/rollup.config.js
 - [ ] bundle/minify css output to 1 asset?
@@ -72,3 +73,5 @@ npm run watch
 - [ ] Add a11y test automation and update app with a11y
 - [ ] Support older browsers using babel (see rollup-starter-project) (css vars issue)
 - [ ] Load package.json version, display on page
+- [ ] Extend homebrew validation to support object-based validation, eg User.validate(user) or similar))
+- [ ] Refactor main.js into smaller files, grouped by activity (eg User/s.js module)
