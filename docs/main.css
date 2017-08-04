@@ -20,13 +20,13 @@ i {
 }
 
 /*Using shoelace's styles instead*/
-/*.isDirty input:required:invalid, .isDirty input:focus:invalid {
+.isDirty input:required:invalid, .isDirty input:focus:invalid {
   border: 1px solid var(--color-primary);
 }
 
 .isDirty input:required:valid {
   border: 1px solid var(--color-green);
-}*/
+}
 
 .spacer-top {
   margin-top: var(--spacing-vertical-normal);
