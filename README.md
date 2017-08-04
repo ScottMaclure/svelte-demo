@@ -59,6 +59,7 @@ npm run watch
 - [x] Edit user - client validation (homebrew)
 - [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
+- [ ] Reorganise code into src/components, src/modules
 
 ## TODO - Later
 
