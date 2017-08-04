@@ -57,6 +57,7 @@ npm run watch
 - [x] Add isDirty (or... isValid?) computed property on EditUser form, to disable/enable the Save button (refs passed into computed property?)
 - [x] Refactor homebrew routing into es6 module
 - [x] Edit user - client validation (homebrew)
+- [ ] Update readme with features list
 - [ ] Refactor edit user to add user, auto-inc the id
 - [ ] Replace html table with a grid of "cards" or similar (https://gridbyexample.com/patterns/header-asmany-footer/)
 - [ ] Reorganise code into src/components, src/modules
