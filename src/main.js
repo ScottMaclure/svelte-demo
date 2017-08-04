@@ -1,6 +1,7 @@
 // Kickstart the application.
 
 import Config from './Config.js'
+import Routing from './Routing.js'
 import {publishMessage} from './Messages.js'
 import SvelteDemoApp from './SvelteDemoApp.html'
 
@@ -23,6 +24,20 @@ var app = new SvelteDemoApp({
 })
 
 // Listen for semantic events and talk to servers, modify data etc.
+
+// Routing machinery handled externally to component hierarhcy.
+// Means Components are ignorant of URL for the most part, and simply react ot data changes to routeParts.
+// TODO need Link components.
+
+app.on('doPopState', () => {
+    app.set({ routeParts: Routing.doPopState() })
+})
+
+app.on('doRoute', (event) => {
+    app.set({ routeParts: Routing.doRoute(event) })
+})
+
+// Semantic event handling
 
 app.on('requestData', () => {
     fetch('data.json').then(function (response) {

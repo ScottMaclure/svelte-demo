@@ -1,4 +1,4 @@
-<:Window on:popstate='doPopState(event)'/>
+<:Window on:popstate='fire("doPopState")'/>
 
 <div class="helloWorld">
 
@@ -17,9 +17,9 @@
   <h1>Svelte Demo App</h1>
 
   <nav class="navLinks">
-    <a href="#{{routes.splash}}" on:click='doRoute(event)'>Home</a>
-    <a href="#{{routes.listUsers}}" on:click='doRoute(event)'>List Users</a>
-    <a href="#{{routes.testBroken}}" on:click='doRoute(event)'>Test Broken</a>
+    <a href="#{{routes.splash}}" on:click='fire("doRoute", event)'>Home</a>
+    <a href="#{{routes.listUsers}}" on:click='fire("doRoute", event)'>List Users</a>
+    <a href="#{{routes.testBroken}}" on:click='fire("doRoute", event)'>Test Broken</a>
   </nav>
 
   {{#if route === routes.splash}}
@@ -60,14 +60,10 @@
 
 <script>
   import Config from './Config.js'
+  import Routing from './Routing.js'
   import Splash from './Splash.html'
   import ListUsers from './ListUsers.html'
   import EditUser from './EditUser.html'
-
-  const getRouteParts = (href) => {
-    // Break up Foo/bar/blah/etc/1 into parts. Individual routes know how to read their own subroutes.
-    return (href || location.hash.slice(1) || Config.routes.default).split('/')
-  }
 
   export default {
     components: {
@@ -82,7 +78,7 @@
     // },
     data () {
       return {
-        routeParts: getRouteParts(),
+        routeParts: Routing.getRouteParts(),
         routes: Config.routes,
         isLoading: false,
         messages: [],
@@ -93,12 +89,7 @@
       }
     },
     computed: {
-      route: (routeParts) => {
-        if (!routeParts) {
-          return Config.routes.default // defensive?
-        }
-        return routeParts[0] // the zero-eth part is always the main "view" of the route.
-      },
+      route: (routeParts) => (Routing.getMainRoute(routeParts)),
       itemToEdit: (items, routeParts) => {
         // routeParts should always be defined due to oncreate method already running?
         let foundItem = items.find(item => {
@@ -108,31 +99,20 @@
       }
     },
     methods: {
-        /**
-         * Handles events triggered from a) dom nodes or b) semantic events fire'd components.
-         */
-        doRoute: function (event) {
-          if (event.preventDefault) { event.preventDefault() } // semantic events won't have dom events... why should this be here then?
-          let href = event.target ? event.target.getAttribute('href').slice(1) : event.href // remove hash from href attributes
-          let routeParts = getRouteParts(href) // for semantic events
-          window.history.pushState(routeParts, routeParts[0], ('#' + href)) // FIXME Adding the hash here...
-          this.set({ routeParts: routeParts })
-        },
-        doPopState: function () {
-          // TODO Repeated code from main.js.
-          let routeParts = getRouteParts()
-          this.set({ routeParts: routeParts })
-        },
         editItem: function (event) {
           // TODO Could check for populated items array at this point?
           // So, this means that Users component knows nothing about route generation, it just fired up the id.
-          this.doRoute({ href: Config.routes.editUser+'/'+event.id }) // FIXME weaksauce route url construction.
+          // TODO Could editItem be the event fired instead, then main.js translates that into doRoute?
+          this.fire('doRoute', { href: Config.routes.editUser+'/'+event.id }) // FIXME weaksauce route url construction.
         },
         cancelEdit: function () {
-          this.doRoute({ href: Config.routes.listUsers})
+          // TODO fire concelEdit, leave main.js to change data?
+          this.fire('doRoute', { href: Config.routes.listUsers})
         },
         requestData: function () {
           // TODO isLoading... localise to Users component?
+          // An example of internalizing data to the component (internal state), hiding from main.js data design.
+          // What's best practice?
           this.set({ isLoading: true })
           this.fire('requestData')
         },
