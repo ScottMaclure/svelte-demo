@@ -1,5 +1,8 @@
 import Config from './Config.js'
 
+/**
+ * Handles events triggered from a) dom nodes or b) semantic events fire'd components.
+ */
 const getRouteParts = (href) => {
   // Break up Foo/bar/blah/etc/1 into parts. Individual routes know how to read their own subroutes.
   return (href || location.hash.slice(1) || Config.routes.default).split('/')
@@ -24,10 +27,6 @@ const doPopState = () => {
   return getRouteParts()
 }
 
-
-/**
- * Handles events triggered from a) dom nodes or b) semantic events fire'd components.
- */
 export default {
   getRouteParts: getRouteParts,
   getMainRoute: getMainRoute,
