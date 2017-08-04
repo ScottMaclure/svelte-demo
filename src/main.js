@@ -135,6 +135,6 @@ app.on('saveUser', event => {
         content: 'User ' + event.id + ' updated successfully.'
     })
 
-    app.doRoute({ href: Config.routes.listUsers })
+    app.fire('doRoute', { href: Config.routes.listUsers })
 
 })
