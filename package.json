@@ -29,19 +29,20 @@
   },
   "homepage": "https://github.com/ScottMaclure/svelte-demo#readme",
   "devDependencies": {
-    "eslint": "^4.3.0",
-    "eslint-plugin-html": "^3.1.1",
+    "eslint": "^4.4.1",
+    "eslint-plugin-html": "^3.2.0",
     "ncp": "^2.0.0",
-    "rollup": "^0.45.2",
-    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup": "^0.47.4",
+    "rollup-plugin-commonjs": "^8.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-svelte": "^3.0.1",
+    "rollup-plugin-svelte": "^3.1.0",
     "rollup-watch": "^4.3.1",
     "shoelace-css": "^1.0.0-beta3",
     "svelte-cli": "^1.4.0",
     "sw-precache": "^5.2.0"
   },
   "dependencies": {
-    "lodash.isequal": "^4.5.0"
+    "lodash.isequal": "^4.5.0",
+    "svelte-transitions": "^1.1.1"
   }
 }
