@@ -36,7 +36,6 @@
       on:editItem='editItem(event)'
       on:deleteItem='fire("deleteItem", event)'
       on:updateSorting='fire("updateSorting", event)'
-      transition:slide
     />
 
   {{elseif route === routes.editUser}}
@@ -47,7 +46,6 @@
         on:requestData='requestData()'
         on:cancelEdit='cancelEdit(event)'
         on:saveUser='fire("saveUser", event)'
-        transition:slide
       />
 
   {{else}}
