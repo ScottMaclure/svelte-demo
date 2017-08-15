@@ -22,24 +22,29 @@
 
   {{#if route === routes.splash}}
 
-    <Splash name='{{name}}' count='{{count}}'/>
+    <div class="page" in:fly='{x:2000}'>
+      <Splash name='{{name}}' count='{{count}}'/>
+    </div>
 
   {{elseif route === routes.listUsers}}
 
-    <ListUsers
-      isLoading='{{isLoading}}'
-      items='{{items}}'
-      sorting='{{sorting}}'
-      filter='{{filter}}'
-      on:filterData='fire("filterData", event)'
-      on:requestData='requestData()'
-      on:editItem='editItem(event)'
-      on:deleteItem='fire("deleteItem", event)'
-      on:updateSorting='fire("updateSorting", event)'
-    />
+    <div class="page" in:fly='{x:2000}'>
+      <ListUsers
+        isLoading='{{isLoading}}'
+        items='{{items}}'
+        sorting='{{sorting}}'
+        filter='{{filter}}'
+        on:filterData='fire("filterData", event)'
+        on:requestData='requestData()'
+        on:editItem='editItem(event)'
+        on:deleteItem='fire("deleteItem", event)'
+        on:updateSorting='fire("updateSorting", event)'
+      />
+    </div>
 
   {{elseif route === routes.editUser}}
 
+    <div class="page" in:fly='{x:2000}'>
       <EditUser
         items='{{items}}'
         item='{{itemToEdit}}'
@@ -47,17 +52,20 @@
         on:cancelEdit='cancelEdit(event)'
         on:saveUser='fire("saveUser", event)'
       />
+    </div>
 
   {{else}}
 
-    <p>No route found for '{{route}}'</p>
+    <div class="page" in:fly='{x:2000}'>
+      <p>No route found for '{{route}}'</p>
+    </div>
 
   {{/if}}
 
 </div>
 
 <script>
-  import slide from 'svelte-transitions-slide'
+  import fly from 'svelte-transitions-fly';
   import fade from 'svelte-transitions-fade'
   import Config from './Config.js'
   import Routing from './Routing.js'
@@ -72,7 +80,7 @@
       ListUsers,
       EditUser
     },
-    transitions: { slide, fade },
+    transitions: { fly, fade },
     // oncreate () {
     //   // this.set({ routeParts: getRouteParts() }) // Set initial view. (default data removes need for this.)
     //   console.log('SvelteDemoApp oncreate')
