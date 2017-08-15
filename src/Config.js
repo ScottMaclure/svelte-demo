@@ -13,7 +13,7 @@ export default {
         edit: '\u270E'
     },
     messages: {
-        displayTime: 3000,
+        displayTime: 2000,
         types: {
             default: 'default',
             success: 'success',

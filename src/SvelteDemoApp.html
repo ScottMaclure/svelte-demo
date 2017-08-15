@@ -3,16 +3,14 @@
 <div class="helloWorld">
 
   <!-- TODO refactor into component -->
-  {{#if messages.length > 0}}
-    <div class="messages">
-      {{#each messages as message}}
-        <div class="alert alert-{{message.type}}">
-          <div>{{message.title}}</div>
-          <div>{{message.content}}</div>
-        </div>
-      {{/each}}
-    </div>
-  {{/if}}
+  <div class="messages">
+    {{#each messages as message}}
+      <div class="alert alert-{{message.type}}" out:fade>
+        <div>{{message.title}}</div>
+        <div>{{message.content}}</div>
+      </div>
+    {{/each}}
+  </div>
 
   <h1>Svelte Demo App</h1>
 
@@ -59,6 +57,7 @@
 </div>
 
 <script>
+  import fade from 'svelte-transitions-fade';
   import Config from './Config.js'
   import Routing from './Routing.js'
   import Splash from './Splash.html'
@@ -72,6 +71,7 @@
       ListUsers,
       EditUser
     },
+    transitions: { fade },
     // oncreate () {
     //   // this.set({ routeParts: getRouteParts() }) // Set initial view. (default data removes need for this.)
     //   console.log('SvelteDemoApp oncreate')
