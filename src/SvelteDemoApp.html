@@ -36,6 +36,7 @@
       on:editItem='editItem(event)'
       on:deleteItem='fire("deleteItem", event)'
       on:updateSorting='fire("updateSorting", event)'
+      transition:slide
     />
 
   {{elseif route === routes.editUser}}
@@ -46,6 +47,7 @@
         on:requestData='requestData()'
         on:cancelEdit='cancelEdit(event)'
         on:saveUser='fire("saveUser", event)'
+        transition:slide
       />
 
   {{else}}
@@ -57,7 +59,8 @@
 </div>
 
 <script>
-  import fade from 'svelte-transitions-fade';
+  import slide from 'svelte-transitions-slide'
+  import fade from 'svelte-transitions-fade'
   import Config from './Config.js'
   import Routing from './Routing.js'
   import Splash from './Splash.html'
@@ -71,7 +74,7 @@
       ListUsers,
       EditUser
     },
-    transitions: { fade },
+    transitions: { slide, fade },
     // oncreate () {
     //   // this.set({ routeParts: getRouteParts() }) // Set initial view. (default data removes need for this.)
     //   console.log('SvelteDemoApp oncreate')
