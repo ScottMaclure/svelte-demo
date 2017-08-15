@@ -1,9 +1,9 @@
 // Kickstart the application.
 
-import Config from './Config.js'
-import Routing from './Routing.js'
-import {publishMessage} from './Messages.js'
-import SvelteDemoApp from './SvelteDemoApp.html'
+import Config from './modules/Config.js'
+import Routing from './modules/Routing.js'
+import {publishMessage} from './modules/Messages.js'
+import SvelteDemoApp from './components/SvelteDemoApp.html'
 
 const MIN_FILTER_LENGTH = 1 // allow for id searches
 
