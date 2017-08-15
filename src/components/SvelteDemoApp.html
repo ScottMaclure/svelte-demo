@@ -23,7 +23,11 @@
   {{#if route === routes.splash}}
 
     <div class="page" in:fly='{x:2000}'>
-      <Splash name='{{name}}' count='{{count}}'/>
+      <Splash
+        name='{{name}}' count='{{count}}'
+        on:incrementCount='fire("incrementCount", event)'
+        on:resetCount='fire("resetCount")'
+      />
     </div>
 
   {{elseif route === routes.listUsers}}

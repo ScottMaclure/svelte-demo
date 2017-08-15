@@ -37,7 +37,19 @@ app.on('doRoute', (event) => {
     app.set({ routeParts: Routing.doRoute(event) })
 })
 
-// Semantic event handling
+// Counter demo on splash screen.
+
+app.on('incrementCount', (event) => {
+    window.localStorage.count = parseInt(event.count, 10) + 1
+    app.set({ count: window.localStorage.count })
+})
+
+app.on('resetCount', () => {
+    window.localStorage.count = 0;
+    app.set({ count: 0 })
+})
+
+// Semantic event handling for users.
 
 app.on('requestData', () => {
     fetch('data.json').then(function (response) {

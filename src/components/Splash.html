@@ -2,8 +2,8 @@
   <h2>Hello {{name}} Yeh!</h2>
   <p>
     Count: {{count}}
-    <button on:click='doInc(count)'>Increment</button>
-    <button on:click='resetCount()'>Reset</button>
+    <button on:click='fire("incrementCount", { count: count })'>Increment</button>
+    <button on:click='fire("resetCount")'>Reset</button>
   </p>
 </div>
 <script>
@@ -12,18 +12,6 @@ export default {
     return {
       name: 'TBC',
       count: 0
-    }
-  },
-  methods: {
-    // TODO emit semantic event and get index.html to update localStorage, so the component knows nothing!
-    doInc: function (count) {
-      window.localStorage.count = parseInt(count, 10) + 1
-      this.set({ count: window.localStorage.count })
-    },
-    // TODO Push reset up to main.js also, rather than hiding localStorage in here.
-    resetCount: function () {
-      window.localStorage.count = 0;
-      this.set({ count: 0 })
     }
   }
 }
