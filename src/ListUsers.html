@@ -19,6 +19,12 @@
   import Users from './Users.html'
 
   export default {
+    oncreate () {
+      console.log('ListUsers oncreate.')
+    },
+    ondestroy () {
+      console.log('ListUsers ondestroy.')
+    },
     components: {
       Filters, Users
     }
