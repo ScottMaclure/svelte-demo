@@ -1,5 +1,7 @@
 # Svelte Demo
 
+Testing out Svelte. See the TODO below.
+
 http://svelte-demo.maclure.info/
 
 ## Running
