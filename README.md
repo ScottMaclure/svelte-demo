@@ -6,10 +6,10 @@ http://svelte-demo.maclure.info/
 
 ## Running
 
-Install some useful global, local deps:
+Install some useful global & local deps:
 
 ```
-npm install -g http-server svelte-cli rollup eslint eslint-plugin-html npm-check-updates
+npm install -g http-server eslint eslint-plugin-html npm-check-updates
 npm install
 ```
 
